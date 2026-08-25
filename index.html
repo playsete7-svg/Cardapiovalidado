@@ -443,7 +443,7 @@ async function saveSmartCouponConfig() {
 function loadSmartCouponConfig() {
     try {
         // Tenta carregar do DATA.restaurant primeiro
-        if (typeof DATA !== 'undefined' && DATA.restaurant && DATA.restaurant.smartCouponConfig) {
+        if (typeof DATA !== 'undefined' && DATA && DATA.restaurant && DATA.restaurant.smartCouponConfig) {
             SMART_COUPON_CONFIG = DATA.restaurant.smartCouponConfig;
             SMART_COUPON_HISTORY = DATA.restaurant.smartCouponHistory || [];
             return;
@@ -2445,7 +2445,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 .brasa-checkout-status{min-height:0;padding:0 24px;color:#a69b91;font-size:12px}.brasa-checkout-status:not(:empty){padding-top:10px}.brasa-checkout-status.is-error{color:#ff927f}.brasa-checkout-status.is-success{color:#8fd9a6}
 .brasa-checkout-body{padding:22px 24px 10px}.brasa-checkout-panel[hidden]{display:none!important}.brasa-checkout-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}.brasa-section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}.brasa-section-heading h4{margin:4px 0 0;font-size:24px;line-height:1}
 .brasa-link-button{min-height:29px;padding:0 9px;color:#ffad89;font-size:10px}.checkout-summary-list{display:grid;gap:8px}.brasa-checkout-item{padding:13px 0;border-bottom:1px solid rgba(246,232,214,.09)}.brasa-checkout-item:last-child{border-bottom:0}.brasa-checkout-item-main{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.brasa-checkout-item-name{color:#f4e9de;font-size:14px;font-weight:700}.brasa-checkout-item-price{color:#ff9a70;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;white-space:nowrap}.brasa-checkout-item-qty{display:inline-grid;place-items:center;min-width:24px;height:21px;margin-right:6px;border-radius:4px;background:rgba(255,90,31,.15);color:#ffaf8b;font-family:"IBM Plex Mono",monospace;font-size:10px}.brasa-checkout-addon{margin:6px 0 0 31px;color:#958a80;font-size:11px}.brasa-checkout-note{margin-top:18px;padding:12px 14px;border:1px solid rgba(255,135,83,.15);border-radius:7px;background:rgba(255,90,31,.06);color:#a99c90;font-size:11px;line-height:1.5}.brasa-checkout-note strong{color:#f2d6c4}
-.brasa-checkout-summary-card,.brasa-review-card{padding:16px;border:1px solid rgba(246,232,214,.12);border-radius:8px;background:rgba(8,8,7,.26)}.brasa-sticky-summary{position:sticky;top:0}.brasa-summary-card-title{margin-bottom:14px;color:#f4e8dc;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.brasa-summary-line{display:flex;justify-content:space-between;gap:12px;margin:8px 0;color:#a99d91;font-size:12px}.brasa-summary-line strong{color:#e6d9cb;font-family:"IBM Plex Mono",monospace;font-size:11px;white-space:nowrap}.brasa-summary-line small{color:#887d73;font-size:9px}.brasa-summary-discount{display:none;color:#8fdda4!important}.brasa-summary-discount[data-visible="true"]{display:flex}.brasa-summary-discount strong{color:#8fdda4}.brasa-summary-total{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:13px;padding-top:13px;border-top:1px dashed rgba(246,232,214,.18);color:#f6ece2;font-size:12px;font-weight:700}.brasa-summary-total strong{color:#ff9a70;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:30px;line-height:.8;white-space:nowrap}.brasa-coupon-box{margin:18px 0 0;padding-top:15px;border-top:1px solid rgba(246,232,214,.1)}.brasa-coupon-box label{font-size:11px}.brasa-coupon-row{display:flex;gap:7px}.brasa-coupon-row input{min-width:0}.brasa-apply-coupon{flex:none;padding:0 10px;color:#ffb28f}.brasa-field-message{min-height:15px;margin-top:5px;font-size:11px}.brasa-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.brasa-form-grid .form-group{min-width:0}.brasa-input-hint{margin-top:5px;color:#82776e;font-size:10px;line-height:1.4}.checkout-location-control{display:grid;gap:8px;padding:12px;border:1px solid rgba(255,135,83,.22);border-radius:8px;background:rgba(255,90,31,.045)}.checkout-location-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid rgba(255,90,31,.74);border-radius:7px;background:linear-gradient(135deg,#ff6a31,#e84918);color:#fff;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.checkout-location-button:disabled{opacity:.62;cursor:wait}.checkout-location-address{min-height:18px;color:#e5d8cb;font-size:12px;line-height:1.45;overflow-wrap:anywhere}.checkout-location-status{min-height:16px;color:#a99d91;font-size:10px;line-height:1.4}.checkout-location-status.is-error{color:#ff9b89}.checkout-location-status.is-success{color:#8fd9a6}.brasa-checkout-card .form-group{margin-bottom:14px}.brasa-checkout-card .form-group label{display:block;margin-bottom:6px;color:#cbbcaf;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.035em;text-transform:uppercase}.brasa-checkout-card .form-group label span{color:#8c8177;font-family:Manrope,sans-serif;font-size:10px;font-weight:400;letter-spacing:0;text-transform:none}.brasa-checkout-card input,.brasa-checkout-card select{width:100%;min-height:42px;padding:0 12px}.brasa-mini-items{display:grid;gap:7px;margin-bottom:12px}.brasa-mini-item{display:flex;justify-content:space-between;gap:10px;color:#b5a89d;font-size:11px}.brasa-mini-item strong{color:#e5d9cd;font-size:11px}.brasa-mini-item small{color:#867b72;font-size:9px}
+.brasa-checkout-summary-card,.brasa-review-card{padding:16px;border:1px solid rgba(246,232,214,.12);border-radius:8px;background:rgba(8,8,7,.26)}.brasa-sticky-summary{position:sticky;top:0}.brasa-summary-card-title{margin-bottom:14px;color:#f4e8dc;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.brasa-summary-line{display:flex;justify-content:space-between;gap:12px;margin:8px 0;color:#a99d91;font-size:12px}.brasa-summary-line strong{color:#e6d9cb;font-family:"IBM Plex Mono",monospace;font-size:11px;white-space:nowrap}.brasa-summary-line small{color:#887d73;font-size:9px}.brasa-summary-discount{display:none;color:#8fdda4!important}.brasa-summary-discount[data-visible="true"]{display:flex}.brasa-summary-discount strong{color:#8fdda4}.brasa-summary-total{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:13px;padding-top:13px;border-top:1px dashed rgba(246,232,214,.18);color:#f6ece2;font-size:12px;font-weight:700}.brasa-summary-total strong{color:#ff9a70;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:30px;line-height:.8;white-space:nowrap}.brasa-coupon-box{margin:18px 0 0;padding-top:15px;border-top:1px solid rgba(246,232,214,.1)}.brasa-coupon-box label{font-size:11px}.brasa-coupon-row{display:flex;gap:7px}.brasa-coupon-row input{min-width:0}.brasa-apply-coupon{flex:none;padding:0 10px;color:#ffb28f}.brasa-field-message{min-height:15px;margin-top:5px;font-size:11px}.brasa-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.brasa-form-grid .form-group{min-width:0}.brasa-input-hint{margin-top:5px;color:#82776e;font-size:10px;line-height:1.4}.checkout-location-control{display:grid;gap:8px;padding:12px;border:1px solid rgba(255,135,83,.22);border-radius:8px;background:rgba(255,90,31,.045)}.checkout-location-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid rgba(255,90,31,.74);border-radius:7px;background:linear-gradient(135deg,#ff6a31,#e84918);color:#fff;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.checkout-location-button:disabled{opacity:.62;cursor:wait}.checkout-location-address{min-height:18px;color:#e5d8cb;font-size:12px;line-height:1.45;overflow-wrap:anywhere}.checkout-location-status{min-height:16px;color:#a99d91;font-size:10px;line-height:1.4}.checkout-location-status.is-error{color:#ff9b89}.checkout-location-status.is-success{color:#8fd9a6}.checkout-location-number-row{display:none;grid-template-columns:minmax(145px,.7fr) minmax(0,1.3fr);align-items:end;gap:10px;margin-top:2px;padding-top:10px;border-top:1px solid rgba(246,232,214,.1)}.checkout-location-number-field{min-width:0}.checkout-location-number-field label{display:block;margin:0 0 5px;color:#cbbcaf;font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.checkout-location-number-field input{width:100%;min-height:40px;box-sizing:border-box;border:1px solid rgba(255,135,83,.35);border-radius:7px;background:#1b1916;color:#f4e8dc;padding:0 11px;font-size:12px;outline:none}.checkout-location-number-field input::placeholder{color:#81756b}.checkout-location-number-field input:focus{border-color:#ff8f61;box-shadow:0 0 0 3px rgba(255,90,31,.1)}.checkout-location-number-hint{align-self:center;color:#9d9187;font-size:10px;line-height:1.4}.checkout-location-number-hint.is-ready{color:#8fd9a6}@media(max-width:600px){.checkout-location-number-row{grid-template-columns:1fr;gap:7px}.checkout-location-number-hint{font-size:9px}.checkout-location-number-field input{min-height:42px}}.brasa-checkout-card .form-group{margin-bottom:14px}.brasa-checkout-card .form-group label{display:block;margin-bottom:6px;color:#cbbcaf;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.035em;text-transform:uppercase}.brasa-checkout-card .form-group label span{color:#8c8177;font-family:Manrope,sans-serif;font-size:10px;font-weight:400;letter-spacing:0;text-transform:none}.brasa-checkout-card input,.brasa-checkout-card select{width:100%;min-height:42px;padding:0 12px}.brasa-mini-items{display:grid;gap:7px;margin-bottom:12px}.brasa-mini-item{display:flex;justify-content:space-between;gap:10px;color:#b5a89d;font-size:11px}.brasa-mini-item strong{color:#e5d9cd;font-size:11px}.brasa-mini-item small{color:#867b72;font-size:9px}
 .brasa-payment-options{display:grid;gap:9px}.brasa-payment-option{display:grid;grid-template-columns:auto 54px minmax(0,1fr);align-items:center;gap:11px;padding:12px;border:1px solid rgba(246,232,214,.12);border-radius:7px;background:rgba(255,255,255,.018);cursor:pointer;transition:border-color .16s ease,background .16s ease}.brasa-payment-option:has(input:checked){border-color:rgba(255,90,31,.72);background:rgba(255,90,31,.1)}.brasa-payment-option input{accent-color:#ff5a1f}.brasa-payment-icon{display:grid;place-items:center;min-height:28px;border:1px solid rgba(255,135,83,.35);border-radius:5px;color:#ffae88;font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:700}.brasa-payment-option strong{display:block;color:#eadfd3;font-size:13px}.brasa-payment-option small{display:block;margin-top:3px;color:#8d8278;font-size:10px}.brasa-cash-change{margin-top:14px;padding:13px;border:1px solid rgba(255,135,83,.2);border-radius:7px;background:rgba(255,90,31,.05)}.brasa-secure-note{margin-top:22px}.brasa-review-card{display:grid;gap:0}.brasa-review-group{padding:12px 0;border-bottom:1px solid rgba(246,232,214,.1)}.brasa-review-group:last-of-type{border-bottom:0}.brasa-review-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px;color:#f0e4d9;font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase}.brasa-review-heading .brasa-link-button{min-height:24px}.brasa-review-value{margin-top:3px;color:#a99d91;font-size:11px;line-height:1.4;overflow-wrap:anywhere}.brasa-review-value:empty{display:none}.brasa-review-card .brasa-summary-line{margin-bottom:0}.brasa-checkout-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 24px 20px;border-top:1px solid var(--line);background:rgba(8,8,7,.24)}.brasa-checkout-actions{display:flex;justify-content:flex-end;gap:8px}.brasa-checkout-footer .btn,.brasa-checkout-footer .pill{min-height:40px;padding:0 16px}.brasa-checkout-footer .btn[hidden],.brasa-checkout-footer .pill[hidden]{display:none}.brasa-checkout-footer .btn:disabled{opacity:.45;cursor:not-allowed;filter:none}.brasa-checkout-card .hidden{display:none!important}
 @media(max-width:760px){.brasa-checkout-card{width:calc(100vw - 18px)}.brasa-checkout-header{padding:18px 16px 13px}.brasa-checkout-header h3{font-size:27px}.brasa-checkout-steps{overflow-x:auto;grid-template-columns:repeat(3,minmax(145px,1fr))}.brasa-checkout-step{padding:12px 13px}.brasa-checkout-status{padding-left:16px;padding-right:16px}.brasa-checkout-body{padding:18px 16px 6px}.brasa-checkout-layout{grid-template-columns:1fr;gap:15px}.brasa-sticky-summary{position:static}.brasa-summary-card-title{margin-bottom:11px}.brasa-checkout-footer{position:sticky;bottom:0;z-index:3;padding:12px 16px 14px}.brasa-checkout-footer .btn,.brasa-checkout-footer .pill{padding:0 12px}}
 @media(max-width:480px){.brasa-checkout-header{gap:8px}.brasa-checkout-header h3{font-size:24px}.brasa-checkout-subtitle{font-size:11px}.brasa-checkout-close{width:30px}.brasa-form-grid{grid-template-columns:1fr}.brasa-section-heading{display:block}.brasa-section-heading .brasa-link-button{margin-top:10px}.brasa-checkout-footer{align-items:stretch}.brasa-checkout-footer>#checkoutCancel{max-width:45%;padding:0 9px}.brasa-checkout-actions{flex:1}.brasa-checkout-actions .btn,.brasa-checkout-actions .pill{flex:1;padding:0 8px;font-size:10px}.brasa-checkout-footer .btn,.brasa-checkout-footer .pill{min-height:42px}}
@@ -2463,6 +2463,89 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 .pdv-pro-cart{position:sticky;top:8px;overflow:hidden;border-color:rgba(255,128,78,.25)}.pdv-pro-cart-header{display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:1px solid rgba(246,232,214,.09)}.pdv-pro-cart-title{color:#f5ebe0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:22px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}.pdv-pro-cart-title:before{content:"▣";margin-right:8px;color:#ff7c48}.pdv-pro-cart-id{padding:4px 6px;border:1px dashed rgba(246,232,214,.18);border-radius:3px;color:#958b80;font-family:"IBM Plex Mono",monospace;font-size:8px}.pdv-pro-context{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(246,232,214,.08)}.pdv-pro-context button{display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:33px;overflow:hidden;border:1px solid rgba(246,232,214,.09);border-radius:4px;padding:0 8px;background:#24211d;color:#c7baad;font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:600;text-align:left;white-space:nowrap}.pdv-pro-lines{display:grid;align-content:start;min-height:210px;max-height:330px;overflow:auto;padding:3px 14px}.pdv-pro-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:11px 0;border-bottom:1px solid rgba(246,232,214,.075)}.pdv-pro-line h5{margin:0;color:#efe5da;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:16px;line-height:.9;text-transform:uppercase}.pdv-pro-line p{margin:4px 0 0;color:#92887e;font-size:8px;line-height:1.4}.pdv-pro-line b{display:block;margin-top:5px;color:#ff9b72;font-family:"IBM Plex Mono",monospace;font-size:9px}.pdv-pro-qty{display:flex;align-items:center;align-self:center;gap:4px;height:28px;border:1px solid rgba(246,232,214,.1);border-radius:5px;padding:0 3px;background:#24211d}.pdv-pro-qty button{display:grid;width:19px;height:19px;place-items:center;border:0;border-radius:3px;background:transparent;color:#d7c9bb;cursor:pointer}.pdv-pro-qty button:hover{background:rgba(255,90,31,.16);color:#ffb18d}.pdv-pro-qty span{min-width:13px;color:#f2e7db;font-family:"IBM Plex Mono",monospace;font-size:9px;text-align:center}.pdv-pro-lines-empty{display:grid;min-height:205px;place-items:center;padding:18px;color:#837a71;font-size:10px;text-align:center}.pdv-pro-lines-empty b{display:block;margin-bottom:5px;color:#b8aa9b;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:17px;letter-spacing:.02em;text-transform:uppercase}.pdv-pro-summary{padding:12px 14px;border-top:1px solid rgba(246,232,214,.09)}.pdv-pro-coupon{display:flex;gap:5px;margin-bottom:10px}.pdv-pro-coupon input{min-width:0;flex:1;height:29px;border:1px solid rgba(246,232,214,.1);border-radius:4px;padding:0 7px;background:#24211d;color:#eee4d9;font-family:"IBM Plex Mono",monospace;font-size:8px;text-transform:uppercase}.pdv-pro-coupon button{border:1px solid rgba(255,90,31,.36);border-radius:4px;padding:0 8px;background:rgba(255,90,31,.1);color:#ffae89;font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:600;cursor:pointer}.pdv-pro-total-row{display:flex;justify-content:space-between;color:#a79c91;font-family:"IBM Plex Mono",monospace;font-size:9px}.pdv-pro-total-row.discount{color:#8cc67d}.pdv-pro-total-row.grand{margin-top:7px;padding-top:10px;border-top:1px dashed rgba(246,232,214,.15);color:#f1e8dc;font-size:10px;font-weight:600}.pdv-pro-total-row.grand strong{color:#ff9a71;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:27px;line-height:.7}.pdv-pro-payments{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:12px 0 9px}.pdv-pro-payments button{display:grid;place-items:center;min-height:40px;border:1px solid rgba(246,232,214,.1);border-radius:4px;background:#24211d;color:#968c82;font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:600;cursor:pointer}.pdv-pro-payments button.active{border-color:rgba(255,90,31,.58);background:rgba(255,90,31,.13);color:#ffb18d}.pdv-pro-finish{width:100%;min-height:42px}.pdv-pro-note{display:block;margin-top:8px;color:#837970;font-size:8px;text-align:center}
 .pdv-pro-tables{margin-top:14px;padding:13px}.pdv-pro-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:11px}.pdv-pro-section-head h5{margin:0;color:#f1e6da;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:20px;font-weight:700;text-transform:uppercase}.pdv-pro-section-head p{margin:3px 0 0;color:#91877d;font-size:9px}.pdv-pro-table-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:7px}.pdv-pro-table{border:1px solid rgba(246,232,214,.09);border-radius:6px;padding:10px;background:#24211d;text-align:left;cursor:pointer;transition:all .16s ease}.pdv-pro-table:hover{border-color:rgba(255,90,31,.46);transform:translateY(-1px)}.pdv-pro-table .top{display:flex;justify-content:space-between;gap:8px}.pdv-pro-table strong{color:#eee4da;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:18px;text-transform:uppercase}.pdv-pro-table small{display:block;margin-top:8px;color:#93897f;font-family:"IBM Plex Mono",monospace;font-size:8px}.pdv-pro-table em{font-family:"IBM Plex Mono",monospace;font-size:8px;font-style:normal}.pdv-pro-table.free em{color:#9bd18e}.pdv-pro-table.busy{border-color:rgba(242,179,80,.32);background:linear-gradient(135deg,rgba(242,179,80,.09),#24211d)}.pdv-pro-table.busy em{color:#e9ba63}
 @media(max-width:1100px){.pdv-pro-products{grid-template-columns:repeat(2,minmax(0,1fr))}.pdv-pro-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:850px){.pdv-pro-layout{grid-template-columns:1fr}.pdv-pro-cart{position:static}.pdv-pro-rail{grid-template-columns:repeat(4,minmax(140px,1fr));overflow:auto;scrollbar-width:none}}@media(max-width:560px){.pdv-pro-header{align-items:flex-start;flex-direction:column}.pdv-pro-header .pdv-pro-button{width:100%}.pdv-pro-title{font-size:31px}.pdv-pro-toolbar{grid-template-columns:1fr}.pdv-pro-channels{justify-content:space-between}.pdv-pro-channels button{flex:1}.pdv-pro-products{gap:6px}.pdv-pro-product{min-height:124px;padding:9px}.pdv-pro-product h5{font-size:17px}.pdv-pro-context{grid-template-columns:1fr}.pdv-pro-payments{grid-template-columns:repeat(2,1fr)}}
+</style>
+<style id="accessibility-and-profile-overrides">
+  /* Contraste administrativo: os módulos legados ainda usam cartões claros inline. */
+  #salesPanel,#customersPanel,#motoboysPanel,#estoquePanel,#integracoesPanel,#financeiroPanel,#totemsPanel{color:#eee5da!important}
+  #estoquePanel h4,#integracoesPanel h4,#financeiroPanel h4,#totemsPanel h4,#estoquePanel h5,#integracoesPanel h5,#financeiroPanel h5,#totemsPanel h5{color:#f7eee5!important}
+  #estoquePanel .est-card,#estoquePanel .est-kpi,#estoquePanel .est-kpi-card,#estoquePanel .est-tab,#estoquePanel .est-table-wrap,#estoquePanel .est-empty{background:linear-gradient(145deg,#28231f,#191714)!important;color:#eee5da!important;border-color:rgba(246,232,214,.14)!important;box-shadow:0 10px 24px rgba(0,0,0,.14)!important}
+  #estoquePanel .est-card *:not(button):not(input):not(select):not(textarea),#estoquePanel .est-kpi *:not(button):not(input):not(select):not(textarea),#estoquePanel .est-kpi-card *:not(button):not(input):not(select):not(textarea){color:#d9cdc1!important}
+  #estoquePanel input,#estoquePanel select,#estoquePanel textarea{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
+  #estoquePanel table th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}
+  #estoquePanel table td{background:#1e1b18!important;color:#ded2c6!important;border-color:rgba(246,232,214,.08)!important}
+  #financeiroPanel .fin-card,#financeiroPanel .fin-kpi,#financeiroPanel .fin-tab,#financeiroPanel .fin-dre-row,#financeiroPanel .fin-dre-row.subtotal,#financeiroPanel [style*="background:#f9f9f9"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#eee5da!important;border-color:rgba(246,232,214,.14)!important}
+  #financeiroPanel .fin-card *:not(button):not(input):not(select):not(textarea):not(.fin-badge){color:#ded2c6!important}
+  #financeiroPanel .fin-card strong,#financeiroPanel .fin-kpi strong{color:#f7eee5!important}
+  #financeiroPanel .fin-kpi.positive strong{color:#8fdda4!important}#financeiroPanel .fin-kpi.negative strong{color:#ff9a70!important}
+  #financeiroPanel .fin-table th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}
+  #financeiroPanel .fin-table td{background:#1e1b18!important;color:#ded2c6!important;border-color:rgba(246,232,214,.08)!important}
+  #financeiroPanel .fin-form-row input,#financeiroPanel .fin-form-row select{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
+  #integracoesPanel .int-card,#integracoesPanel .int-kpi,#integracoesPanel .int-tab,#integracoesPanel th,#integracoesPanel [style*="background: white"],#integracoesPanel [style*="background:white"],#integracoesPanel [style*="background: #fff"],#integracoesPanel [style*="background:#fff"],#integracoesPanel [style*="background: #f9f9f9"],#integracoesPanel [style*="background:#f9f9f9"],#integracoesPanel [style*="background: #f5f5f5"],#integracoesPanel [style*="background:#f5f5f5"],#integracoesPanel [style*="background: #f8fafc"],#integracoesPanel [style*="background:#f8fafc"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#e5d9ce!important;border-color:rgba(246,232,214,.14)!important}
+  #integracoesPanel .int-card *:not(button):not(input):not(select):not(textarea),#integracoesPanel .int-kpi *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: white"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:white"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #fff"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#fff"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #f9f9f9"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#f9f9f9"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #f5f5f5"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#f5f5f5"] *:not(button):not(input):not(select):not(textarea){color:#e5d9ce!important}
+  #integracoesPanel .int-tab{background:#211f1b!important;color:#cbbcaf!important;border-color:rgba(246,232,214,.14)!important}#integracoesPanel .int-tab.active{background:#ff5a1f!important;color:#fff!important;border-color:#ff5a1f!important}#integracoesPanel th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}#integracoesPanel input,#integracoesPanel select,#integracoesPanel textarea{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
+  #financeiroPanel .fin-badge-pending{color:#24170b!important}
+  #settingsPanel #smartCouponAdminPanel [style*="background: white"],#settingsPanel #smartCouponAdminPanel [style*="background:white"],#settingsPanel #smartCouponAdminPanel [style*="background: #fff"],#settingsPanel #smartCouponAdminPanel [style*="background:#fff"],#settingsPanel #smartCouponAdminPanel [style*="background: #f9f9f9"],#settingsPanel #smartCouponAdminPanel [style*="background:#f9f9f9"],#settingsPanel #smartCouponAdminPanel [style*="background: #f5f5f5"],#settingsPanel #smartCouponAdminPanel [style*="background:#f5f5f5"],#settingsPanel #smartCouponAdminPanel [style*="background: #fff3e0"],#settingsPanel #smartCouponAdminPanel [style*="background:#fff3e0"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#e5d9ce!important;border-color:rgba(246,232,214,.14)!important}
+  #settingsPanel #smartCouponAdminPanel [style*="background: white"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:white"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #fff"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#fff"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #f9f9f9"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#f9f9f9"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #f5f5f5"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#f5f5f5"] *:not(button):not(input):not(select):not(textarea){color:#e5d9ce!important}
+  #settingsPanel #smartCouponAdminPanel h5,#settingsPanel #smartCouponAdminPanel h6{color:#f7eee5!important}
+  #settingsPanel #smartCouponAdminPanel input,#settingsPanel #smartCouponAdminPanel select,#settingsPanel #smartCouponAdminPanel textarea{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
+  #motoboysPanel .brasa-avatar{overflow:hidden}.brasa-avatar.brasa-avatar-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .motoboy-profile-identity{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:14px;border:1px solid rgba(255,135,83,.22);border-radius:10px;background:linear-gradient(135deg,rgba(255,90,31,.12),rgba(255,255,255,.025))}
+  .motoboy-profile-avatar{display:grid;flex:none;width:72px;height:72px;place-items:center;overflow:hidden;border:1px solid rgba(255,135,83,.42);border-radius:14px;background:rgba(255,90,31,.14);color:#ffb08a;font:700 28px "Barlow Condensed","Arial Narrow",sans-serif}
+  .motoboy-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}.motoboy-profile-copy{min-width:0}.motoboy-profile-copy small{display:block;color:#ff9d72;font:700 9px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.motoboy-profile-copy strong{display:block;margin-top:4px;color:#fff3e8;font-size:19px}.motoboy-profile-copy span{display:block;margin-top:4px;color:#b9aaa0;font-size:11px;line-height:1.45}.motoboy-profile-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.motoboy-profile-tag{padding:5px 7px;border:1px solid rgba(246,232,214,.14);border-radius:999px;color:#decfc2;font:700 9px "IBM Plex Mono",monospace}
+</style>
+<style id="motoboy-form-and-card-style">
+  .motoboy-form-card{width:min(620px,calc(100vw - 28px));padding:18px!important;background:linear-gradient(145deg,#28231f,#181613)!important;border-color:rgba(255,135,83,.28)!important}
+  .motoboy-form{display:grid;gap:11px}.motoboy-form-section{padding:13px;border:1px solid rgba(246,232,214,.1);border-radius:9px;background:rgba(8,8,7,.2)}
+  .motoboy-form-section-heading{display:flex;align-items:flex-start;gap:9px;margin-bottom:12px}.motoboy-form-section-heading>span{display:grid;width:21px;height:21px;place-items:center;flex:none;border:1px solid rgba(255,135,83,.5);border-radius:4px;color:#ffad88;font:8px "IBM Plex Mono",monospace}.motoboy-form-section-heading strong{display:block;color:#f5e9df;font-size:14px}.motoboy-form-section-heading small{display:block;margin-top:3px;color:#94887d;font-size:10px;line-height:1.4}
+  .motoboy-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.motoboy-form-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.motoboy-field-wide{grid-column:span 2}.motoboy-form .form-group{min-width:0;margin:0}.motoboy-form .form-group label{display:block;margin-bottom:5px;color:#cfc1b4;font:700 9px/1.3 "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase}.motoboy-form .form-group input{width:100%;min-height:38px;box-sizing:border-box;border:1px solid rgba(246,232,214,.14)!important;border-radius:5px!important;background:#1b1916!important;color:#f0e6dc!important;padding:0 10px!important;font-size:11px!important;outline:none}.motoboy-form .form-group input::placeholder{color:#776d64}.motoboy-form .form-group input:focus{border-color:rgba(255,135,83,.72)!important;box-shadow:0 0 0 3px rgba(255,90,31,.1)}
+  .motoboy-photo-upload{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:13px}.motoboy-photo-preview{display:grid;min-height:112px;place-items:center;align-content:center;gap:4px;overflow:hidden;border:1px dashed rgba(255,135,83,.42);border-radius:10px;background:#1b1916;color:#ffad88;text-align:center}.motoboy-photo-preview>span{font-size:26px;line-height:1}.motoboy-photo-preview strong{font-size:10px}.motoboy-photo-preview small{padding:0 7px;color:#8e8176;font-size:8px;line-height:1.25}.motoboy-photo-preview img{width:100%;height:112px;object-fit:cover}.motoboy-photo-remove{margin-top:2px;border:0;background:rgba(0,0,0,.55);color:#ffd0bb;font-size:9px;cursor:pointer}.motoboy-photo-copy p{margin:8px 0 0;color:#8f8379;font-size:10px;line-height:1.45}.motoboy-photo-button{display:inline-flex;align-items:center;min-height:32px;border:1px solid rgba(255,135,83,.42);border-radius:5px;padding:0 10px;background:rgba(255,90,31,.12);color:#ffb18d;font:700 9px "IBM Plex Mono",monospace;cursor:pointer}
+  .motoboy-form-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:4px}.motoboy-form-actions .pill,.motoboy-form-actions .btn{min-height:38px;padding:0 14px}.brasa-motoboy-identity{display:flex;align-items:center;gap:8px;min-height:39px;margin-top:11px;padding:8px;border:1px solid rgba(246,232,214,.09);border-radius:6px;background:rgba(255,255,255,.025)}.brasa-motoboy-identity-icon{display:grid;width:25px;height:25px;place-items:center;border:1px solid rgba(255,135,83,.3);border-radius:5px;background:rgba(255,90,31,.1);color:#ffad88;font-size:12px}.brasa-motoboy-identity strong{display:block;overflow:hidden;color:#e9ddd2;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.brasa-motoboy-identity small{display:block;margin-top:3px;color:#92867b;font:8px "IBM Plex Mono",monospace;text-transform:uppercase}.brasa-motoboy-card .brasa-card-actions button:not(.primary){min-height:30px;padding:0 9px}
+  @media(max-width:620px){.motoboy-form-grid-3{grid-template-columns:1fr 1fr}.motoboy-form-grid-3 .form-group:last-child{grid-column:span 2}}@media(max-width:460px){.motoboy-form-card{padding:13px!important}.motoboy-form-grid,.motoboy-form-grid-3{grid-template-columns:1fr}.motoboy-field-wide,.motoboy-form-grid-3 .form-group:last-child{grid-column:auto}.motoboy-photo-upload{grid-template-columns:96px minmax(0,1fr)}.motoboy-photo-preview,.motoboy-photo-preview img{min-height:96px;height:96px}}
+</style>
+
+<style id="menu-promotions-row-style">
+  #items > .menu-promotions-section{margin:0 0 16px;padding:12px 12px 8px;border:1px solid rgba(255,112,48,.38);border-radius:16px;background:linear-gradient(135deg,rgba(255,90,31,.13),rgba(255,187,83,.045) 52%,rgba(255,255,255,.025));box-shadow:0 10px 24px rgba(0,0,0,.16)}
+  #items .menu-promotions-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 10px}
+  #items .menu-promotions-kicker{display:block;color:#ff9b70;font:700 10px/1.1 "IBM Plex Mono",monospace;letter-spacing:.11em;text-transform:uppercase}
+  #items .menu-promotions-heading h3{margin:4px 0 0;color:#fff1e6;font-size:18px;line-height:1.05}
+  #items .menu-promotions-count{flex:none;padding:6px 9px;border:1px solid rgba(255,172,119,.3);border-radius:999px;background:rgba(255,90,31,.12);color:#ffc29f;font-size:10px;font-weight:700;white-space:nowrap}
+  #items .menu-promotions-grid{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;scrollbar-color:rgba(255,133,82,.65) rgba(255,255,255,.06);scrollbar-width:thin}
+  #items .menu-promotions-grid .menu-card{display:flex;flex:0 0 clamp(190px,24vw,270px);flex-direction:column;align-self:stretch;min-height:0;padding:10px;border:1px solid rgba(255,134,83,.42);background:linear-gradient(180deg,#fffdfb,#fff8f2);scroll-snap-align:start}
+  #items .menu-promotions-grid .menu-card:hover{border-color:#ff8c5e;box-shadow:0 10px 24px rgba(255,90,31,.2)}
+  #items .menu-promotions-grid .menu-card-img{display:block;width:100%;height:clamp(106px,13vw,150px);border-radius:11px;object-fit:cover}
+  #items .menu-promotions-grid .menu-card-body{display:flex;flex:1;flex-direction:column;padding:8px 4px 2px}
+  #items .menu-promotions-grid .menu-card-title{min-height:2.25em;margin:5px 0 4px;color:#2a211b;font-size:15px;line-height:1.12}
+  #items .menu-promotions-grid .product-promo-badge{order:initial;display:block;width:max-content;max-width:100%;overflow:hidden;padding:4px 8px;border-radius:999px;background:#18ad63;color:#fff;font-size:10px;font-weight:800;line-height:1.1;text-overflow:ellipsis;white-space:nowrap}
+  #items .menu-promotions-grid .menu-card-price{margin:7px 0 0;color:#df5428;font-size:16px;line-height:1.1}
+  #items .menu-promotions-grid .promo-current-price{color:#df5428;font-weight:800}
+  #items .menu-promotions-grid .promo-original-price{margin-left:5px;color:#8c817a;font-size:10px}
+  #items .menu-promotions-grid .menu-card-btn{width:100%;min-height:34px;margin-top:auto;padding:8px 10px;border-radius:9px;background:linear-gradient(135deg,#ff6a31,#ed4c1e);color:#fff;font-size:11px;font-weight:800}
+  @media (max-width:600px){
+    #items > .menu-promotions-section{margin-bottom:11px;padding:10px 8px 6px;border-radius:13px}
+    #items .menu-promotions-heading h3{font-size:15px}
+    #items .menu-promotions-count{padding:5px 7px;font-size:9px}
+    #items .menu-promotions-grid{gap:8px}
+    #items .menu-promotions-grid .menu-card{flex-basis:210px;padding:8px;border-radius:12px}
+    #items .menu-promotions-grid .menu-card-img{height:108px;border-radius:8px}
+    #items .menu-promotions-grid .menu-card-title{font-size:13px}
+  }
+</style>
+<style id="menu-promotions-same-size">
+  #items .menu-promotions-grid{align-items:stretch}
+  #items .menu-promotions-grid .menu-card{flex:0 0 var(--promo-card-width,calc((100% - 42px)/4));width:var(--promo-card-width,calc((100% - 42px)/4));height:var(--promo-card-height,auto);min-height:0;box-sizing:border-box;padding:12px;border:0;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+  #items .menu-promotions-grid .menu-card-img{flex:0 0 var(--promo-image-height,clamp(96px,12vw,140px));height:var(--promo-image-height,clamp(96px,12vw,140px));min-height:0;aspect-ratio:auto}
+  #items .menu-promotions-grid .menu-card-body{min-height:0;overflow:hidden;padding:9px 8px 8px}
+  @media(max-width:600px){#items .menu-promotions-grid .menu-card{flex-basis:var(--promo-card-width,calc((100% - 14px)/3));width:var(--promo-card-width,calc((100% - 14px)/3));padding:7px;border-radius:11px}#items .menu-promotions-grid .menu-card-img{height:var(--promo-image-height,clamp(88px,26vw,108px));border-radius:8px}#items .menu-promotions-grid .menu-card-body{padding:6px 3px 2px}}
+</style>
+<style id="menu-promotions-carousel-style">
+  #items .menu-promotions-carousel{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;align-items:center;gap:7px;min-width:0}
+  #items .menu-promotions-grid{min-width:0;overscroll-behavior-x:contain;scrollbar-width:none;scroll-behavior:smooth;touch-action:pan-x}
+  #items .menu-promotions-grid::-webkit-scrollbar{display:none}
+  #items .menu-promotions-nav{display:grid;width:32px;height:40px;place-items:center;border:1px solid rgba(255,172,119,.36);border-radius:10px;background:rgba(255,90,31,.13);color:#ffd0b5;font:400 27px/1 Arial,sans-serif;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+  #items .menu-promotions-nav:hover{border-color:rgba(255,188,139,.72);background:rgba(255,90,31,.27);transform:translateY(-1px)}
+  #items .menu-promotions-nav:focus-visible{outline:2px solid #ffc09a;outline-offset:2px}
+  #items .menu-promotions-loop-hint{margin:5px 2px 0;color:rgba(255,211,190,.72);font:9px/1.35 "IBM Plex Mono",monospace;letter-spacing:.02em;text-align:center}
+  @media(max-width:600px){#items .menu-promotions-carousel{grid-template-columns:26px minmax(0,1fr) 26px;gap:5px}#items .menu-promotions-nav{width:26px;height:35px;border-radius:8px;font-size:23px}#items .menu-promotions-loop-hint{font-size:8px}}
 </style>
 </head>
 <style id="brasa-settings-pro-style">
@@ -2726,6 +2809,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               
 <div id="ordersPanel" class="admin-panel">
   <h4>Pedidos em Tempo Real</h4>
+  <div id="ordersHistorySummary" class="orders-history-summary" role="status" aria-live="polite">Carregando os pedidos mais recentes…</div>
 
   <style>
     #kanbanWrapper {
@@ -2773,6 +2857,13 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     #ordersPanel .order-track-btn{border-color:rgba(3,169,244,.35);color:#64b5f6;background:rgba(3,169,244,.06);}
     #ordersPanel .order-track-btn:hover{background:rgba(3,169,244,.15);color:#90caf9;}
     #ordersPanel .order-card-expanded .order-details{color:#eadfd4;}
+    #ordersPanel .orders-history-summary{display:flex;align-items:center;min-height:32px;margin:0 0 10px;padding:8px 11px;border:1px solid rgba(255,219,190,.11);border-radius:8px;background:rgba(255,219,190,.045);color:#cbbcaf;font-size:11px;line-height:1.4}
+    #ordersPanel .orders-load-more-wrap{display:grid;gap:5px;margin:3px 0 1px;padding:10px 2px 2px;border-top:1px solid rgba(255,219,190,.12);text-align:center}
+    #ordersPanel .orders-load-more-btn{width:100%;min-height:36px;padding:8px 9px;border:1px solid rgba(255,143,97,.45);border-radius:7px;background:linear-gradient(135deg,rgba(255,90,31,.2),rgba(255,90,31,.08));color:#ffb18d;font:700 10px/1.2 "IBM Plex Mono",monospace;cursor:pointer;transition:transform .15s ease,background .15s ease,border-color .15s ease}
+    #ordersPanel .orders-load-more-btn:hover{transform:translateY(-1px);border-color:#ff8f61;background:rgba(255,90,31,.26)}
+    #ordersPanel .orders-load-more-note,#ordersPanel .orders-load-more-loading,#ordersPanel .orders-load-more-end{display:block;color:#9e8e81;font-size:9px;line-height:1.35}
+    #ordersPanel .orders-load-more-loading{color:#ffbd99}
+    #ordersPanel .orders-load-more-end{color:#88c99b}
   </style>
 
   <div id="kanbanWrapper">
@@ -3401,21 +3492,32 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     
     <!-- Modal Cadastro Motoboy -->
     <div class="modal" id="motoboyModal">
-      <div class="card" role="dialog" aria-modal="true" style="max-width:420px">
-        <h3>Cadastrar Motoboy</h3>
-        <form id="motoboyForm">
-          <div class="form-group">
-            <label for="motoboyName">Nome</label>
-            <input type="text" id="motoboyName" required>
-          </div>
-          <div class="form-group">
-            <label for="motoboyPhone">Número de WhatsApp</label>
-            <input type="tel" id="motoboyPhone" required placeholder="(11) 9XXXX-XXXX">
-          </div>
-          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
-            <button type="button" class="pill" onclick="document.getElementById('motoboyModal')?.classList.remove('open')">Cancelar</button>
-            <button type="submit" class="btn">Salvar Motoboy</button>
-          </div>
+      <div class="card motoboy-form-card" role="dialog" aria-modal="true" aria-labelledby="motoboyModalTitle" style="max-width:620px">
+        <div class="brasa-detail-header">
+          <div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Equipe de entrega</small><h3 id="motoboyModalTitle">Cadastrar motoboy</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">Esses dados ajudam o cliente a reconhecer o entregador com segurança.</p></div>
+          <button type="button" class="pill" onclick="document.getElementById('motoboyModal')?.classList.remove('open')" aria-label="Fechar">&times;</button>
+        </div>
+        <form id="motoboyForm" class="motoboy-form">
+          <section class="motoboy-form-section">
+            <div class="motoboy-form-section-heading"><span>01</span><div><strong>Identificação</strong><small>Nome e contato usados na operação.</small></div></div>
+            <div class="motoboy-form-grid">
+              <div class="form-group motoboy-field-wide"><label for="motoboyName">Nome completo</label><input type="text" id="motoboyName" required autocomplete="name" placeholder="Ex.: Lucas Almeida"></div>
+              <div class="form-group"><label for="motoboyPhone">WhatsApp</label><input type="tel" id="motoboyPhone" required autocomplete="tel" placeholder="(27) 99999-9999"></div>
+            </div>
+          </section>
+          <section class="motoboy-form-section">
+            <div class="motoboy-form-section-heading"><span>02</span><div><strong>Veículo</strong><small>Informações que aparecem para o cliente durante a entrega.</small></div></div>
+            <div class="motoboy-form-grid motoboy-form-grid-3">
+              <div class="form-group"><label for="motoboyVehicleModel">Modelo</label><input type="text" id="motoboyVehicleModel" autocomplete="organization-title" placeholder="Ex.: Honda CG 160"></div>
+              <div class="form-group"><label for="motoboyVehicleColor">Cor</label><input type="text" id="motoboyVehicleColor" placeholder="Ex.: Preta"></div>
+              <div class="form-group"><label for="motoboyVehiclePlate">Placa</label><input type="text" id="motoboyVehiclePlate" maxlength="8" autocomplete="off" placeholder="ABC1D23" style="text-transform:uppercase"></div>
+            </div>
+          </section>
+          <section class="motoboy-form-section">
+            <div class="motoboy-form-section-heading"><span>03</span><div><strong>Foto de perfil</strong><small>Uma imagem nítida aumenta a confiança do cliente.</small></div></div>
+            <div class="motoboy-photo-upload"><div id="motoboyPhotoPreview" class="motoboy-photo-preview"><span>+</span><strong>Adicionar foto</strong><small>JPG, PNG ou WEBP · até 5 MB</small></div><div class="motoboy-photo-copy"><label for="motoboyPhoto" class="motoboy-photo-button">Escolher imagem</label><input type="file" id="motoboyPhoto" accept="image/jpeg,image/png,image/webp" hidden><p>A foto será reduzida automaticamente para carregar rápido no acompanhamento da entrega.</p></div></div>
+          </section>
+          <div class="motoboy-form-actions"><button type="button" class="pill" onclick="document.getElementById('motoboyModal')?.classList.remove('open')">Cancelar</button><button type="submit" class="btn" id="motoboySubmitButton">Salvar cadastro</button></div>
         </form>
       </div>
     </div>
@@ -3440,6 +3542,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
           <div><h3 id="motoboyProfileName">Perfil do Motoboy</h3><p>Indicadores e histórico de entregas.</p></div>
           <button type="button" class="pill" onclick="window.closeMotoboyProfile?.()" aria-label="Fechar">&times;</button>
         </div>
+        <div id="motoboyProfileIdentity" class="motoboy-profile-identity"></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;">
           <div class="brasa-kpi-card"><span>Entregas totais</span><strong id="profileTotalEntregas">0</strong></div>
           <div class="brasa-kpi-card accent"><span>Média por entrega</span><strong id="profileMediaEntrega">R$ 0,00</strong></div>
@@ -3652,9 +3755,16 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
                   <button type="button" id="checkoutLocationButton" class="checkout-location-button">Sua localização</button>
                   <div id="checkoutLocationAddress" class="checkout-location-address">Ative sua localização para preencher o endereço automaticamente.</div>
                   <div id="checkoutLocationStatus" class="checkout-location-status" role="status" aria-live="polite">O endereço será confirmado a partir da posição do seu aparelho.</div>
+                  <div class="checkout-location-number-row">
+                    <div class="checkout-location-number-field">
+                      <label for="checkoutHouseNumber">Número da casa</label>
+                      <input type="text" id="checkoutHouseNumber" inputmode="numeric" autocomplete="address-line2" placeholder="Ex.: 123 ou S/N" maxlength="20" aria-describedby="checkoutHouseNumberHint">
+                    </div>
+                    <div id="checkoutHouseNumberHint" class="checkout-location-number-hint">Informe o número depois que a localização for confirmada.</div>
+                  </div>
                 </div>
                 <input type="hidden" id="checkoutAddress">
-                <div class="brasa-input-hint">A digitação manual foi desativada para evitar erros de rota e entrega.</div>
+                <div class="brasa-input-hint">A localização identifica a rua; o número da casa completa o endereço para a entrega.</div>
               </div>
 
               <div class="form-group" id="checkoutSavedAddressesGroup" style="display:none;">
@@ -4809,7 +4919,7 @@ const firebaseConfig = {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
 import { 
     getFirestore, collection, doc, getDoc, setDoc, updateDoc, 
-    addDoc, query, orderBy, onSnapshot, deleteDoc, getDocs, where, limit, serverTimestamp 
+    addDoc, query, orderBy, onSnapshot, deleteDoc, getDocs, where, limit, startAfter, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
 
 
@@ -4838,6 +4948,7 @@ window.deleteDoc = deleteDoc;
 window.getDocs = getDocs;
 window.where = where;
 window.limit = limit;
+window.startAfter = startAfter;
 window.serverTimestamp = serverTimestamp;
 // ===========================================================================================
 
@@ -4898,6 +5009,31 @@ let isAdmin = false;
 let salesChartInstance = null;
 let lastPendingCount = 0; // Para notificação
 
+// O painel administrativo trabalha com uma janela limitada em tempo real.
+// O restante do histórico só é buscado quando o operador pede explicitamente.
+const ADMIN_ORDERS_REALTIME_PAGE_SIZE = 24;
+const ADMIN_ORDERS_HISTORY_PAGE_SIZE = 24;
+let adminOrdersLivePage = [];
+let adminOrdersHistoryPage = [];
+let adminOrdersHistoryCursor = null;
+let adminOrdersHistoryHasMore = false;
+let adminOrdersHistoryLoading = false;
+let adminOrdersHistoryError = '';
+let adminOrdersRealtimeInitialized = false;
+
+function adminOrderDateValue(value) {
+  if (value?.toMillis) return value.toMillis();
+  if (value?.toDate) return value.toDate().getTime();
+  const parsed = Date.parse(String(value || ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function mergeAdminOrdersPages(livePage, historyPage) {
+  const byId = new Map();
+  (historyPage || []).forEach(order => byId.set(String(order.id), order));
+  (livePage || []).forEach(order => byId.set(String(order.id), order));
+  return [...byId.values()].sort((a, b) => adminOrderDateValue(b.createdAt) - adminOrderDateValue(a.createdAt));
+}
 
 const $ = sel => document.querySelector(sel);
 
@@ -5025,11 +5161,23 @@ async function saveMenuData() {
  */
 function setupRealtimeOrdersListener() {
     // Busca todos os pedidos, ordenados pelo mais recente
-    const q = query(ordersCollectionRef, orderBy("createdAt", "desc"));
+    const q = query(ordersCollectionRef, orderBy("createdAt", "desc"), limit(ADMIN_ORDERS_REALTIME_PAGE_SIZE));
 
     // onSnapshot: mantém a conexão aberta para updates em tempo real
     onSnapshot(q, (snapshot) => {
         const newOrders = ((snapshot.docs || [])).map(doc => ({ id: doc.id, ...doc.data() }));
+        if (adminOrdersRealtimeInitialized) {
+            const incomingIds = new Set(newOrders.map(order => String(order.id)));
+            const evictedFromLiveWindow = adminOrdersLivePage.filter(order => !incomingIds.has(String(order.id)));
+            const knownHistoryIds = new Set(adminOrdersHistoryPage.map(order => String(order.id)));
+            adminOrdersHistoryPage = [...adminOrdersHistoryPage, ...evictedFromLiveWindow.filter(order => !knownHistoryIds.has(String(order.id)))];
+        }
+        adminOrdersLivePage = newOrders;
+        if (!adminOrdersRealtimeInitialized) {
+            adminOrdersRealtimeInitialized = true;
+            adminOrdersHistoryCursor = snapshot.docs?.[snapshot.docs.length - 1] || null;
+            adminOrdersHistoryHasMore = (snapshot.docs || []).length === ADMIN_ORDERS_REALTIME_PAGE_SIZE;
+        }
         
         // Verifica se há novos pedidos pendentes APENAS se for Admin
         if (isAdmin && !window.__garcomSession) {
@@ -5087,7 +5235,7 @@ function setupRealtimeOrdersListener() {
             lastPendingCount = currentPending;
         }
 
-        orders = newOrders;
+        orders = mergeAdminOrdersPages(adminOrdersLivePage, adminOrdersHistoryPage);
         window.orders = orders;
         window.__ordersVersion = (window.__ordersVersion || 0) + 1;
         notifyCustomerDecision(newOrders);
@@ -5235,35 +5383,136 @@ document.getElementById('btnOpenMotoboyModal')?.addEventListener('click', () => 
   document.getElementById('motoboyModal').classList.add('open');
 });
 
-// Cadastro do motoboy — handler único do módulo profissional.
-document.getElementById('motoboyForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const nameInput = document.getElementById('motoboyName');
-  const phoneInput = document.getElementById('motoboyPhone');
-  const name = nameInput?.value.trim() || '';
-  const phone = phoneInput?.value.trim() || '';
-  if (!name) {
-    alert('Informe o nome do motoboy');
-    nameInput?.focus();
+// Cadastro profissional de motoboy — dados operacionais e identificação do cliente.
+let motoboyPhotoDataUrl = '';
+
+function setMotoboyPhotoPreview(value) {
+  const preview = document.getElementById('motoboyPhotoPreview');
+  if (!preview) return;
+  preview.innerHTML = '';
+  if (value) {
+    const image = document.createElement('img');
+    image.src = value;
+    image.alt = 'Prévia da foto do motoboy';
+    preview.appendChild(image);
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'motoboy-photo-remove';
+    remove.textContent = 'Remover foto';
+    remove.addEventListener('click', () => { motoboyPhotoDataUrl = ''; setMotoboyPhotoPreview(''); });
+    preview.appendChild(remove);
     return;
   }
+  preview.innerHTML = '<span>+</span><strong>Adicionar foto</strong><small>JPG, PNG ou WEBP · até 5 MB</small>';
+}
 
+function compressMotoboyPhoto(file) {
+  if (!file) return Promise.resolve('');
+  const accepted = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!accepted.includes(file.type)) return Promise.reject(new Error('Escolha uma imagem JPG, PNG ou WEBP.'));
+  if (file.size > 5 * 1024 * 1024) return Promise.reject(new Error('A foto deve ter no máximo 5 MB.'));
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Não foi possível ler a foto.'));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error('A imagem não pôde ser carregada.'));
+      image.onload = () => {
+        const maxSize = 480;
+        const ratio = Math.min(1, maxSize / Math.max(image.width || maxSize, image.height || maxSize));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round((image.width || maxSize) * ratio));
+        canvas.height = Math.max(1, Math.round((image.height || maxSize) * ratio));
+        const context = canvas.getContext('2d');
+        if (!context) return reject(new Error('Seu navegador não conseguiu preparar a foto.'));
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('motoboyPhoto')?.addEventListener('change', async event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
   try {
-    await addDoc(motoboysCollectionRef, {
-      name,
-      phone,
-      createdAt: Date.now(),
-      status: 'offline',
-      entregasHoje: 0
-    });
-    document.getElementById('motoboyForm')?.reset();
+    motoboyPhotoDataUrl = await compressMotoboyPhoto(file);
+    setMotoboyPhotoPreview(motoboyPhotoDataUrl);
+  } catch (error) {
+    event.target.value = '';
+    motoboyPhotoDataUrl = '';
+    setMotoboyPhotoPreview('');
+    alert(error.message || 'Não foi possível usar esta foto.');
+  }
+});
+
+function openMotoboyEditor(id = '') {
+  const form = document.getElementById('motoboyForm');
+  if (!form) return;
+  form.reset();
+  delete form.dataset.editingId;
+  motoboyPhotoDataUrl = '';
+  setMotoboyPhotoPreview('');
+  const title = document.getElementById('motoboyModalTitle');
+  const submit = document.getElementById('motoboySubmitButton');
+  const source = Array.isArray(window.motoboys) ? window.motoboys : (typeof motoboys !== 'undefined' ? motoboys : []);
+  const current = id ? source.find(item => String(item.id) === String(id)) : null;
+  if (current) {
+    form.dataset.editingId = current.id;
+    document.getElementById('motoboyName').value = current.name || '';
+    document.getElementById('motoboyPhone').value = current.phone || '';
+    document.getElementById('motoboyVehicleModel').value = current.vehicleModel || current.vehicle || '';
+    document.getElementById('motoboyVehicleColor').value = current.vehicleColor || current.color || '';
+    document.getElementById('motoboyVehiclePlate').value = current.vehiclePlate || current.plate || '';
+    motoboyPhotoDataUrl = current.photo || current.photoURL || current.avatarUrl || '';
+    setMotoboyPhotoPreview(motoboyPhotoDataUrl);
+    if (title) title.textContent = 'Editar cadastro';
+    if (submit) submit.textContent = 'Salvar alterações';
+  } else {
+    if (title) title.textContent = 'Cadastrar motoboy';
+    if (submit) submit.textContent = 'Salvar cadastro';
+  }
+  document.getElementById('motoboyModal')?.classList.add('open');
+}
+window.openMotoboyEditor = openMotoboyEditor;
+
+document.getElementById('btnOpenMotoboyModal')?.addEventListener('click', () => openMotoboyEditor());
+
+document.getElementById('motoboyForm')?.addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const nameInput = document.getElementById('motoboyName');
+  const name = nameInput?.value.trim() || '';
+  if (!name) { alert('Informe o nome completo do motoboy.'); nameInput?.focus(); return; }
+  const payload = {
+    name,
+    phone: document.getElementById('motoboyPhone')?.value.trim() || '',
+    vehicleModel: document.getElementById('motoboyVehicleModel')?.value.trim() || '',
+    vehicleColor: document.getElementById('motoboyVehicleColor')?.value.trim() || '',
+    vehiclePlate: (document.getElementById('motoboyVehiclePlate')?.value.trim() || '').toUpperCase(),
+    photo: motoboyPhotoDataUrl || null,
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    const editingId = form.dataset.editingId;
+    if (editingId) {
+      await updateDoc(doc(motoboysCollectionRef, editingId), payload);
+    } else {
+      await addDoc(motoboysCollectionRef, { ...payload, createdAt: Date.now(), status: 'offline', entregasHoje: 0 });
+    }
+    form.reset();
+    delete form.dataset.editingId;
+    motoboyPhotoDataUrl = '';
+    setMotoboyPhotoPreview('');
     document.getElementById('motoboyModal')?.classList.remove('open');
     await fetchMotoboys();
     renderMotoboyDashboard?.();
-    alert('Motoboy cadastrado com sucesso!');
-  } catch (err) {
-    console.error('Erro ao salvar motoboy:', err);
-    alert(`Falha ao salvar motoboy${err?.message ? `: ${err.message}` : '.'}`);
+    alert(editingId ? 'Cadastro do motoboy atualizado com sucesso!' : 'Motoboy cadastrado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar cadastro de motoboy:', error);
+    alert(`Falha ao salvar cadastro${error?.message ? `: ${error.message}` : '.'}`);
   }
 });
 
@@ -5310,6 +5559,11 @@ window._updateOrderMotoboy = async function(orderId, motoboyId) {
     const update = {
       motoboyId: safeMotoboyId,
       motoboyName: selectedMotoboy?.name || '',
+      motoboyPhone: selectedMotoboy?.phone || '',
+      motoboyPhoto: selectedMotoboy?.photo || selectedMotoboy?.photoURL || selectedMotoboy?.avatarUrl || '',
+      motoboyVehicleModel: selectedMotoboy?.vehicleModel || selectedMotoboy?.vehicle || '',
+      motoboyVehicleColor: selectedMotoboy?.vehicleColor || selectedMotoboy?.color || '',
+      motoboyPlate: selectedMotoboy?.vehiclePlate || selectedMotoboy?.plate || '',
       updatedAt: changedAt
     };
     if (safeMotoboyId) {
@@ -5840,17 +6094,21 @@ function getLocalSession(){
 function normalizeSavedAddressRecords(user) {
     const rawRecords = Array.isArray(user?.savedAddressRecords) ? user.savedAddressRecords : [];
     const records = rawRecords.map((record, index) => {
-        const address = String(record?.address || '').trim();
+        const baseAddress = String(record?.baseAddress || '').trim();
+        const houseNumber = baseAddress ? normalizeCheckoutHouseNumber(record?.houseNumber) : '';
+        const address = String(record?.address || composeCheckoutAddress(baseAddress, houseNumber)).trim();
         const latitude = Number(record?.latitude);
         const longitude = Number(record?.longitude);
         if (!address || !Number.isFinite(latitude) || !Number.isFinite(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) return null;
-        return { id: String(record?.id || `location_${index}_${latitude.toFixed(6)}_${longitude.toFixed(6)}`), address, latitude, longitude, accuracy: Number.isFinite(Number(record?.accuracy)) ? Number(record.accuracy) : null, updatedAt: record?.updatedAt || '', source: 'browser_geolocation' };
+        return { id: String(record?.id || `location_${index}_${latitude.toFixed(6)}_${longitude.toFixed(6)}`), address, baseAddress, houseNumber, latitude, longitude, accuracy: Number.isFinite(Number(record?.accuracy)) ? Number(record.accuracy) : null, updatedAt: record?.updatedAt || '', source: 'browser_geolocation' };
     }).filter(Boolean);
-    const legacyAddress = String(user?.deliveryAddress || '').trim();
+    const legacyBaseAddress = String(user?.deliveryAddressBase || '').trim();
+    const legacyHouseNumber = legacyBaseAddress ? normalizeCheckoutHouseNumber(user?.deliveryHouseNumber) : '';
+    const legacyAddress = String(user?.deliveryAddress || composeCheckoutAddress(legacyBaseAddress, legacyHouseNumber)).trim();
     const legacyLatitude = Number(user?.deliveryLatitude);
     const legacyLongitude = Number(user?.deliveryLongitude);
     if (legacyAddress && Number.isFinite(legacyLatitude) && Number.isFinite(legacyLongitude) && !records.some(record => record.address.toLowerCase() === legacyAddress.toLowerCase())) {
-        records.unshift({ id:`current_${legacyLatitude.toFixed(6)}_${legacyLongitude.toFixed(6)}`, address:legacyAddress, latitude:legacyLatitude, longitude:legacyLongitude, accuracy:Number.isFinite(Number(user?.deliveryAccuracy)) ? Number(user.deliveryAccuracy) : null, updatedAt:user?.deliveryLocationUpdatedAt || '', source:'browser_geolocation' });
+        records.unshift({ id:`current_${legacyLatitude.toFixed(6)}_${legacyLongitude.toFixed(6)}`, address:legacyAddress, baseAddress:legacyBaseAddress, houseNumber:legacyHouseNumber, latitude:legacyLatitude, longitude:legacyLongitude, accuracy:Number.isFinite(Number(user?.deliveryAccuracy)) ? Number(user.deliveryAccuracy) : null, updatedAt:user?.deliveryLocationUpdatedAt || '', source:'browser_geolocation' });
     }
     const seen = new Set();
     return records.filter(record => { const key = record.address.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true; }).slice(0, 10);
@@ -5874,6 +6132,8 @@ function sanitizeLocalUser(user){
         savedAddresses: savedAddressRecords.map(record => record.address),
         savedAddressRecords,
         deliveryAddress: String(user.deliveryAddress || '').trim(),
+        deliveryAddressBase: String(user.deliveryAddressBase || '').trim(),
+        deliveryHouseNumber: user.deliveryAddressBase ? normalizeCheckoutHouseNumber(user.deliveryHouseNumber) : '',
         deliveryLatitude: Number.isFinite(Number(user.deliveryLatitude)) ? Number(user.deliveryLatitude) : null,
         deliveryLongitude: Number.isFinite(Number(user.deliveryLongitude)) ? Number(user.deliveryLongitude) : null,
         deliveryAccuracy: Number.isFinite(Number(user.deliveryAccuracy)) ? Number(user.deliveryAccuracy) : null,
@@ -6073,7 +6333,9 @@ async function finalizeOrder(e) {
   let deliveryAreaId = "";
   let deliveryDistanceKm = null;
   const deliveryCoordinates = checkoutLocationCoordinates();
-  const deliveryAddress = String(document.querySelector("#checkoutAddress")?.value || '').trim();
+  const deliveryAddressBase = String(checkoutLocationBaseAddress || '').trim();
+  const deliveryHouseNumber = normalizeCheckoutHouseNumber(document.querySelector('#checkoutHouseNumber')?.value);
+  const deliveryAddress = composeCheckoutAddress(deliveryAddressBase, deliveryHouseNumber);
   
   // Verifica se o modo automático por raio está ativado
   if (DATA.restaurant.useRadiusDelivery && hasAutoDeliveryQuote()) {
@@ -6131,9 +6393,14 @@ async function finalizeOrder(e) {
   // Pagamentos online entram em uma etapa separada: a loja só recebe o pedido após a confirmação.
   const paymentPolicy = window.PaymentHub?.getPolicy?.(paymentMethod) || {
     requiresOnlineConfirmation: false,
+    ready: true,
     provider: 'manual',
     providerLabel: 'Pagamento manual'
   };
+  if (paymentPolicy.requiresOnlineConfirmation && paymentPolicy.ready === false) {
+    alert('O pagamento online desta loja ainda não está conectado. Escolha pagamento na entrega ou conecte a conta no painel administrativo.');
+    return;
+  }
 
   // NOVO: Calcula ETA de preparo baseado na configuração
   const preparationTime = DATA.restaurant.preparationTime || 30;
@@ -6145,6 +6412,8 @@ async function finalizeOrder(e) {
     userName: document.querySelector("#checkoutName").value.trim(),
     userPhone: document.querySelector("#checkoutPhone").value.trim(),
     address: deliveryAddress,
+    deliveryAddressBase: deliveryAddressBase,
+    deliveryHouseNumber: deliveryHouseNumber,
     deliveryLatitude: deliveryCoordinates?.latitude ?? null,
     deliveryLongitude: deliveryCoordinates?.longitude ?? null,
     deliveryLocationAccuracy: Number.isFinite(Number(window.autoDeliveryAccuracy)) ? Number(window.autoDeliveryAccuracy) : (Number.isFinite(Number(currentUser?.deliveryAccuracy)) ? Number(currentUser.deliveryAccuracy) : null),
@@ -6203,7 +6472,7 @@ async function finalizeOrder(e) {
   
   try {
       const docRef = await addDoc(ordersCollectionRef, newOrder);
-      if (deliveryCoordinates) persistCustomerDeliveryLocation({ address: deliveryAddress, latitude: deliveryCoordinates.latitude, longitude: deliveryCoordinates.longitude, accuracy: window.autoDeliveryAccuracy || currentUser?.deliveryAccuracy, updatedAt: window.autoDeliveryLocationUpdatedAt });
+      if (deliveryCoordinates) persistCustomerDeliveryLocation({ address: deliveryAddress, baseAddress: deliveryAddressBase, houseNumber: deliveryHouseNumber, latitude: deliveryCoordinates.latitude, longitude: deliveryCoordinates.longitude, accuracy: window.autoDeliveryAccuracy || currentUser?.deliveryAccuracy, updatedAt: window.autoDeliveryLocationUpdatedAt });
       
       // Incrementa o contador de uso do cupom
       if (appliedCoupon) {
@@ -6546,7 +6815,10 @@ function renderProfileAddresses() {
 
 function updateCurrentUserAddressRecord(record) {
   if (!currentUser || !record) return false;
-  const patch = { deliveryAddress:record.address, deliveryLatitude:record.latitude, deliveryLongitude:record.longitude, deliveryAccuracy:record.accuracy ?? null, deliveryLocationUpdatedAt:record.updatedAt || new Date().toISOString(), savedAddressRecords:confirmedSavedAddressRecords(currentUser), savedAddresses:confirmedSavedAddressRecords(currentUser).map(item => item.address) };
+  const normalizedRecords = confirmedSavedAddressRecords(currentUser);
+  const baseAddress = String(record.baseAddress || '').trim();
+  const houseNumber = baseAddress ? normalizeCheckoutHouseNumber(record.houseNumber) : '';
+  const patch = { deliveryAddress:record.address, deliveryAddressBase:baseAddress, deliveryHouseNumber:houseNumber, deliveryLatitude:record.latitude, deliveryLongitude:record.longitude, deliveryAccuracy:record.accuracy ?? null, deliveryLocationUpdatedAt:record.updatedAt || new Date().toISOString(), savedAddressRecords:normalizedRecords, savedAddresses:normalizedRecords.map(item => item.address) };
   currentUser = { ...currentUser, ...patch };
   window.currentUser = currentUser;
   const userToUpdate = Array.isArray(users) ? users.find(user => String(user.id) === String(currentUser.id)) : null;
@@ -6572,12 +6844,12 @@ function removeUserAddress(index) {
   currentUser = { ...currentUser, savedAddressRecords:remaining, savedAddresses:remaining.map(record => record.address) };
   if (activeMatches) {
     const next = remaining[0];
-    if (next) { currentUser.deliveryAddress = next.address; currentUser.deliveryLatitude = next.latitude; currentUser.deliveryLongitude = next.longitude; currentUser.deliveryAccuracy = next.accuracy; currentUser.deliveryLocationUpdatedAt = next.updatedAt || ''; }
-    else { currentUser.deliveryAddress = ''; currentUser.deliveryLatitude = null; currentUser.deliveryLongitude = null; currentUser.deliveryAccuracy = null; currentUser.deliveryLocationUpdatedAt = ''; }
+    if (next) { currentUser.deliveryAddress = next.address; currentUser.deliveryAddressBase = next.baseAddress || ''; currentUser.deliveryHouseNumber = next.baseAddress ? normalizeCheckoutHouseNumber(next.houseNumber) : ''; currentUser.deliveryLatitude = next.latitude; currentUser.deliveryLongitude = next.longitude; currentUser.deliveryAccuracy = next.accuracy; currentUser.deliveryLocationUpdatedAt = next.updatedAt || ''; }
+    else { currentUser.deliveryAddress = ''; currentUser.deliveryAddressBase = ''; currentUser.deliveryHouseNumber = ''; currentUser.deliveryLatitude = null; currentUser.deliveryLongitude = null; currentUser.deliveryAccuracy = null; currentUser.deliveryLocationUpdatedAt = ''; }
   }
   window.currentUser = currentUser;
   const userToUpdate = Array.isArray(users) ? users.find(user => String(user.id) === String(currentUser.id)) : null;
-  if (userToUpdate) Object.assign(userToUpdate, { savedAddressRecords:currentUser.savedAddressRecords, savedAddresses:currentUser.savedAddresses, deliveryAddress:currentUser.deliveryAddress, deliveryLatitude:currentUser.deliveryLatitude, deliveryLongitude:currentUser.deliveryLongitude, deliveryAccuracy:currentUser.deliveryAccuracy, deliveryLocationUpdatedAt:currentUser.deliveryLocationUpdatedAt });
+  if (userToUpdate) Object.assign(userToUpdate, { savedAddressRecords:currentUser.savedAddressRecords, savedAddresses:currentUser.savedAddresses, deliveryAddress:currentUser.deliveryAddress, deliveryAddressBase:currentUser.deliveryAddressBase, deliveryHouseNumber:currentUser.deliveryHouseNumber, deliveryLatitude:currentUser.deliveryLatitude, deliveryLongitude:currentUser.deliveryLongitude, deliveryAccuracy:currentUser.deliveryAccuracy, deliveryLocationUpdatedAt:currentUser.deliveryLocationUpdatedAt });
   if (typeof saveUsers === 'function') saveUsers();
   if (typeof saveLocalSession === 'function') saveLocalSession(currentUser);
   renderProfileAddresses();
@@ -6966,6 +7238,8 @@ function renderCategories(){
 }
 
 
+let promotionCardResizeObserver = null;
+
 function renderItems(){
     const itemsEl = document.querySelector("#items");
     if (!itemsEl) return;
@@ -7042,34 +7316,158 @@ function renderItems(){
     }
 
     // === CLIENTE: layout tipo iFood ===
-    if (items.length === 0) {
-        itemsEl.innerHTML = '<div class="small" style="color:var(--muted); text-align:center;">Nenhum item nesta categoria.</div>';
-        return;
-    }
-
-    const grid = document.createElement('div');
-    grid.classList.add('menu-grid');
-    items.forEach(item => {
+    const renderCustomerCard = (item) => {
+        const promotion = getItemPromotion(item);
         const card = document.createElement('div');
         card.classList.add('menu-card');
+        if (promotion) card.classList.add('menu-card-promotion');
+        card.dataset.itemId = item.id;
         card.innerHTML = `
             <img src="${item.img || blankSVG()}" alt="${item.name}" class="menu-card-img">
             <div class="menu-card-body">
                 <h3 class="menu-card-title">${item.name}</h3>
-                ${getItemPromotion(item) ? `<span class="product-promo-badge">-${getItemPromotion(item).discountPercent}% OFF</span>` : ''}
-                <p class="menu-card-price">${getItemPromotion(item) ? `<span class="promo-current-price">${formatBRL(getItemPromotion(item).price)}</span> <del class="promo-original-price">${formatBRL(item.price)}</del>` : formatBRL(item.price)}</p>
+                ${promotion ? `<span class="product-promo-badge">-${promotion.discountPercent}% OFF</span>` : ''}
+                <p class="menu-card-price">${promotion ? `<span class="promo-current-price">${formatBRL(promotion.price)}</span> <del class="promo-original-price">${formatBRL(item.price)}</del>` : formatBRL(item.price)}</p>
                 <button class="btn menu-card-btn" data-id="${item.id}" data-action="add-to-cart">Comprar</button>
             </div>
         `;
-        grid.appendChild(card);
-    });
-    itemsEl.appendChild(grid);
+        return card;
+    };
 
-    itemsEl.querySelectorAll('[data-action=\"add-to-cart\"]').forEach(btn => {
-        btn.addEventListener('click', (e) => handleItemAction('add-to-cart', e.target.dataset.id));
+    const promotionalItems = (DATA.items || []).filter(item => !item.isPaused && getItemPromotion(item));
+    const regularItems = items.filter(item => !getItemPromotion(item));
+
+    if (promotionalItems.length) {
+        const promotionsSection = document.createElement('section');
+        promotionsSection.className = 'menu-promotions-section';
+        promotionsSection.setAttribute('aria-label', 'Ofertas em destaque');
+        promotionsSection.innerHTML = `
+          <div class="menu-promotions-heading">
+            <div><span class="menu-promotions-kicker">OFERTAS DA CASA</span><h3>Promoções em destaque</h3></div>
+            <span class="menu-promotions-count">${promotionalItems.length} ${promotionalItems.length === 1 ? 'oferta' : 'ofertas'}</span>
+          </div>
+          <div class="menu-promotions-carousel" data-promo-carousel="true">
+            <button type="button" class="menu-promotions-nav" data-promo-nav="-1" aria-label="Promoção anterior">‹</button>
+            <div class="menu-promotions-grid" tabindex="0" aria-label="Carrossel de promoções"></div>
+            <button type="button" class="menu-promotions-nav" data-promo-nav="1" aria-label="Próxima promoção">›</button>
+          </div>
+          <div class="menu-promotions-loop-hint">Arraste para os lados · o carrossel retorna ao início automaticamente</div>`;
+        const promoGrid = promotionsSection.querySelector('.menu-promotions-grid');
+        const promoCopies = Math.max(5, Math.min(8, Math.ceil(900 / Math.max(210, promotionalItems.length * 210)) + 3));
+        for (let copyIndex = 0; copyIndex < promoCopies; copyIndex += 1) {
+          promotionalItems.forEach(item => {
+            const card = renderCustomerCard(item);
+            card.dataset.promoCopy = String(copyIndex);
+            promoGrid.appendChild(card);
+          });
+        }
+        promoGrid.dataset.promoCopies = String(promoCopies);
+        promoGrid.dataset.promoCount = String(promotionalItems.length);
+        itemsEl.appendChild(promotionsSection);
+    }
+
+    if (regularItems.length) {
+        const grid = document.createElement('div');
+        grid.classList.add('menu-grid');
+        regularItems.forEach(item => grid.appendChild(renderCustomerCard(item)));
+        itemsEl.appendChild(grid);
+    } else if (!promotionalItems.length) {
+        itemsEl.innerHTML = '<div class="small" style="color:var(--muted); text-align:center;">Nenhum item nesta categoria.</div>';
+    }
+
+        itemsEl.querySelectorAll('[data-action="add-to-cart"]').forEach(btn => {
+        btn.addEventListener('click', (e) => handleItemAction('add-to-cart', e.currentTarget.dataset.id));
     });
+
+    if (promotionCardResizeObserver) {
+        promotionCardResizeObserver.disconnect();
+        promotionCardResizeObserver = null;
+    }
+
+    const promotionsGrid = itemsEl.querySelector('.menu-promotions-grid');
+    const regularGrid = itemsEl.querySelector(':scope > .menu-grid');
+    const regularReferenceCard = regularGrid?.querySelector('.menu-card');
+    const syncPromotionCardDimensions = () => {
+        if (!promotionsGrid?.isConnected) return;
+        if (regularReferenceCard?.isConnected) {
+            const referenceRect = regularReferenceCard.getBoundingClientRect();
+            const firstGridTrack = getComputedStyle(regularGrid).gridTemplateColumns.split(/\s+/)[0];
+            const measuredWidth = /^\d+(?:\.\d+)?px$/.test(firstGridTrack) ? firstGridTrack : `${referenceRect.width}px`;
+            if (referenceRect.width > 0) promotionsGrid.style.setProperty('--promo-card-width', measuredWidth);
+            if (referenceRect.height > 0) promotionsGrid.style.setProperty('--promo-card-height', `${referenceRect.height}px`);
+            const imageRect = regularReferenceCard.querySelector('.menu-card-img')?.getBoundingClientRect();
+            if (imageRect?.height > 0) promotionsGrid.style.setProperty('--promo-image-height', `${imageRect.height}px`);
+        } else {
+            promotionsGrid.style.removeProperty('--promo-card-width');
+            promotionsGrid.style.removeProperty('--promo-card-height');
+            promotionsGrid.style.removeProperty('--promo-image-height');
+        }
+    };
+    syncPromotionCardDimensions();
+    window.requestAnimationFrame(syncPromotionCardDimensions);
+    window.setTimeout(syncPromotionCardDimensions, 100);
+    if (promotionsGrid && regularGrid && window.ResizeObserver) {
+        promotionCardResizeObserver = new ResizeObserver(syncPromotionCardDimensions);
+        promotionCardResizeObserver.observe(regularGrid);
+        if (regularReferenceCard) promotionCardResizeObserver.observe(regularReferenceCard);
+    }
+
+    if (promotionsGrid) {
+        const carousel = promotionsGrid.closest('[data-promo-carousel="true"]');
+        const cards = [...promotionsGrid.querySelectorAll('.menu-card')];
+        const promoCount = Number(promotionsGrid.dataset.promoCount) || 0;
+        const promoCopies = Number(promotionsGrid.dataset.promoCopies) || 0;
+        let copyDistance = 0;
+        let wrapTimer = 0;
+
+        const measurePromoLoop = () => {
+            if (!promotionsGrid.isConnected || !promoCount || cards.length < promoCount * 2) return;
+            const first = cards[0]?.getBoundingClientRect();
+            const nextCopyFirst = cards[promoCount]?.getBoundingClientRect();
+            if (!first || !nextCopyFirst || nextCopyFirst.left <= first.left) return;
+            copyDistance = nextCopyFirst.left - first.left;
+            const middleCopy = Math.floor(promoCopies / 2);
+            const maxScroll = Math.max(0, promotionsGrid.scrollWidth - promotionsGrid.clientWidth);
+            if (!promotionsGrid.dataset.promoLoopStarted && copyDistance > 0) {
+                promotionsGrid.scrollLeft = Math.min(copyDistance * middleCopy, Math.max(0, maxScroll - copyDistance));
+                promotionsGrid.dataset.promoLoopStarted = 'true';
+            }
+        };
+
+        const keepPromoLoopContinuous = () => {
+            if (!copyDistance || !promoCopies) return;
+            const maxScroll = Math.max(0, promotionsGrid.scrollWidth - promotionsGrid.clientWidth);
+            const lowerLimit = copyDistance;
+            const upperLimit = Math.max(lowerLimit, maxScroll - copyDistance);
+            if (promotionsGrid.scrollLeft < lowerLimit) promotionsGrid.scrollLeft += copyDistance;
+            else if (promotionsGrid.scrollLeft > upperLimit) promotionsGrid.scrollLeft -= copyDistance;
+        };
+
+        const movePromoCarousel = (direction) => {
+            measurePromoLoop();
+            const first = cards[0]?.getBoundingClientRect();
+            const second = cards[1]?.getBoundingClientRect();
+            const step = second && first ? Math.max(1, second.left - first.left) : 220;
+            promotionsGrid.scrollBy({ left: Number(direction) * step, behavior: 'smooth' });
+        };
+
+        window.requestAnimationFrame(measurePromoLoop);
+        window.setTimeout(measurePromoLoop, 120);
+        promotionsGrid.addEventListener('scroll', () => {
+            window.clearTimeout(wrapTimer);
+            wrapTimer = window.setTimeout(keepPromoLoopContinuous, 90);
+        }, { passive: true });
+        promotionsGrid.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                movePromoCarousel(event.key === 'ArrowRight' ? 1 : -1);
+            }
+        });
+        carousel?.querySelectorAll('[data-promo-nav]').forEach(button => {
+            button.addEventListener('click', () => movePromoCarousel(Number(button.dataset.promoNav) || 1));
+        });
+    }
 }
-
 function handleItemAction(action, itemId){
     const item = getItem(itemId);
     if (!item) return;
@@ -8960,7 +9358,7 @@ function renderAdminOrders(){
         <span class='order-compact-badge'>💰 ${escapeOrderText(paymentDisplay || 'N/A')}</span>
         <span class='order-compact-status-badge ${compactStatusClass}'>${compactStatusLabel}</span>
         ${hasLiveTracking ? `<button type='button' class='order-track-btn' onclick='event.stopPropagation(); window.trackOrderLive("${order.id}")'>📍 Acompanhar pedido</button>` : ''}
-        <button type='button' class='order-expand-btn' onclick='event.stopPropagation(); window.toggleOrderExpand("${order.id}")'>${isAlreadyExpanded ? '▲ Saber menos' : '▶ Saber mais'}</button>
+        <button type='button' class='order-expand-btn' data-expand-order='${order.id}' onclick='event.stopPropagation(); window.toggleOrderExpand("${order.id}")'>${isAlreadyExpanded ? '▲ Saber menos' : '▶ Saber mais'}</button>
       </div>
       <div class='order-card-expanded' style='display:${isAlreadyExpanded ? 'block' : 'none'}' data-expanded-details='${order.id}'>
         ${detailsHTML}
@@ -8975,11 +9373,88 @@ function renderAdminOrders(){
     else if(normalizedStatus==="delivered") colDelivered.appendChild(div);
     // Pedidos cancelados não são exibidos no Kanban
   });
-    window.setTimeout(() => window.refreshLiveDeliveryMaps?.(), 0);
+
+  const columnDefinitions = [
+    ['pending', colPending],
+    ['in_production', colInProduction],
+    ['ready_for_delivery', colReadyForDelivery],
+    ['delivered', colDelivered]
+  ];
+  columnDefinitions.forEach(([columnKey, column]) => {
+    const footer = document.createElement('div');
+    footer.className = 'orders-load-more-wrap';
+    footer.dataset.ordersMore = columnKey;
+    const count = column.querySelectorAll('.order-card').length;
+    if (adminOrdersHistoryLoading) {
+      footer.innerHTML = `<span class="orders-load-more-loading">Carregando mais pedidos…</span>`;
+    } else if (adminOrdersHistoryError) {
+      footer.innerHTML = `<button type="button" class="orders-load-more-btn" onclick="window.loadMoreAdminOrders()">↻ Tentar novamente</button><small class="orders-load-more-note">Não foi possível carregar a próxima página.</small>`;
+    } else if (adminOrdersHistoryHasMore) {
+      footer.innerHTML = `<button type="button" class="orders-load-more-btn" onclick="window.loadMoreAdminOrders()">＋ Carregar mais pedidos</button><small class="orders-load-more-note">${count} exibidos nesta etapa · histórico sob demanda</small>`;
+    } else {
+      footer.innerHTML = `<span class="orders-load-more-end">✓ Histórico completo nesta sessão</span><small class="orders-load-more-note">${count} exibidos nesta etapa</small>`;
+    }
+    column.appendChild(footer);
+  });
+
+  const historySummary = document.getElementById('ordersHistorySummary');
+  if (historySummary) {
+    const loaded = orders.length;
+    historySummary.textContent = adminOrdersHistoryLoading
+      ? `Exibindo ${loaded} pedidos carregados · buscando a próxima página…`
+      : adminOrdersHistoryError
+        ? `Exibindo ${loaded} pedidos carregados · houve uma falha ao buscar mais histórico.`
+        : adminOrdersHistoryHasMore
+          ? `Exibindo ${loaded} pedidos carregados · os pedidos mais antigos permanecem no Firebase até você clicar em “Carregar mais pedidos”.`
+          : `Exibindo ${loaded} pedidos · histórico carregado até o fim desta sessão.`;
+  }
+
+  window.setTimeout(() => window.refreshLiveDeliveryMaps?.(), 0);
     window.restoreLiveMapFullscreenState?.();
 }
 
 window.renderAdminOrders = renderAdminOrders;
+
+window.loadMoreAdminOrders = async function loadMoreAdminOrders() {
+  if (adminOrdersHistoryLoading || !adminOrdersHistoryHasMore || !adminOrdersHistoryCursor) return false;
+  if (typeof getDocs !== 'function' || typeof startAfter !== 'function') {
+    adminOrdersHistoryError = 'Paginação indisponível.';
+    renderAdminOrders();
+    return false;
+  }
+  adminOrdersHistoryLoading = true;
+  adminOrdersHistoryError = '';
+  renderAdminOrders();
+  try {
+    const nextQuery = query(
+      ordersCollectionRef,
+      orderBy('createdAt', 'desc'),
+      startAfter(adminOrdersHistoryCursor),
+      limit(ADMIN_ORDERS_HISTORY_PAGE_SIZE)
+    );
+    const snapshot = await getDocs(nextQuery);
+    const nextPage = (snapshot.docs || []).map(doc => ({ id: doc.id, ...doc.data() }));
+    const existingIds = new Set([...adminOrdersLivePage, ...adminOrdersHistoryPage].map(order => String(order.id)));
+    adminOrdersHistoryPage = [...adminOrdersHistoryPage, ...nextPage.filter(order => !existingIds.has(String(order.id)))];
+    adminOrdersHistoryCursor = snapshot.docs?.[snapshot.docs.length - 1] || adminOrdersHistoryCursor;
+    adminOrdersHistoryHasMore = (snapshot.docs || []).length === ADMIN_ORDERS_HISTORY_PAGE_SIZE;
+    adminOrdersHistoryError = '';
+    orders = mergeAdminOrdersPages(adminOrdersLivePage, adminOrdersHistoryPage);
+    window.orders = orders;
+    window.__ordersVersion = (window.__ordersVersion || 0) + 1;
+    renderAdminOrders();
+    window.renderAdminDashboard?.();
+    return nextPage.length > 0;
+  } catch (error) {
+    console.error('Erro ao carregar mais pedidos:', error);
+    adminOrdersHistoryError = 'Não foi possível carregar mais pedidos.';
+    renderAdminOrders();
+    return false;
+  } finally {
+    adminOrdersHistoryLoading = false;
+    if (document.querySelector('#adminModal')?.classList.contains('open')) renderAdminOrders();
+  }
+};
 
 // === CONTROLE DE EXPANDIR/RECOLHER CARDS DO KANBAN ===
 window.__expandedOrders = window.__expandedOrders || new Set();
@@ -10176,6 +10651,46 @@ function getCheckoutTotalNumber() {
 }
 
 let checkoutLocationRequestInFlight = false;
+let checkoutLocationBaseAddress = '';
+
+function normalizeCheckoutHouseNumber(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').slice(0, 20);
+}
+
+function composeCheckoutAddress(baseAddress = checkoutLocationBaseAddress, houseNumber = document.getElementById('checkoutHouseNumber')?.value) {
+  const base = String(baseAddress || '').trim();
+  const number = normalizeCheckoutHouseNumber(houseNumber);
+  if (!base) return '';
+  return number ? `${base}, nº ${number}` : base;
+}
+
+function checkoutHouseNumberIsValid() {
+  return Boolean(normalizeCheckoutHouseNumber(document.getElementById('checkoutHouseNumber')?.value));
+}
+
+function updateCheckoutAddressDisplay() {
+  const value = composeCheckoutAddress();
+  const hidden = document.getElementById('checkoutAddress');
+  const display = document.getElementById('checkoutLocationAddress');
+  if (hidden) hidden.value = value;
+  if (display) display.textContent = value || 'Ative sua localização para preencher o endereço automaticamente.';
+  const numberRow = document.querySelector('.checkout-location-number-row');
+  if (numberRow) numberRow.style.display = checkoutLocationBaseAddress ? 'grid' : 'none';
+  const hint = document.getElementById('checkoutHouseNumberHint');
+  if (hint) {
+    hint.textContent = checkoutLocationBaseAddress
+      ? (checkoutHouseNumberIsValid() ? 'Número incluído no endereço de entrega.' : 'Informe o número para concluir o endereço.')
+      : 'Informe o número depois que a localização for confirmada.';
+    hint.classList.toggle('is-ready', checkoutHouseNumberIsValid());
+  }
+  updateCheckoutReview();
+}
+
+function setCheckoutHouseNumber(value) {
+  const input = document.getElementById('checkoutHouseNumber');
+  if (input) input.value = normalizeCheckoutHouseNumber(value);
+  updateCheckoutAddressDisplay();
+}
 
 function checkoutLocationCoordinates(source = window.autoDeliveryCoordinates) {
   if (!source) return null;
@@ -10197,13 +10712,14 @@ function setCheckoutLocationStatus(message, type = '') {
   node.classList.toggle('is-success', type === 'success');
 }
 
-function setCheckoutLocationAddress(address) {
-  const value = String(address || '').trim();
-  const hidden = document.getElementById('checkoutAddress');
-  const display = document.getElementById('checkoutLocationAddress');
-  if (hidden) hidden.value = value;
-  if (display) display.textContent = value || 'Ative sua localização para preencher o endereço automaticamente.';
-  updateCheckoutReview();
+function setCheckoutLocationAddress(address, options = {}) {
+  checkoutLocationBaseAddress = String(options.baseAddress ?? address ?? '').trim();
+  const houseNumber = options.houseNumber !== undefined
+    ? options.houseNumber
+    : document.getElementById('checkoutHouseNumber')?.value;
+  const input = document.getElementById('checkoutHouseNumber');
+  if (input && options.houseNumber !== undefined) input.value = normalizeCheckoutHouseNumber(houseNumber);
+  updateCheckoutAddressDisplay();
 }
 
 function applySavedCheckoutAddress(record) {
@@ -10211,8 +10727,10 @@ function applySavedCheckoutAddress(record) {
   window.autoDeliveryCoordinates = { lat:record.latitude, lng:record.longitude };
   window.autoDeliveryAccuracy = record.accuracy ?? null;
   window.autoDeliveryLocationUpdatedAt = record.updatedAt || '';
-  setCheckoutLocationAddress(record.address);
-  setCheckoutLocationStatus('Endereço salvo e confirmado pela localização do aparelho.', 'success');
+  const savedBaseAddress = String(record.baseAddress || record.address || '').trim();
+  const savedHouseNumber = record.baseAddress ? normalizeCheckoutHouseNumber(record.houseNumber) : '';
+  setCheckoutLocationAddress(savedBaseAddress, { baseAddress: savedBaseAddress, houseNumber: savedHouseNumber });
+  setCheckoutLocationStatus(savedHouseNumber ? 'Endereço salvo e confirmado pela localização do aparelho.' : 'Localização salva. Informe o número da casa para concluir o endereço.', savedHouseNumber ? 'success' : 'error');
   applyCheckoutDeliveryQuote({ latitude:record.latitude, longitude:record.longitude });
   const select = document.getElementById('checkoutSavedAddresses');
   if (select) select.value = record.id;
@@ -10249,6 +10767,8 @@ function prepareCheckoutLocation() {
   window.autoDeliveryCoordinates = null;
   window.autoDeliveryAccuracy = null;
   window.autoDeliveryLocationUpdatedAt = '';
+  checkoutLocationBaseAddress = '';
+  setCheckoutHouseNumber('');
   const savedRecords = confirmedSavedAddressRecords(currentUser);
   renderCheckoutSavedAddresses();
   const savedCoordinates = checkoutLocationCoordinates({ latitude: currentUser?.deliveryLatitude, longitude: currentUser?.deliveryLongitude });
@@ -10259,8 +10779,10 @@ function prepareCheckoutLocation() {
     applySavedCheckoutAddress(currentRecord);
   } else if (savedCoordinates && savedAddress) {
     window.autoDeliveryCoordinates = { lat: savedCoordinates.latitude, lng: savedCoordinates.longitude };
-    setCheckoutLocationAddress(savedAddress);
-    setCheckoutLocationStatus('Endereço confirmado pela última localização autorizada.', 'success');
+    const savedBaseAddress = String(currentUser?.deliveryAddressBase || savedAddress).trim();
+    const savedHouseNumber = currentUser?.deliveryAddressBase ? normalizeCheckoutHouseNumber(currentUser?.deliveryHouseNumber) : '';
+    setCheckoutLocationAddress(savedBaseAddress, { baseAddress: savedBaseAddress, houseNumber: savedHouseNumber });
+    setCheckoutLocationStatus(savedHouseNumber ? 'Endereço confirmado pela última localização autorizada.' : 'Localização confirmada. Informe o número da casa para continuar.', savedHouseNumber ? 'success' : 'error');
     if (button) button.textContent = 'Atualizar localização';
     applyCheckoutDeliveryQuote(savedCoordinates);
   } else {
@@ -10305,9 +10827,10 @@ async function requestCheckoutLocation() {
     window.autoDeliveryCoordinates = { lat: coordinates.latitude, lng: coordinates.longitude };
     window.autoDeliveryAccuracy = Number.isFinite(accuracy) ? accuracy : null;
     window.autoDeliveryLocationUpdatedAt = new Date().toISOString();
-    setCheckoutLocationAddress(address);
+    setCheckoutLocationAddress(address, { baseAddress: address, houseNumber: '' });
     const quoteReady = !DATA?.restaurant?.useRadiusDelivery || applyCheckoutDeliveryQuote(coordinates);
-    setCheckoutLocationStatus(quoteReady ? 'Localização confirmada e endereço pronto para o pedido.' : 'Localização confirmada. A loja ainda precisa configurar sua posição para calcular a taxa por raio.', quoteReady ? 'success' : 'error');
+    setCheckoutLocationStatus(quoteReady ? 'Localização confirmada. Agora informe o número da casa.' : 'Localização confirmada. Informe o número da casa; a loja ainda precisa configurar sua posição para calcular a taxa por raio.', quoteReady ? '' : 'error');
+    window.setTimeout(() => document.getElementById('checkoutHouseNumber')?.focus(), 0);
     if (button) button.textContent = 'Atualizar localização';
     return quoteReady;
   } catch (error) {
@@ -10335,13 +10858,15 @@ async function requestCheckoutLocation() {
 
 function persistCustomerDeliveryLocation(location) {
   const coordinates = checkoutLocationCoordinates(location);
-  const address = String(location?.address || '').trim();
-  if (!currentUser || !coordinates || !address) return false;
+  const baseAddress = String(location?.baseAddress || '').trim();
+  const houseNumber = normalizeCheckoutHouseNumber(location?.houseNumber);
+  const address = String(location?.address || composeCheckoutAddress(baseAddress, houseNumber)).trim();
+  if (!currentUser || !coordinates || !address || !houseNumber) return false;
   const updatedAt = location.updatedAt || new Date().toISOString();
-  const record = { id:`location_${Date.now()}_${coordinates.latitude.toFixed(6)}_${coordinates.longitude.toFixed(6)}`, address, latitude:coordinates.latitude, longitude:coordinates.longitude, accuracy:Number.isFinite(Number(location.accuracy)) ? Number(location.accuracy) : null, updatedAt, source:'browser_geolocation' };
+  const record = { id:`location_${Date.now()}_${coordinates.latitude.toFixed(6)}_${coordinates.longitude.toFixed(6)}`, address, baseAddress: baseAddress || address, houseNumber, latitude:coordinates.latitude, longitude:coordinates.longitude, accuracy:Number.isFinite(Number(location.accuracy)) ? Number(location.accuracy) : null, updatedAt, source:'browser_geolocation' };
   const previous = confirmedSavedAddressRecords(currentUser).filter(item => item.address.toLowerCase() !== address.toLowerCase());
   const savedAddressRecords = [record, ...previous].slice(0, 10);
-  const patch = { deliveryAddress: address, deliveryLatitude: coordinates.latitude, deliveryLongitude: coordinates.longitude, deliveryAccuracy: record.accuracy, deliveryLocationUpdatedAt: updatedAt, deliveryLocationSource: 'browser_geolocation', savedAddressRecords, savedAddresses: savedAddressRecords.map(item => item.address) };
+  const patch = { deliveryAddress: address, deliveryAddressBase: record.baseAddress, deliveryHouseNumber: houseNumber, deliveryLatitude: coordinates.latitude, deliveryLongitude: coordinates.longitude, deliveryAccuracy: record.accuracy, deliveryLocationUpdatedAt: updatedAt, deliveryLocationSource: 'browser_geolocation', savedAddressRecords, savedAddresses: savedAddressRecords.map(item => item.address) };
   currentUser = { ...currentUser, ...patch };
   window.currentUser = currentUser;
   const userRecord = (typeof users !== 'undefined' && Array.isArray(users)) ? users.find(user => String(user.id) === String(currentUser.id)) : null;
@@ -10363,9 +10888,10 @@ function validateCheckoutStep(step) {
     const name = document.getElementById('checkoutName');
     const phone = document.getElementById('checkoutPhone');
     const address = document.getElementById('checkoutAddress');
-    if (!name?.value.trim() || !phone?.value.trim() || !address?.value.trim()) {
-      showCheckoutFeedback('Preencha nome, telefone e endereço para continuar.', 'error');
-      const firstInvalid = [name, phone, address].find(field => !field?.value.trim());
+    const houseNumber = document.getElementById('checkoutHouseNumber');
+    if (!name?.value.trim() || !phone?.value.trim() || !address?.value.trim() || !houseNumber?.value.trim()) {
+      showCheckoutFeedback('Preencha nome, telefone, endereço e número da casa para continuar.', 'error');
+      const firstInvalid = [name, phone, address, houseNumber].find(field => !field?.value.trim());
       firstInvalid?.focus();
       return false;
     }
@@ -10439,6 +10965,7 @@ function openCheckoutModal(){
     renderCheckoutCartSummary();
     renderCheckoutDeliveryAreas();
     renderCheckoutSavedAddresses();
+    window.PaymentHub?.syncCheckoutOptions?.();
 
     const deliveryAreaSelect = document.querySelector("#deliveryAreaSelect");
     const deliveryAreaGroup = document.querySelector("#deliveryAreaGroup") || deliveryAreaSelect?.closest('.form-group');
@@ -10466,6 +10993,8 @@ function closeCheckoutModal(){
     window.autoDeliveryCoordinates = null;
     window.autoDeliveryAccuracy = null;
     window.autoDeliveryLocationUpdatedAt = null;
+    checkoutLocationBaseAddress = '';
+    setCheckoutHouseNumber('');
     setCheckoutLocationAddress('');
     setCheckoutLocationStatus('O endereço será confirmado a partir da posição do seu aparelho.');
     const locationButton = document.getElementById('checkoutLocationButton');
@@ -10750,6 +11279,7 @@ function initListeners(){
   });
   
   document.querySelector('#checkoutLocationButton')?.addEventListener('click', requestCheckoutLocation);
+  document.querySelector('#checkoutHouseNumber')?.addEventListener('input', event => { event.target.value = normalizeCheckoutHouseNumber(event.target.value); updateCheckoutAddressDisplay(); });
   document.querySelector('#checkoutSavedAddresses')?.addEventListener('change', event => {
     const record = confirmedSavedAddressRecords(currentUser).find(item => String(item.id) === String(event.target.value));
     if (record) applySavedCheckoutAddress(record);
@@ -12648,15 +13178,66 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   function ensureMotoboyMarkup() { const panel=$id('motoboysPanel');if(!panel)return;const title=panel.querySelector('h4.brasa-professional-title') || panel.querySelector(':scope > h4');if(title && !$id('motoboyUpgradeHeader')){title.classList.add('brasa-professional-title');title.insertAdjacentHTML('beforebegin',`<div id="motoboyUpgradeHeader" class="brasa-module-heading"><div><small>Logística e última milha</small><h4>Central de motoboys</h4><p>Acompanhe disponibilidade, entregas, tempo e performance por entregador.</p></div><div class="brasa-module-meta" id="motoboyUpdated">Aguardando dados</div></div>`);title.style.display='none';}const list=$id('motoboysList');list?.classList.add('brasa-motoboy-grid');const row=list?.previousElementSibling;row?.classList.add('brasa-motoboy-toolbar');if(row&&!$id('motoboyStatusFilter'))row.insertAdjacentHTML('afterbegin',`<label for="motoboyStatusFilter">Status</label><select id="motoboyStatusFilter"><option value="all">Todos</option><option value="disponivel">Disponível</option><option value="entrega">Em entrega</option><option value="offline">Offline</option></select>`);if(!$id('motoboyUpgradeKpis'))$id('motoboyDashboard')?.insertAdjacentHTML('beforebegin',`<div id="motoboyUpgradeKpis" class="brasa-kpi-grid"><div class="brasa-kpi-card good"><span>Disponíveis agora</span><strong id="motoAvailable">0</strong><em>Prontos para sair</em></div><div class="brasa-kpi-card warn"><span>Em entrega</span><strong id="motoActive">0</strong><em>Pedidos atribuídos</em></div><div class="brasa-kpi-card accent"><span>Entregas concluídas</span><strong id="motoDelivered">0</strong><em>Histórico carregado</em></div><div class="brasa-kpi-card"><span>No prazo</span><strong id="motoOnTime">0%</strong><em>Com tempo registrado</em></div></div>`);if(!$id('profileDeliveryList'))$id('profileTopAreas')?.insertAdjacentHTML('afterend',`<div class="brasa-detail-section" style="margin-top:12px"><h5>Últimas entregas</h5><div id="profileDeliveryList"></div></div>`); }
 
   function motoboyStats(motoboy) { motoboy = {...motoboy, status:automaticMotoboyStatus(motoboy)}; const assigned=orders().filter(order=>order.motoboyId===motoboy.id);const delivered=assigned.filter(isDelivered);const active=assigned.filter(order=>!isDelivered(order)&&!isCancelled(order));let total=0,totalMinutes=0,timed=0,onTime=0;delivered.forEach(order=>{total+=orderTotal(order);const created=dateMs(order.createdAt),done=dateMs(order.deliveredAt);if(created&&done&&done>=created){const minutes=(done-created)/60000;totalMinutes+=minutes;timed++;if(minutes<=num(order.preparationTime)||minutes<=45)onTime++;}});const today=new Date();const todayKey=today.toLocaleDateString('pt-BR');return {...motoboy,assigned:assigned.length,delivered:delivered.length,active:active.length,total,avg:delivered.length?total/delivered.length:0,avgMinutes:timed?totalMinutes/timed:0,onTime:timed?Math.round(onTime/timed*100):0,today:delivered.filter(order=>dateMs(order.deliveredAt)&&new Date(dateMs(order.deliveredAt)).toLocaleDateString('pt-BR')===todayKey).length,orders:assigned}; }
-  function renderMotoboysProfessional(){ ensureMotoboyMarkup();const list=$id('motoboysList');if(!list)return;const stats=motoboys().map(motoboyStats);const statusFilter=$id('motoboyStatusFilter')?.value||'all';const visible=stats.filter(m=>statusFilter==='all'||(m.status||'offline')===statusFilter);const setText=(id,value)=>{const node=$id(id);if(node)node.textContent=value;};setText('motoAvailable',stats.filter(m=>m.status==='disponivel').length);setText('motoActive',stats.reduce((sum,m)=>sum+m.active,0));setText('motoDelivered',stats.reduce((sum,m)=>sum+m.delivered,0));const timed=stats.filter(m=>m.onTime>0);setText('motoOnTime',timed.length?`${Math.round(timed.reduce((sum,m)=>sum+m.onTime,0)/timed.length)}%`:'0%');setText('motoboyUpdated',`${stats.length} motoboys · atualizado ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`);if(!visible.length){list.innerHTML='<div class="brasa-analytics-card" style="grid-column:1/-1"><p class="brasa-table-empty">Nenhum motoboy encontrado com este filtro.</p></div>';return;}const statusInfo={disponivel:['Disponível','good'],entrega:['Em entrega','warn'],ocupado:['Em entrega','warn'],offline:['Offline','danger']};list.innerHTML=visible.map(m=>{const [label,klass]=statusInfo[m.status]||statusInfo.offline;const phone=digits(m.phone);return `<article class="brasa-motoboy-card" data-motoboy-id="${esc(m.id)}"><div class="brasa-card-top"><div class="brasa-avatar">${esc(initials(m.name))}</div><div class="brasa-card-title"><strong>${esc(m.name||'Motoboy')}</strong><small>${esc(m.phone||'Telefone não informado')}</small></div><span class="brasa-motoboy-status ${klass}"><span class="brasa-status-dot"></span>${label}</span></div><div class="brasa-card-metrics"><div><span>Entregas</span><strong>${m.delivered}</strong></div><div><span>Hoje</span><strong>${m.today}</strong></div><div><span>Tempo</span><strong>${m.avgMinutes?`${Math.round(m.avgMinutes)}m`:'—'}</strong></div></div><div class="brasa-card-subline"><span>Em andamento</span><strong>${m.active}</strong></div><div class="brasa-card-subline"><span>Valor entregue</span><strong>${money(m.total)}</strong></div><span class="brasa-motoboy-auto-status">Status automático</span><div class="brasa-card-actions"><button class="primary" data-motoboy-action="profile" data-motoboy-id="${esc(m.id)}">Ver perfil</button>${phone?`<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>`:''}</div></article>`;}).join(''); }
+  function renderMotoboysProfessional(){
+    ensureMotoboyMarkup();
+    const list = $id('motoboysList');
+    if (!list) return;
+    const stats = motoboys().map(motoboyStats);
+    const statusFilter = $id('motoboyStatusFilter')?.value || 'all';
+    const visible = stats.filter(item => statusFilter === 'all' || (item.status || 'offline') === statusFilter);
+    const setText = (id, value) => { const node = $id(id); if (node) node.textContent = value; };
+    setText('motoAvailable', stats.filter(item => item.status === 'disponivel').length);
+    setText('motoActive', stats.reduce((sum, item) => sum + item.active, 0));
+    setText('motoDelivered', stats.reduce((sum, item) => sum + item.delivered, 0));
+    const timed = stats.filter(item => item.onTime > 0);
+    setText('motoOnTime', timed.length ? `${Math.round(timed.reduce((sum, item) => sum + item.onTime, 0) / timed.length)}%` : '0%');
+    setText('motoboyUpdated', `${stats.length} motoboys · atualizado ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`);
+    if (!visible.length) { list.innerHTML = '<div class="brasa-analytics-card" style="grid-column:1/-1"><p class="brasa-table-empty">Nenhum motoboy encontrado com este filtro.</p></div>'; return; }
+    const statusInfo = { disponivel:['Disponível','good'], entrega:['Em entrega','warn'], ocupado:['Em entrega','warn'], offline:['Offline','danger'] };
+    const safePhoto = value => { const src = String(value || '').trim(); return /^(data:image\/(jpeg|png|webp);|https?:\/\/)/i.test(src) ? src : ''; };
+    list.innerHTML = visible.map(m => {
+      const [label, klass] = statusInfo[m.status] || statusInfo.offline;
+      const phone = digits(m.phone);
+      const photo = safePhoto(m.photo || m.photoURL || m.avatarUrl);
+      const vehicle = [m.vehicleModel || m.vehicle, m.vehicleColor || m.color].filter(Boolean).map(value => String(value).trim()).filter(Boolean).join(' · ');
+      const plate = m.vehiclePlate || m.plate || '';
+      const avatar = photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(m.name || 'motoboy')}">` : `<span>${esc(initials(m.name))}</span>`;
+      return `<article class="brasa-motoboy-card" data-motoboy-id="${esc(m.id)}"><div class="brasa-card-top"><div class="brasa-avatar brasa-avatar-photo">${avatar}</div><div class="brasa-card-title"><strong>${esc(m.name || 'Motoboy')}</strong><small>${esc(m.phone || 'Telefone não informado')}</small></div><span class="brasa-motoboy-status ${klass}"><span class="brasa-status-dot"></span>${label}</span></div><div class="brasa-motoboy-identity"><span class="brasa-motoboy-identity-icon">▣</span><div><strong>${esc(vehicle || 'Veículo não informado')}</strong><small>${plate ? `Placa ${esc(plate)}` : 'Placa não informada'}</small></div></div><div class="brasa-card-metrics"><div><span>Entregas</span><strong>${m.delivered}</strong></div><div><span>Hoje</span><strong>${m.today}</strong></div><div><span>Tempo</span><strong>${m.avgMinutes ? `${Math.round(m.avgMinutes)}m` : '—'}</strong></div></div><div class="brasa-card-subline"><span>Em andamento</span><strong>${m.active}</strong></div><div class="brasa-card-subline"><span>Valor entregue</span><strong>${money(m.total)}</strong></div><span class="brasa-motoboy-auto-status">Status automático</span><div class="brasa-card-actions"><button class="primary" data-motoboy-action="profile" data-motoboy-id="${esc(m.id)}">Ver perfil</button><button data-motoboy-action="edit" data-motoboy-id="${esc(m.id)}">Editar cadastro</button>${phone ? `<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>` : ''}</div></article>`;
+    }).join('');
+  }
 
-  function openMotoboyProfileProfessional(id){ bindOrderHistoryAccordion(); const moto=motoboys().find(item=>String(item.id)===String(id));if(!moto){alert('Motoboy não encontrado.');return;}ensureMotoboyMarkup();const stats=motoboyStats(moto);const delivered=stats.orders.filter(isDelivered).sort((a,b)=>dateMs(b.deliveredAt||b.createdAt)-dateMs(a.deliveredAt||a.createdAt));const areas=new Map();delivered.forEach(order=>{const area=order.deliveryAreaName||order.deliveryArea||order.address||'Não informado';areas.set(area,(areas.get(area)||0)+1);});$id('motoboyProfileName').textContent=`Perfil: ${moto.name||'Motoboy'}`;$id('profileTotalEntregas').textContent=stats.delivered;$id('profileMediaEntrega').textContent=money(stats.avg);$id('profileTempoMedio').textContent=stats.avgMinutes?`${Math.round(stats.avgMinutes)} min`:'—';$id('profileEntregasHoje').textContent=stats.today;$id('profileTopAreas').innerHTML=areas.size?[...areas.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([area,count])=>`<div class="brasa-card-subline"><span>${esc(area)}</span><strong>${count} entrega${count===1?'':'s'}</strong></div>`).join(''):'<span class="muted">Nenhuma entrega concluída.</span>';$id('profileDeliveryList').innerHTML=delivered.slice(0,8).map(order=>renderExpandableOrderCard(order,{context:'motoboy',showClient:true})).join('')||'<span class="muted">Nenhuma entrega registrada.</span>';
-    if(window.Chart){const canvas=$id('motoboyDeliveriesChart');if(canvas){destroyChart('motoboyDeliveriesChart');const buckets=new Map();for(let index=6;index>=0;index--){const day=new Date();day.setHours(0,0,0,0);day.setDate(day.getDate()-index);const key=day.toLocaleDateString('pt-BR');buckets.set(key,0);}delivered.forEach(order=>{const key=new Date(dateMs(order.deliveredAt||order.createdAt)).toLocaleDateString('pt-BR');if(buckets.has(key))buckets.set(key,buckets.get(key)+1);});new window.Chart(canvas.getContext('2d'),{type:'bar',data:{labels:[...buckets.keys()].map(key=>key.slice(0,5)),datasets:[{label:'Entregas',data:[...buckets.values()],backgroundColor:'rgba(255,125,74,.65)',borderColor:'#ff7d4a',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});}}
-    $id('motoboyProfileModal').classList.add('open'); }
+  function openMotoboyProfileProfessional(id){
+    bindOrderHistoryAccordion();
+    const moto = motoboys().find(item => String(item.id) === String(id));
+    if (!moto) { alert('Motoboy não encontrado.'); return; }
+    ensureMotoboyMarkup();
+    const stats = motoboyStats(moto);
+    const delivered = stats.orders.filter(isDelivered).sort((a,b) => dateMs(b.deliveredAt || b.createdAt) - dateMs(a.deliveredAt || a.createdAt));
+    const areas = new Map();
+    delivered.forEach(order => { const area = order.deliveryAreaName || order.deliveryArea || order.address || 'Não informado'; areas.set(area, (areas.get(area) || 0) + 1); });
+    const safePhoto = value => { const src = String(value || '').trim(); return /^(data:image\/(jpeg|png|webp);|https?:\/\/)/i.test(src) ? src : ''; };
+    const photo = safePhoto(moto.photo || moto.photoURL || moto.avatarUrl);
+    const vehicle = [moto.vehicleModel || moto.vehicle, moto.vehicleColor || moto.color].filter(Boolean).map(value => String(value).trim()).filter(Boolean).join(' · ');
+    const plate = moto.vehiclePlate || moto.plate || '';
+    const avatar = photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(moto.name || 'motoboy')}">` : esc(initials(moto.name));
+    $id('motoboyProfileName').textContent = `Perfil: ${moto.name || 'Motoboy'}`;
+    $id('motoboyProfileIdentity').innerHTML = `<div class="motoboy-profile-avatar">${avatar}</div><div class="motoboy-profile-copy"><small>Entregador da loja</small><strong>${esc(moto.name || 'Motoboy')}</strong><span>${esc(moto.phone || 'Telefone não informado')}</span><div class="motoboy-profile-tags"><span class="motoboy-profile-tag">${esc(vehicle || 'Veículo não informado')}</span>${plate ? `<span class="motoboy-profile-tag">Placa ${esc(plate)}</span>` : ''}</div></div>`;
+    $id('profileTotalEntregas').textContent = stats.delivered;
+    $id('profileMediaEntrega').textContent = money(stats.avg);
+    $id('profileTempoMedio').textContent = stats.avgMinutes ? `${Math.round(stats.avgMinutes)} min` : '—';
+    $id('profileEntregasHoje').textContent = stats.today;
+    $id('profileTopAreas').innerHTML = areas.size ? [...areas.entries()].sort((a,b) => b[1] - a[1]).slice(0,5).map(([area,count]) => `<div class="brasa-card-subline"><span>${esc(area)}</span><strong>${count} entrega${count === 1 ? '' : 's'}</strong></div>`).join('') : '<span class="muted">Nenhuma entrega concluída.</span>';
+    $id('profileDeliveryList').innerHTML = delivered.slice(0,8).map(order => renderExpandableOrderCard(order,{context:'motoboy',showClient:true})).join('') || '<span class="muted">Nenhuma entrega registrada.</span>';
+    if (window.Chart) {
+      const canvas = $id('motoboyDeliveriesChart');
+      if (canvas) { destroyChart('motoboyDeliveriesChart'); const buckets = new Map(); for (let index = 6; index >= 0; index--) { const day = new Date(); day.setHours(0,0,0,0); day.setDate(day.getDate() - index); buckets.set(day.toLocaleDateString('pt-BR'), 0); } delivered.forEach(order => { const key = new Date(dateMs(order.deliveredAt || order.createdAt)).toLocaleDateString('pt-BR'); if (buckets.has(key)) buckets.set(key, buckets.get(key) + 1); }); new window.Chart(canvas.getContext('2d'), {type:'bar',data:{labels:[...buckets.keys()].map(key => key.slice(0,5)),datasets:[{label:'Entregas',data:[...buckets.values()],backgroundColor:'rgba(255,125,74,.65)',borderColor:'#ff7d4a',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}}); }
+    }
+    $id('motoboyProfileModal').classList.add('open');
+  }
 
   function init() { if(state.initialized)return; state.initialized=true; ensureSalesMarkup();ensureCustomerMarkup();ensureMotoboyMarkup();window.renderAdminDashboard=renderSalesProfessional;window.renderSalesMetrics=renderSalesProfessional;window.setSalesPeriod=period=>{if(period==='custom'&&!periodBounds('custom')){alert('Selecione um intervalo de datas válido.');return;}state.salesPeriod=period;renderSalesProfessional();};window.renderCustomers=renderCustomersProfessional;window.renderAdminCustomers=renderCustomersProfessional;window.filterAndSortCustomers=renderCustomersProfessional;window.renderMotoboys=renderMotoboysProfessional;window.renderMotoboysList=renderMotoboysProfessional;window.renderMotoboyDashboard=renderMotoboysProfessional;window.openMotoboyProfile=openMotoboyProfileProfessional;
     $id('tabSales')?.addEventListener('click',()=>window.renderAdminDashboard());$id('tabCustomers')?.addEventListener('click',()=>window.renderCustomers());$id('tabMotoboys')?.addEventListener('click',()=>window.renderMotoboys());$id('customerSearchInput')?.addEventListener('input',()=>window.renderCustomers());$id('customerSortSelect')?.addEventListener('change',()=>window.renderCustomers());$id('customerSegmentSelect')?.addEventListener('change',()=>window.renderCustomers());$id('motoboyStatusFilter')?.addEventListener('change',()=>window.renderMotoboys());['startDate','endDate'].forEach(id=>$id(id)?.addEventListener('change',()=>{if(state.salesPeriod==='custom')window.renderAdminDashboard();}));
-    $id('customersList')?.addEventListener('click',event=>{const button=event.target.closest('[data-customer-action]');if(!button)return;const id=button.dataset.customerId;if(button.dataset.customerAction==='details')openCustomerDetail(id);if(button.dataset.customerAction==='history'){const customer=customerCache().find(item=>String(item.id)===String(id));if(customer)window.showOrderHistoryModal?.(id,customer.name);}});document.addEventListener('click',event=>{if(event.target.closest('[data-close-customer-detail]'))closeCustomerDetail();if(event.target.id==='customerDetailModal')closeCustomerDetail();const motoAction=event.target.closest('[data-motoboy-action="profile"]');if(motoAction)openMotoboyProfileProfessional(motoAction.dataset.motoboyId);const select=event.target.closest('[data-motoboy-action="status"]');if(select){event.stopPropagation();}});$id('motoboysList')?.addEventListener('change',event=>{const select=event.target.closest('[data-motoboy-action="status"]');if(select){window.updateMotoboyStatus?.(select.dataset.motoboyId,select.value);setTimeout(()=>window.renderMotoboys(),0);}});
+    $id('customersList')?.addEventListener('click',event=>{const button=event.target.closest('[data-customer-action]');if(!button)return;const id=button.dataset.customerId;if(button.dataset.customerAction==='details')openCustomerDetail(id);if(button.dataset.customerAction==='history'){const customer=customerCache().find(item=>String(item.id)===String(id));if(customer)window.showOrderHistoryModal?.(id,customer.name);}});document.addEventListener('click',event=>{if(event.target.closest('[data-close-customer-detail]'))closeCustomerDetail();if(event.target.id==='customerDetailModal')closeCustomerDetail();const motoAction=event.target.closest('[data-motoboy-action="profile"]');if(motoAction)openMotoboyProfileProfessional(motoAction.dataset.motoboyId);const motoEdit=event.target.closest('[data-motoboy-action="edit"]');if(motoEdit)window.openMotoboyEditor?.(motoEdit.dataset.motoboyId);const select=event.target.closest('[data-motoboy-action="status"]');if(select){event.stopPropagation();}});$id('motoboysList')?.addEventListener('change',event=>{const select=event.target.closest('[data-motoboy-action="status"]');if(select){window.updateMotoboyStatus?.(select.dataset.motoboyId,select.value);setTimeout(()=>window.renderMotoboys(),0);}});
     $id('openSalesOrdersHistory')?.addEventListener('click', openSalesOrdersHistory);
     $id('tableGarcomReport')?.addEventListener('click', event => { const button = event.target.closest('[data-sales-garcom-history]'); if (!button) return; event.preventDefault(); event.stopPropagation(); window.openGarcomHistory?.(button.dataset.garcomId); });
     window.renderAdminDashboard();window.renderCustomers();window.renderMotoboys();
@@ -13266,83 +13847,354 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 
 
 <style id="payment-hub-style">
-  .payment-hub-panel{color:#eadfd4}.payment-hub{display:grid;gap:16px}.payment-hub-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:4px 0 12px;border-bottom:1px solid rgba(246,232,214,.12)}.payment-hub-head h4{margin:4px 0 0;color:#fff1e8;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:32px;line-height:.95;text-transform:uppercase}.payment-hub-kicker{color:#ff9b72;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.payment-hub-head p{max-width:680px;margin:6px 0 0;color:#a99c90;font-size:12px;line-height:1.5}.payment-hub-health{padding:10px 12px;border:1px solid rgba(246,232,214,.12);border-radius:8px;background:rgba(35,32,28,.78);font:700 10px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-hub-health.ready{border-color:rgba(112,183,139,.35);color:#a9ddb8}.payment-hub-health.waiting{border-color:rgba(231,172,119,.35);color:#efc28d}.payment-hub-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:14px}.payment-hub-card{padding:16px;border:1px solid rgba(246,232,214,.12);border-radius:10px;background:linear-gradient(145deg,rgba(46,40,34,.96),rgba(24,22,19,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.payment-hub-card h5{margin:0;color:#fff0e5;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:23px;line-height:1;text-transform:uppercase}.payment-hub-card>p{margin:7px 0 15px;color:#988d83;font-size:11px;line-height:1.5}.payment-hub-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.payment-hub-field{display:grid;gap:5px}.payment-hub-field.wide{grid-column:1/-1}.payment-hub-field label{color:#b9aaa0;font:700 9px "IBM Plex Mono",monospace;letter-spacing:.07em;text-transform:uppercase}.payment-hub-field input,.payment-hub-field select,.payment-hub-field textarea{box-sizing:border-box;width:100%;min-height:40px;border:1px solid rgba(246,232,214,.14);border-radius:6px;padding:9px 10px;background:#1b1916;color:#efe4d9;font-size:13px}.payment-hub-field textarea{min-height:82px;resize:vertical}.payment-hub-help{margin:2px 0 0;color:#887d72;font-size:10px;line-height:1.45}.payment-hub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.payment-hub-button{min-height:38px;border:1px solid rgba(255,132,86,.45);border-radius:6px;padding:0 12px;background:linear-gradient(135deg,#ff6a35,#de471b);color:#fff6f0;font:700 10px "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.payment-hub-button.secondary{border-color:rgba(246,232,214,.16);background:#2b2723;color:#e5d6ca}.payment-hub-button.warn{border-color:rgba(231,172,119,.42);background:rgba(151,103,62,.18);color:#f2c78d}.payment-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.payment-metric{padding:12px;border:1px solid rgba(246,232,214,.1);border-radius:7px;background:rgba(255,255,255,.018)}.payment-metric span{display:block;color:#91857a;font:700 9px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-metric strong{display:block;margin-top:6px;color:#ffad87;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:27px;line-height:.9}.payment-flow{display:grid;gap:0;margin-top:15px}.payment-flow-step{position:relative;padding:0 0 16px 28px;color:#b8aba0;font-size:11px;line-height:1.45}.payment-flow-step:before{content:"";position:absolute;left:7px;top:4px;width:9px;height:9px;border:2px solid #ff8d61;border-radius:50%;background:#241d18}.payment-flow-step:not(:last-child):after{content:"";position:absolute;left:12px;top:17px;bottom:-2px;width:1px;background:rgba(255,141,97,.42)}.payment-flow-step strong{display:block;color:#f3e7db;font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase}.payment-transactions{margin-top:14px;overflow:auto}.payment-transactions table{width:100%;border-collapse:collapse;font-size:11px}.payment-transactions th{padding:8px;text-align:left;color:#8f8277;font:700 9px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase}.payment-transactions td{padding:10px 8px;border-top:1px solid rgba(246,232,214,.08);color:#d8cbc0}.payment-chip{display:inline-flex;align-items:center;border:1px solid rgba(246,232,214,.12);border-radius:999px;padding:4px 7px;font:700 9px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-chip.paid{border-color:rgba(112,183,139,.42);background:rgba(112,183,139,.12);color:#a7dcb7}.payment-chip.waiting{border-color:rgba(231,172,119,.42);background:rgba(231,172,119,.10);color:#efc28d}.payment-chip.refund{border-color:rgba(209,131,131,.42);background:rgba(209,131,131,.10);color:#e4a5a5}.payment-order-state,.payment-waiting-note{margin:8px 0;padding:8px 9px;border-radius:6px;font-size:11px;line-height:1.4}.payment-order-state.waiting,.payment-waiting-note{border-left:3px solid #e7ac77;background:#fff7e6;color:#764d24}.payment-order-state.paid{border-left:3px solid #72b78b;background:#edf8ef;color:#356c48}.payment-order-state.refund{border-left:3px solid #c97878;background:#fff1ef;color:#803f39}@media(max-width:820px){.payment-hub-grid{grid-template-columns:1fr}.payment-hub-head{align-items:flex-start;flex-direction:column}.payment-hub-fields{grid-template-columns:1fr}.payment-hub-field.wide{grid-column:auto}}
+  .payment-connection-status{display:grid;gap:4px;margin:4px 0 14px;padding:12px 13px;border:1px solid rgba(246,232,214,.14);border-left:3px solid #e7ac77;border-radius:8px;background:rgba(255,255,255,.025)}.payment-connection-status strong{color:#fff0e5;font-size:13px}.payment-connection-status span{color:#b9aaa0;font-size:11px;line-height:1.45}.payment-connection-status.ready{border-left-color:#72b78b;background:rgba(112,183,139,.08)}.payment-connection-status.ready strong{color:#a9ddb8}.payment-connection-status.error{border-left-color:#c97878;background:rgba(209,131,131,.08)}.payment-connection-status.error strong{color:#e4a5a5}.payment-hub-choice{display:grid;gap:6px;min-height:40px;padding:9px 10px;border:1px solid rgba(246,232,214,.14);border-radius:6px;background:#1b1916;color:#efe4d9;font-size:13px}.payment-hub-choice label{display:flex;align-items:center;gap:8px;color:#efe4d9;font:600 12px Arial,sans-serif;letter-spacing:0;text-transform:none}.payment-hub-choice small{color:#887d72;font-size:10px}.payment-steps{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.payment-steps span{padding:6px 8px;border:1px solid rgba(246,232,214,.12);border-radius:999px;color:#887d72;font:700 9px "IBM Plex Mono",monospace}.payment-steps span.done{border-color:rgba(112,183,139,.35);background:rgba(112,183,139,.08);color:#a9ddb8}.payment-hub-panel{color:#eadfd4}.payment-hub{display:grid;gap:16px}.payment-hub-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:4px 0 12px;border-bottom:1px solid rgba(246,232,214,.12)}.payment-hub-head h4{margin:4px 0 0;color:#fff1e8;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:32px;line-height:.95;text-transform:uppercase}.payment-hub-kicker{color:#ff9b72;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.payment-hub-head p{max-width:680px;margin:6px 0 0;color:#a99c90;font-size:12px;line-height:1.5}.payment-hub-health{padding:10px 12px;border:1px solid rgba(246,232,214,.12);border-radius:8px;background:rgba(35,32,28,.78);font:700 10px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-hub-health.ready{border-color:rgba(112,183,139,.35);color:#a9ddb8}.payment-hub-health.waiting{border-color:rgba(231,172,119,.35);color:#efc28d}.payment-hub-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:14px}.payment-hub-card{padding:16px;border:1px solid rgba(246,232,214,.12);border-radius:10px;background:linear-gradient(145deg,rgba(46,40,34,.96),rgba(24,22,19,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.payment-hub-card h5{margin:0;color:#fff0e5;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:23px;line-height:1;text-transform:uppercase}.payment-hub-card>p{margin:7px 0 15px;color:#988d83;font-size:11px;line-height:1.5}.payment-hub-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.payment-hub-field{display:grid;gap:5px}.payment-hub-field.wide{grid-column:1/-1}.payment-hub-field label{color:#b9aaa0;font:700 9px "IBM Plex Mono",monospace;letter-spacing:.07em;text-transform:uppercase}.payment-hub-field input,.payment-hub-field select,.payment-hub-field textarea{box-sizing:border-box;width:100%;min-height:40px;border:1px solid rgba(246,232,214,.14);border-radius:6px;padding:9px 10px;background:#1b1916;color:#efe4d9;font-size:13px}.payment-hub-field textarea{min-height:82px;resize:vertical}.payment-hub-help{margin:2px 0 0;color:#887d72;font-size:10px;line-height:1.45}.payment-hub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.payment-hub-button{min-height:38px;border:1px solid rgba(255,132,86,.45);border-radius:6px;padding:0 12px;background:linear-gradient(135deg,#ff6a35,#de471b);color:#fff6f0;font:700 10px "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.payment-hub-button.secondary{border-color:rgba(246,232,214,.16);background:#2b2723;color:#e5d6ca}.payment-hub-button.warn{border-color:rgba(231,172,119,.42);background:rgba(151,103,62,.18);color:#f2c78d}.payment-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.payment-metric{padding:12px;border:1px solid rgba(246,232,214,.1);border-radius:7px;background:rgba(255,255,255,.018)}.payment-metric span{display:block;color:#91857a;font:700 9px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-metric strong{display:block;margin-top:6px;color:#ffad87;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:27px;line-height:.9}.payment-flow{display:grid;gap:0;margin-top:15px}.payment-flow-step{position:relative;padding:0 0 16px 28px;color:#b8aba0;font-size:11px;line-height:1.45}.payment-flow-step:before{content:"";position:absolute;left:7px;top:4px;width:9px;height:9px;border:2px solid #ff8d61;border-radius:50%;background:#241d18}.payment-flow-step:not(:last-child):after{content:"";position:absolute;left:12px;top:17px;bottom:-2px;width:1px;background:rgba(255,141,97,.42)}.payment-flow-step strong{display:block;color:#f3e7db;font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase}.payment-transactions{margin-top:14px;overflow:auto}.payment-transactions table{width:100%;border-collapse:collapse;font-size:11px}.payment-transactions th{padding:8px;text-align:left;color:#8f8277;font:700 9px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase}.payment-transactions td{padding:10px 8px;border-top:1px solid rgba(246,232,214,.08);color:#d8cbc0}.payment-chip{display:inline-flex;align-items:center;border:1px solid rgba(246,232,214,.12);border-radius:999px;padding:4px 7px;font:700 9px "IBM Plex Mono",monospace;text-transform:uppercase}.payment-chip.paid{border-color:rgba(112,183,139,.42);background:rgba(112,183,139,.12);color:#a7dcb7}.payment-chip.waiting{border-color:rgba(231,172,119,.42);background:rgba(231,172,119,.10);color:#efc28d}.payment-chip.refund{border-color:rgba(209,131,131,.42);background:rgba(209,131,131,.10);color:#e4a5a5}.payment-order-state,.payment-waiting-note{margin:8px 0;padding:8px 9px;border-radius:6px;font-size:11px;line-height:1.4}.payment-order-state.waiting,.payment-waiting-note{border-left:3px solid #e7ac77;background:#fff7e6;color:#764d24}.payment-order-state.paid{border-left:3px solid #72b78b;background:#edf8ef;color:#356c48}.payment-order-state.refund{border-left:3px solid #c97878;background:#fff1ef;color:#803f39}@media(max-width:820px){.payment-hub-grid{grid-template-columns:1fr}.payment-hub-head{align-items:flex-start;flex-direction:column}.payment-hub-fields{grid-template-columns:1fr}.payment-hub-field.wide{grid-column:auto}}
 </style>
 <script id="payment-hub-module">
 (() => {
-  const DEFAULT = { enabled:false, provider:'custom', providerLabel:'Gateway de pagamento', createPaymentUrl:'', webhookUrl:'', publicCheckoutCode:'', testMode:true, acceptedMethods:{pix:true,credit:true,debit:true,cash:true}, updatedAt:null };
+  'use strict';
+
+  const DEFAULT = {
+    enabled: false,
+    provider: 'mercadopago',
+    providerLabel: 'Mercado Pago',
+    testMode: false,
+    acceptedMethods: { pix: true, credit: true, debit: true, cash: true },
+    connectionStatus: 'disconnected',
+    connectedAt: null,
+    lastCheckedAt: null,
+    lastError: '',
+    updatedAt: null
+  };
+  const PROVIDERS = {
+    mercadopago: 'Mercado Pago',
+    infinitypay: 'InfinityPay',
+    santander: 'Santander',
+    bradesco: 'Bradesco',
+    custom: 'Outro provedor'
+  };
   const clone = value => JSON.parse(JSON.stringify(value));
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.',',')}`;
   const isOnlineMethod = value => ['pix','credit','debit'].includes(String(value || '').toLowerCase());
-  function config(){
-    window.DATA = window.DATA || {}; window.DATA.restaurant = window.DATA.restaurant || {};
+  const apiBase = () => String(window.PAYMENT_API_BASE || '/api').replace(/\/$/, '');
+  const providerName = cfg => PROVIDERS[cfg.provider] || cfg.providerLabel || 'Gateway de pagamento';
+
+  function config() {
+    window.DATA = window.DATA || {};
+    window.DATA.restaurant = window.DATA.restaurant || {};
     const stored = window.DATA.restaurant.paymentHub || {};
-    return { ...clone(DEFAULT), ...stored, acceptedMethods:{...DEFAULT.acceptedMethods,...(stored.acceptedMethods || {})} };
+    const acceptedMethods = { ...DEFAULT.acceptedMethods, ...(stored.acceptedMethods || {}) };
+    return {
+      ...clone(DEFAULT),
+      ...stored,
+      acceptedMethods,
+      providerLabel: PROVIDERS[stored.provider] || stored.providerLabel || PROVIDERS[DEFAULT.provider]
+    };
   }
-  function stateLabel(order){
-    const state = String(order?.paymentStatus || order?.payment?.status || 'pending').toLowerCase();
-    if(state === 'paid') return {label:'Pago', klass:'paid'};
-    if(state.includes('refund')) return {label:state === 'refunded' ? 'Estornado' : 'Estorno pendente', klass:'refund'};
-    if(state === 'awaiting_payment' || state === 'processing') return {label:'Aguardando', klass:'waiting'};
-    return {label:'Manual', klass:'waiting'};
+
+  function isConnectionReady(cfg = config()) {
+    return Boolean(cfg.testMode || ['connected','active','ready','test_ready'].includes(String(cfg.connectionStatus || '').toLowerCase()));
   }
-  function getPolicy(method){
-    const cfg = config(); const key = String(method || '').toLowerCase();
+
+  function statusMeta(cfg = config()) {
+    if (cfg.testMode) return { title: 'Modo de demonstração ativo', description: 'Você pode testar o fluxo sem movimentar dinheiro real.', klass: 'waiting', action: 'Ativar pagamentos reais' };
+    const status = String(cfg.connectionStatus || 'disconnected').toLowerCase();
+    if (['connected','active','ready'].includes(status)) return { title: 'Pagamentos online ativos', description: `Conta ${providerName(cfg)} conectada e pronta para receber.`, klass: 'ready', action: 'Verificar conexão' };
+    if (['pending','pending_review','incomplete'].includes(status)) return { title: 'Configuração em andamento', description: 'Sua conta precisa concluir uma etapa no provedor.', klass: 'waiting', action: 'Continuar configuração' };
+    if (status === 'error') return { title: 'A conexão precisa de atenção', description: cfg.lastError || 'Não foi possível validar a conta agora.', klass: 'error', action: 'Tentar novamente' };
+    return { title: 'Pagamentos online não conectados', description: 'Conecte sua conta para receber Pix e cartão automaticamente.', klass: 'waiting', action: 'Conectar pagamentos' };
+  }
+
+  async function apiJson(path, options = {}) {
+    const response = await fetch(`${apiBase()}${path}`, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      credentials: 'include'
+    });
+    let payload = null;
+    try { payload = await response.json(); } catch (_) {}
+    if (!response.ok) throw new Error(payload?.message || `Gateway HTTP ${response.status}`);
+    return payload || {};
+  }
+
+  async function persist(next) {
+    window.DATA.restaurant.paymentHub = next;
+    const result = await window.saveMenuData?.();
+    return result !== false;
+  }
+
+  function getPolicy(method) {
+    const cfg = config();
+    const key = String(method || '').toLowerCase();
     const online = isOnlineMethod(key) && cfg.enabled && cfg.acceptedMethods?.[key];
-    return { requiresOnlineConfirmation:Boolean(online), provider:cfg.provider || 'custom', providerLabel:cfg.providerLabel || 'Gateway de pagamento', testMode:Boolean(cfg.testMode) };
+    return {
+      requiresOnlineConfirmation: Boolean(online),
+      ready: !online || isConnectionReady(cfg),
+      provider: cfg.provider || 'manual',
+      providerLabel: providerName(cfg),
+      testMode: Boolean(cfg.testMode),
+      connectionStatus: cfg.connectionStatus || 'disconnected'
+    };
   }
-  async function saveFromForm(){
-    const root = document.getElementById('paymentHubRoot'); if(!root) return;
-    const read = name => root.querySelector(`[name="${name}"]`);
+
+  async function saveFromForm() {
+    const root = document.getElementById('paymentHubRoot');
+    if (!root) return;
     const current = config();
     const next = {
       ...current,
-      enabled:Boolean(read('enabled')?.checked), provider:String(read('provider')?.value || 'custom'), providerLabel:String(read('providerLabel')?.value || '').trim() || 'Gateway de pagamento', createPaymentUrl:String(read('createPaymentUrl')?.value || '').trim(), webhookUrl:String(read('webhookUrl')?.value || '').trim(), publicCheckoutCode:String(read('publicCheckoutCode')?.value || '').trim(), testMode:Boolean(read('testMode')?.checked),
-      acceptedMethods:{ pix:Boolean(read('pix')?.checked), credit:Boolean(read('credit')?.checked), debit:Boolean(read('debit')?.checked), cash:Boolean(read('cash')?.checked) }, updatedAt:new Date().toISOString()
+      enabled: Boolean(root.querySelector('[name="enabled"]')?.checked),
+      provider: String(root.querySelector('[name="provider"]')?.value || current.provider),
+      providerLabel: PROVIDERS[String(root.querySelector('[name="provider"]')?.value || current.provider)] || current.providerLabel,
+      testMode: Boolean(root.querySelector('[name="testMode"]')?.checked),
+      acceptedMethods: {
+        pix: Boolean(root.querySelector('[name="pix"]')?.checked),
+        credit: Boolean(root.querySelector('[name="credit"]')?.checked),
+        debit: Boolean(root.querySelector('[name="debit"]')?.checked),
+        cash: Boolean(root.querySelector('[name="cash"]')?.checked)
+      },
+      updatedAt: new Date().toISOString()
     };
-    if(next.enabled && !next.createPaymentUrl && !next.testMode){ alert('Para ativar pagamentos reais, informe a URL segura que cria a cobrança no servidor.'); return; }
-    window.DATA.restaurant.paymentHub = next;
-    const ok = await window.saveMenuData?.();
-    if(ok !== false) { render(); alert('Configuração de pagamentos salva.'); }
+    if (!next.enabled) {
+      next.connectionStatus = 'disconnected';
+      next.lastError = '';
+    } else if (next.testMode) {
+      next.connectionStatus = 'test_ready';
+      next.lastError = '';
+    }
+    await persist(next);
+    render();
+    syncCheckoutOptions();
+    alert(next.testMode ? 'Modo de demonstração ativado.' : 'Preferências de pagamento salvas.');
   }
-  async function markTestPaid(orderId){
-    const cfg=config(); if(!cfg.testMode){ alert('A confirmação manual só fica disponível em modo de teste.'); return; }
-    const order=(window.orders || []).find(item=>String(item.id)===String(orderId)); if(!order) return;
-    const changedAt=new Date().toISOString(); const payment={...(order.payment||{}),status:'paid',confirmedAt:changedAt,transactionId:`TEST-${String(order.id).slice(0,8).toUpperCase()}`};
-    const patch={status:'pending',paymentStatus:'paid',payment,paidAt:changedAt,updatedAt:changedAt,customerNotification:{type:'payment_confirmed',title:'Pagamento confirmado',message:'Seu pagamento foi confirmado e o pedido foi enviado para análise da loja.',createdAt:changedAt,read:false}};
-    try { await window.updateDoc(window.doc(window.db,'orders',String(order.id)),patch); Object.assign(order,patch); window.renderAdminOrders?.(); render(); } catch(error){ console.error(error); alert('Não foi possível confirmar o pagamento de teste.'); }
-  }
-  async function startCheckout(order){
-    const cfg=config(); if(!order?.payment?.requiresOnlineConfirmation) return {redirected:false};
-    if(cfg.testMode || !cfg.createPaymentUrl) return {redirected:false, waiting:true};
+
+  async function connectPayments() {
+    const cfg = config();
+    if (cfg.testMode) {
+      const next = { ...cfg, enabled: true, connectionStatus: 'test_ready', lastError: '', updatedAt: new Date().toISOString() };
+      await persist(next);
+      render();
+      syncCheckoutOptions();
+      alert('Modo de demonstração ativado. Nenhum pagamento real será processado.');
+      return;
+    }
     try {
-      const response=await fetch(cfg.createPaymentUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:order.id,amount:order.total,currency:'BRL',method:order.paymentMethod,customer:{name:order.userName,email:order.userEmail,phone:order.userPhone},returnUrl:window.location.href})});
-      if(!response.ok) throw new Error(`Gateway HTTP ${response.status}`);
-      const payload=await response.json(); if(!payload?.checkoutUrl) throw new Error('O servidor não retornou checkoutUrl.');
-      const changedAt=new Date().toISOString(); const payment={...(order.payment||{}),status:'processing',transactionId:payload.transactionId || '',checkoutSessionId:payload.sessionId || '',checkoutUrl:payload.checkoutUrl,startedAt:changedAt};
-      await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'processing',payment,updatedAt:changedAt});
-      window.location.assign(payload.checkoutUrl); return {redirected:true};
-    } catch(error){ console.error('Falha ao iniciar checkout:',error); alert('O pagamento não pôde ser iniciado agora. Seu pedido ficou salvo como aguardando pagamento.'); return {redirected:false,error:true}; }
+      const payload = await apiJson('/payment-connections/start', {
+        method: 'POST',
+        body: JSON.stringify({ provider: cfg.provider, returnUrl: window.location.href })
+      });
+      if (payload.authUrl || payload.authorizationUrl) {
+        window.location.assign(payload.authUrl || payload.authorizationUrl);
+        return;
+      }
+      const next = { ...cfg, enabled: true, connectionStatus: payload.status || (payload.connected ? 'connected' : 'pending'), connectedAt: payload.connectedAt || cfg.connectedAt, lastError: '', updatedAt: new Date().toISOString() };
+      await persist(next);
+      render();
+      syncCheckoutOptions();
+    } catch (error) {
+      const next = { ...cfg, connectionStatus: 'error', lastError: 'O servidor de pagamentos ainda não está disponível ou a conexão precisa ser retomada.', updatedAt: new Date().toISOString() };
+      await persist(next);
+      render();
+      alert('Não foi possível iniciar a conexão agora. Verifique se o serviço de pagamentos está publicado e tente novamente.');
+      console.error('Falha ao iniciar conexão de pagamentos:', error);
+    }
   }
-  async function queueRefund(orderId){
-    const order=(window.orders || []).find(item=>String(item.id)===String(orderId)); if(!order || order.paymentStatus !== 'refund_pending') return;
-    const cfg=config(); if(!cfg.createPaymentUrl || cfg.testMode) return;
-    try { await fetch(cfg.createPaymentUrl.replace(/\/?create-payment\/?$/,'/refund'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:order.id,transactionId:order.payment?.transactionId,amount:order.refund?.amount,reason:order.refund?.reason})}); } catch(error){ console.warn('Estorno ficou pendente para nova tentativa:',error); }
+
+  async function refreshConnection() {
+    const cfg = config();
+    if (cfg.testMode) {
+      alert('O modo de demonstração está ativo; não há conta real para verificar.');
+      return;
+    }
+    try {
+      const payload = await apiJson('/payment-connections/status', { method: 'GET', headers: {} });
+      const next = { ...cfg, enabled: Boolean(payload.enabled ?? cfg.enabled), connectionStatus: payload.status || 'disconnected', connectedAt: payload.connectedAt || cfg.connectedAt, lastCheckedAt: new Date().toISOString(), lastError: payload.lastError || '', updatedAt: new Date().toISOString() };
+      await persist(next);
+      render();
+      syncCheckoutOptions();
+      alert(statusMeta(next).description);
+    } catch (error) {
+      alert('Não foi possível verificar a conexão agora. Tente novamente em instantes.');
+      console.error('Falha ao verificar conexão de pagamentos:', error);
+    }
   }
-  function render(){
-    const root=document.getElementById('paymentHubRoot'); if(!root) return;
-    const cfg=config(); const online=(window.orders || []).filter(order=>order?.payment?.requiresOnlineConfirmation); const paid=online.filter(order=>String(order.paymentStatus).toLowerCase()==='paid'); const waiting=online.filter(order=>['awaiting_payment','processing'].includes(String(order.paymentStatus).toLowerCase())); const refunds=online.filter(order=>String(order.paymentStatus).toLowerCase().includes('refund'));
-    const enabledText=cfg.enabled ? (cfg.testMode ? 'Modo de teste ativo' : 'Gateway ativo') : 'Gateway desativado';
-    const health=cfg.enabled && (cfg.testMode || cfg.createPaymentUrl) ? 'ready' : 'waiting';
-    const rows=online.slice().sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,12).map(order=>{const state=stateLabel(order); return `<tr><td>#${esc(String(order.id||'').slice(0,7).toUpperCase())}</td><td>${esc(order.payment?.providerLabel||order.payment?.provider||'Gateway')}</td><td>${money(order.total)}</td><td><span class="payment-chip ${state.klass}">${state.label}</span></td><td>${state.klass==='waiting' && cfg.testMode ? `<button class="payment-hub-button warn" data-test-paid="${esc(order.id)}">Confirmar teste</button>` : '—'}</td></tr>`;}).join('') || '<tr><td colspan="5" style="color:#91857a;padding:16px 8px">Ainda não há transações online.</td></tr>';
-    root.innerHTML=`<div class="payment-hub"><div class="payment-hub-head"><div><span class="payment-hub-kicker">Financeiro e conciliação</span><h4>Central de pagamentos</h4><p>O pedido online só é liberado para análise da loja depois da confirmação do gateway. Em caso de recusa, o pagamento confirmado entra em fila de estorno.</p></div><div class="payment-hub-health ${health}">${esc(enabledText)}</div></div><div class="payment-hub-grid"><section class="payment-hub-card"><h5>Conexão do gateway</h5><p>Use uma integração de servidor para gerar cobranças e receber webhooks. Não coloque token secreto, senha ou chave privada neste arquivo.</p><div class="payment-hub-fields"><div class="payment-hub-field"><label>Provedor</label><select name="provider"><option value="infinitypay" ${cfg.provider==='infinitypay'?'selected':''}>InfinityPay</option><option value="santander" ${cfg.provider==='santander'?'selected':''}>Santander</option><option value="bradesco" ${cfg.provider==='bradesco'?'selected':''}>Bradesco</option><option value="custom" ${!['infinitypay','santander','bradesco'].includes(cfg.provider)?'selected':''}>Outro / próprio</option></select></div><div class="payment-hub-field"><label>Nome exibido</label><input name="providerLabel" value="${esc(cfg.providerLabel)}" placeholder="Ex.: InfinityPay"></div><div class="payment-hub-field wide"><label>URL segura para criar cobrança</label><input name="createPaymentUrl" inputmode="url" value="${esc(cfg.createPaymentUrl)}" placeholder="https://seu-servidor.com/create-payment"><small class="payment-hub-help">Esse endpoint recebe o pedido, usa as credenciais protegidas no servidor e devolve a URL de checkout do banco.</small></div><div class="payment-hub-field wide"><label>URL do webhook no seu servidor</label><input name="webhookUrl" inputmode="url" value="${esc(cfg.webhookUrl)}" placeholder="https://seu-servidor.com/payment-webhook"><small class="payment-hub-help">Cadastre esta URL no banco. O webhook deve validar assinatura, confirmar pagamento e atualizar o pedido para <code>paid</code> + <code>pending</code>.</small></div><div class="payment-hub-field wide"><label>Código público do checkout (referência)</label><textarea name="publicCheckoutCode" placeholder="Cole somente um identificador ou snippet público fornecido pelo provedor.">${esc(cfg.publicCheckoutCode)}</textarea><small class="payment-hub-help">Guardado apenas como referência. O sistema não executa HTML colado aqui, evitando scripts maliciosos e exposição de credenciais.</small></div></div><div class="payment-hub-actions"><button class="payment-hub-button" data-save-payment>Salvar configuração</button><button class="payment-hub-button secondary" data-test-webhook>Testar estrutura</button></div></section><aside class="payment-hub-card"><h5>Regras de liberação</h5><p>O fluxo financeiro acontece antes do fluxo operacional.</p><div class="payment-metrics"><div class="payment-metric"><span>Confirmados</span><strong>${paid.length}</strong></div><div class="payment-metric"><span>Aguardando</span><strong>${waiting.length}</strong></div><div class="payment-metric"><span>Estornos</span><strong>${refunds.length}</strong></div><div class="payment-metric"><span>Valor pago</span><strong>${money(paid.reduce((sum,order)=>sum+Number(order.total||0),0))}</strong></div></div><div class="payment-flow"><div class="payment-flow-step"><strong>1. Cliente paga</strong>O gateway cria e confirma a cobrança.</div><div class="payment-flow-step"><strong>2. Webhook valida</strong>O servidor marca o pedido como pago e libera para análise.</div><div class="payment-flow-step"><strong>3. Loja decide</strong>Ao aceitar, o pedido vai para produção.</div><div class="payment-flow-step"><strong>4. Recusa</strong>Pagamento já confirmado vira estorno pendente.</div></div><div class="payment-hub-actions"><label class="payment-hub-button secondary" style="display:flex;align-items:center;gap:8px"><input type="checkbox" name="enabled" ${cfg.enabled?'checked':''}> Ativar pagamentos online</label><label class="payment-hub-button warn" style="display:flex;align-items:center;gap:8px"><input type="checkbox" name="testMode" ${cfg.testMode?'checked':''}> Modo de teste</label></div><div class="payment-hub-actions" style="margin-top:8px"><label class="payment-hub-button secondary"><input type="checkbox" name="pix" ${cfg.acceptedMethods.pix?'checked':''}> Pix</label><label class="payment-hub-button secondary"><input type="checkbox" name="credit" ${cfg.acceptedMethods.credit?'checked':''}> Crédito</label><label class="payment-hub-button secondary"><input type="checkbox" name="debit" ${cfg.acceptedMethods.debit?'checked':''}> Débito</label><label class="payment-hub-button secondary"><input type="checkbox" name="cash" ${cfg.acceptedMethods.cash?'checked':''}> Dinheiro</label></div></aside></div><section class="payment-hub-card"><h5>Transações recentes</h5><p>Visão operacional dos pedidos que exigem confirmação online.</p><div class="payment-transactions"><table><thead><tr><th>Pedido</th><th>Provedor</th><th>Valor</th><th>Status</th><th>Ação</th></tr></thead><tbody>${rows}</tbody></table></div></section></div>`;
-    root.querySelector('[data-save-payment]')?.addEventListener('click',saveFromForm);
-    root.querySelector('[data-test-webhook]')?.addEventListener('click',()=>{const c=config(); alert(c.testMode ? 'Modo de teste pronto. Use “Confirmar teste” em uma transação aguardando pagamento.' : (c.createPaymentUrl && c.webhookUrl ? 'Estrutura configurada. Agora valide o endpoint e a assinatura do webhook no seu servidor.' : 'Faltam as URLs seguras de criação de cobrança e webhook.'));});
-    root.querySelectorAll('[data-test-paid]').forEach(button=>button.addEventListener('click',()=>markTestPaid(button.dataset.testPaid)));
+
+  async function testConnection() {
+    const cfg = config();
+    if (cfg.testMode) {
+      alert('Teste local concluído. Para validar pagamentos reais, desative o modo de demonstração e conecte a conta.');
+      return;
+    }
+    try {
+      const payload = await apiJson('/payment-connections/test', { method: 'POST', body: JSON.stringify({ provider: cfg.provider }) });
+      alert(payload.message || 'Conexão validada com sucesso.');
+    } catch (error) {
+      alert('O teste não foi concluído. Corrija a conexão e tente novamente.');
+      console.error('Falha no teste de pagamentos:', error);
+    }
   }
-  window.PaymentHub={config,getPolicy,startCheckout,queueRefund,render,markTestPaid};
-  document.getElementById('tabPayments')?.addEventListener('click',render);
+
+  async function disconnectPayments() {
+    if (!window.confirm('Desconectar pagamentos online? Pedidos já pagos não serão alterados, mas novos Pix e cartões deixarão de ser aceitos.')) return;
+    const cfg = config();
+    try { await apiJson('/payment-connections/disconnect', { method: 'POST', body: JSON.stringify({ provider: cfg.provider }) }); } catch (error) { console.warn('Não foi possível revogar a conexão no servidor:', error); }
+    const next = { ...cfg, enabled: false, connectionStatus: 'disconnected', connectedAt: null, lastError: '', updatedAt: new Date().toISOString() };
+    await persist(next);
+    render();
+    syncCheckoutOptions();
+  }
+
+  async function markTestPaid(orderId) {
+    const cfg = config();
+    if (!cfg.testMode) { alert('A confirmação manual só existe no modo de demonstração.'); return; }
+    const order = (window.orders || []).find(item => String(item.id) === String(orderId));
+    if (!order) return;
+    const changedAt = new Date().toISOString();
+    const payment = { ...(order.payment || {}), status: 'paid', confirmedAt: changedAt, transactionId: `TEST-${String(order.id).slice(0,8).toUpperCase()}` };
+    const patch = { status: 'pending', paymentStatus: 'paid', payment, paidAt: changedAt, updatedAt: changedAt, customerNotification: { type:'payment_confirmed', title:'Pagamento confirmado', message:'Seu pagamento de demonstração foi confirmado.', createdAt:changedAt, read:false } };
+    try {
+      await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), patch);
+      Object.assign(order, patch);
+      window.renderAdminOrders?.();
+      render();
+    } catch (error) {
+      console.error(error);
+      alert('Não foi possível confirmar o pagamento de demonstração.');
+    }
+  }
+
+  async function startCheckout(order) {
+    const policy = getPolicy(order?.paymentMethod);
+    if (!policy.requiresOnlineConfirmation) return { redirected:false, waiting:false };
+    if (!policy.ready) return { redirected:false, waiting:false, error:true, code:'gateway_not_ready' };
+    try {
+      const idempotencyKey = `order-${String(order.id)}-payment`;
+      const payload = await apiJson('/payments', {
+        method: 'POST',
+        body: JSON.stringify({ orderId: order.id, amount: Number(order.total || 0), currency:'BRL', method: order.paymentMethod, idempotencyKey, returnUrl: window.location.href })
+      });
+      if (!payload.checkoutUrl && !payload.authorizationUrl) throw new Error('O servidor não retornou a URL de pagamento.');
+      const changedAt = new Date().toISOString();
+      const payment = { ...(order.payment || {}), status:'processing', transactionId:payload.transactionId || '', checkoutSessionId:payload.sessionId || '', checkoutUrl:payload.checkoutUrl || payload.authorizationUrl, startedAt:changedAt };
+      await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { paymentStatus:'processing', payment, updatedAt:changedAt });
+      window.location.assign(payload.checkoutUrl || payload.authorizationUrl);
+      return { redirected:true };
+    } catch (error) {
+      console.error('Falha ao iniciar checkout:', error);
+      return { redirected:false, error:true };
+    }
+  }
+
+  async function queueRefund(orderId) {
+    const order = (window.orders || []).find(item => String(item.id) === String(orderId));
+    if (!order || order.paymentStatus !== 'refund_pending') return;
+    try {
+      await apiJson(`/payments/${encodeURIComponent(order.id)}/refund`, { method:'POST', body: JSON.stringify({ amount:order.refund?.amount, reason:order.refund?.reason }) });
+    } catch (error) {
+      console.warn('Estorno ficou pendente para nova tentativa:', error);
+    }
+  }
+
+  function syncCheckoutOptions() {
+    const cfg = config();
+    const pix = document.getElementById('paymentPix');
+    const pixLabel = pix?.closest('label');
+    const pixReady = Boolean(cfg.enabled && cfg.acceptedMethods?.pix && isConnectionReady(cfg));
+    if (pix && pixLabel) {
+      pix.disabled = !pixReady;
+      pixLabel.hidden = !pixReady;
+      const hint = pixLabel.querySelector('small');
+      if (hint) hint.textContent = pixReady ? `Aprovação rápida por ${providerName(cfg)}` : 'Conecte pagamentos online na administração';
+    }
+    ['paymentCredit','paymentDebit'].forEach(id => {
+      const input = document.getElementById(id);
+      const label = input?.closest('label');
+      const hint = label?.querySelector('small');
+      if (!input || !label || !hint) return;
+      const activeOnline = Boolean(cfg.enabled && cfg.acceptedMethods?.[input.value] && isConnectionReady(cfg));
+      input.disabled = false;
+      label.hidden = false;
+      hint.textContent = activeOnline ? `Pagamento online por ${providerName(cfg)}` : 'Pagamento na entrega';
+    });
+    const options = [...document.querySelectorAll('input[name="paymentMethod"]')];
+    const checked = options.find(input => input.checked && !input.disabled && !input.closest('label')?.hidden);
+    if (!checked) {
+      const firstAvailable = options.find(input => !input.disabled && !input.closest('label')?.hidden);
+      if (firstAvailable) firstAvailable.checked = true;
+    }
+    let notice = document.getElementById('checkoutPaymentGatewayNotice');
+    const paymentGroup = document.querySelector('.brasa-payment-options');
+    if (paymentGroup && !notice) {
+      notice = document.createElement('div');
+      notice.id = 'checkoutPaymentGatewayNotice';
+      notice.className = 'brasa-field-message';
+      notice.setAttribute('aria-live', 'polite');
+      paymentGroup.parentElement?.insertBefore(notice, paymentGroup);
+    }
+    if (notice) {
+      if (cfg.enabled && !isConnectionReady(cfg)) {
+        notice.textContent = 'Pagamentos online ainda não estão conectados. Cartão e débito continuam disponíveis para pagamento na entrega.';
+        notice.style.color = '#a86420';
+      } else if (cfg.enabled && isConnectionReady(cfg)) {
+        notice.textContent = `Pagamentos online ativos por ${providerName(cfg)}.`;
+        notice.style.color = '#2d7d4f';
+      } else {
+        notice.textContent = 'O pagamento online pode ser ativado pela administração da loja.';
+        notice.style.color = '';
+      }
+    }
+  }
+
+  function render() {
+    const root = document.getElementById('paymentHubRoot');
+    if (!root) return;
+    const cfg = config();
+    const meta = statusMeta(cfg);
+    const online = (window.orders || []).filter(order => order?.payment?.requiresOnlineConfirmation);
+    const paid = online.filter(order => String(order.paymentStatus).toLowerCase() === 'paid');
+    const waiting = online.filter(order => ['awaiting_payment','processing'].includes(String(order.paymentStatus).toLowerCase()));
+    const refunds = online.filter(order => String(order.paymentStatus).toLowerCase().includes('refund'));
+    const rows = online.slice().sort((a,b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0,12).map(order => {
+      const state = String(order.paymentStatus || order.payment?.status || 'pending').toLowerCase();
+      const label = state === 'paid' ? 'Pago' : state.includes('refund') ? 'Estorno' : state === 'processing' || state === 'awaiting_payment' ? 'Aguardando' : 'Manual';
+      const klass = state === 'paid' ? 'paid' : state.includes('refund') ? 'refund' : 'waiting';
+      return `<tr><td>#${esc(String(order.id || '').slice(0,7).toUpperCase())}</td><td>${esc(order.payment?.providerLabel || providerName(cfg))}</td><td>${money(order.total)}</td><td><span class="payment-chip ${klass}">${label}</span></td><td>${klass === 'waiting' && cfg.testMode ? `<button class="payment-hub-button warn" data-test-paid="${esc(order.id)}">Confirmar demonstração</button>` : '—'}</td></tr>`;
+    }).join('') || '<tr><td colspan="5" style="color:#91857a;padding:16px 8px">Ainda não há transações online.</td></tr>';
+    const providerOptions = Object.entries(PROVIDERS).map(([id, label]) => `<option value="${id}" ${cfg.provider === id ? 'selected' : ''}>${label}</option>`).join('');
+    root.innerHTML = `<div class="payment-hub">
+      <div class="payment-hub-head"><div><span class="payment-hub-kicker">Ativação simples</span><h4>Pagamentos online</h4><p>Conecte a conta da loja e receba Pix e cartão sem nenhuma configuração técnica.</p></div><div class="payment-hub-health ${meta.klass}">${esc(meta.title)}</div></div>
+      <div class="payment-hub-grid">
+        <section class="payment-hub-card">
+          <h5>Conexão da conta</h5>
+          <p>Você será direcionado ao provedor para autorizar a conexão. Os dados ficam protegidos no sistema.</p>
+          <div class="payment-connection-status ${meta.klass}"><strong>${esc(meta.title)}</strong><span>${esc(meta.description)}</span></div>
+          <div class="payment-hub-fields">
+            <div class="payment-hub-field"><label>Provedor</label><select name="provider">${providerOptions}</select><small class="payment-hub-help">Escolha onde a loja já recebe ou deseja receber.</small></div>
+            <div class="payment-hub-field"><label>Ambiente</label><div class="payment-hub-choice"><label><input type="checkbox" name="testMode" ${cfg.testMode ? 'checked' : ''}> Demonstração</label><small>Não movimenta dinheiro real.</small></div></div>
+          </div>
+          <div class="payment-hub-actions"><button class="payment-hub-button" data-connect-payment>${esc(meta.action)}</button><button class="payment-hub-button secondary" data-test-payment>Testar conexão</button>${isConnectionReady(cfg) && !cfg.testMode ? '<button class="payment-hub-button warn" data-disconnect-payment>Desconectar</button>' : ''}</div>
+          <div class="payment-hub-actions"><button class="payment-hub-button secondary" data-save-payment>Salvar preferências</button></div>
+          <div class="payment-steps"><span class="done">1. Escolha o provedor</span><span class="${isConnectionReady(cfg) ? 'done' : ''}">2. Autorize a conta</span><span class="${isConnectionReady(cfg) ? 'done' : ''}">3. Teste e ative</span></div>
+        </section>
+        <aside class="payment-hub-card"><h5>O que a loja controla</h5><p>Somente decisões do negócio. A parte técnica fica automática.</p><div class="payment-metrics"><div class="payment-metric"><span>Confirmados</span><strong>${paid.length}</strong></div><div class="payment-metric"><span>Aguardando</span><strong>${waiting.length}</strong></div><div class="payment-metric"><span>Estornos</span><strong>${refunds.length}</strong></div><div class="payment-metric"><span>Valor pago</span><strong>${money(paid.reduce((sum, order) => sum + Number(order.total || 0), 0))}</strong></div></div><div class="payment-flow"><div class="payment-flow-step"><strong>1. Cliente paga</strong>O provedor cria e confirma a cobrança.</div><div class="payment-flow-step"><strong>2. Sistema valida</strong>O servidor confirma o valor e atualiza o pedido.</div><div class="payment-flow-step"><strong>3. Loja produz</strong>O pedido é liberado depois do pagamento.</div></div><div class="payment-hub-actions" style="margin-top:8px"><label class="payment-hub-button secondary"><input type="checkbox" name="enabled" ${cfg.enabled ? 'checked' : ''}> Aceitar pagamentos online</label></div><div class="payment-hub-actions" style="margin-top:8px"><label class="payment-hub-button secondary"><input type="checkbox" name="pix" ${cfg.acceptedMethods.pix ? 'checked' : ''}> Pix</label><label class="payment-hub-button secondary"><input type="checkbox" name="credit" ${cfg.acceptedMethods.credit ? 'checked' : ''}> Crédito</label><label class="payment-hub-button secondary"><input type="checkbox" name="debit" ${cfg.acceptedMethods.debit ? 'checked' : ''}> Débito</label><label class="payment-hub-button secondary"><input type="checkbox" name="cash" ${cfg.acceptedMethods.cash ? 'checked' : ''}> Dinheiro na entrega</label></div></aside>
+      </div>
+      <section class="payment-hub-card"><h5>Transações recentes</h5><p>Status operacional dos pedidos que usam pagamento online.</p><div class="payment-transactions"><table><thead><tr><th>Pedido</th><th>Provedor</th><th>Valor</th><th>Status</th><th>Ação</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+    </div>`;
+    root.querySelector('[data-save-payment]')?.addEventListener('click', saveFromForm);
+    root.querySelector('[data-connect-payment]')?.addEventListener('click', connectPayments);
+    root.querySelector('[data-test-payment]')?.addEventListener('click', testConnection);
+    root.querySelector('[data-disconnect-payment]')?.addEventListener('click', disconnectPayments);
+    root.querySelectorAll('[data-test-paid]').forEach(button => button.addEventListener('click', () => markTestPaid(button.dataset.testPaid)));
+    root.querySelector('[name="testMode"]')?.addEventListener('change', event => {
+      const cfgNow = config();
+      const next = { ...cfgNow, testMode: Boolean(event.target.checked), connectionStatus: event.target.checked ? 'test_ready' : (cfgNow.connectionStatus === 'test_ready' ? 'disconnected' : cfgNow.connectionStatus) };
+      persist(next).then(() => { render(); syncCheckoutOptions(); });
+    });
+    syncCheckoutOptions();
+  }
+
+  window.PaymentHub = { config, getPolicy, startCheckout, queueRefund, render, markTestPaid, syncCheckoutOptions, isConnectionReady, apiBase };
+  document.getElementById('tabPayments')?.addEventListener('click', render);
 })();
 </script>
 <script>
@@ -18015,57 +18867,49 @@ updatedAt:changedAt };
       position: absolute; bottom: 24px; left: 0; right: 0;
       font-size: 13px; color: #584e44; text-align: center;
     }
-
-    /* ====== ADMIN PANEL CSS (unchanged) ====== */
-    .totem-admin-section { margin-bottom: 24px; }
-    .totem-admin-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-top: 16px;
-    }
-    .totem-admin-card {
-      background: #faf8f5; border: 1px solid #e0dcd5; border-radius: 12px; padding: 16px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .totem-admin-card-header { display: flex; align-items: center; justify-content: space-between; }
-    .totem-admin-card-header h5 { font-size: 17px; margin: 0; font-weight: 700; color: #333; }
-    .totem-admin-card-creds {
-      background: #f0ede8; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #555;
-    }
-    .totem-admin-card-creds b { color: #333; }
-    .totem-admin-card-status {
-      display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600;
-    }
-    .totem-admin-status-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .totem-admin-status-dot.online { background: #4CAF50; }
-    .totem-admin-status-dot.offline { background: #ccc; }
-    .totem-admin-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .totem-admin-btn {
-      padding: 8px 14px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-    .totem-admin-btn.online-btn { background: #4CAF50; color: #fff; }
-    .totem-admin-btn.offline-btn { background: #ff9800; color: #fff; }
-    .totem-admin-btn.history-btn { background: #9c27b0; color: #fff; }
-    .totem-admin-btn.delete-btn { background: #f44336; color: #fff; }
-    .totem-admin-add-btn {
-      padding: 12px 24px; background: #ff5a1f; color: #fff; border: none; border-radius: 10px;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-    }
-    .totem-admin-history-modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000;
-      display: flex; align-items: center; justify-content: center; padding: 20px;
-    }
-    .totem-admin-history-box {
-      background: #fff; border-radius: 14px; padding: 24px; max-width: 600px; width: 100%;
-      max-height: 80vh; overflow-y: auto;
-    }
-    .totem-admin-history-box h4 { font-size: 20px; margin: 0 0 16px; }
-    .totem-admin-history-item {
-      padding: 12px; border-bottom: 1px solid #eee; font-size: 14px;
-    }
-    .totem-admin-history-item b { color: #333; }
-    .totem-admin-history-close {
-      margin-top: 16px; padding: 10px 20px; background: #333; color: #fff; border: none;
-      border-radius: 8px; cursor: pointer; font-size: 15px;
-    }
+    /* ====== ADMIN PANEL CSS — visual profissional ====== */
+    .totem-admin-section { margin-bottom: 24px; padding: 18px; border: 1px solid rgba(246,232,214,.1); border-radius: 14px; background: linear-gradient(145deg,rgba(40,35,31,.9),rgba(22,20,18,.96)); }
+    .totem-admin-section p { color: #a99d91 !important; line-height: 1.5; }
+    .totem-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(315px, 1fr)); gap: 14px; margin-top: 16px; }
+    .totem-admin-card { position: relative; overflow: hidden; background: linear-gradient(145deg,#28231f,#181613); border: 1px solid rgba(246,232,214,.13); border-radius: 14px; padding: 0; display: flex; flex-direction: column; gap: 0; box-shadow: 0 12px 28px rgba(0,0,0,.18); transition: transform .16s ease,border-color .16s ease,box-shadow .16s ease; }
+    .totem-admin-card:hover { transform: translateY(-2px); border-color: rgba(255,135,83,.45); box-shadow: 0 16px 32px rgba(0,0,0,.25); }
+    .totem-admin-card.online { border-color: rgba(112,183,139,.3); }
+    .totem-admin-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 16px 13px; border-bottom: 1px solid rgba(246,232,214,.1); background: linear-gradient(90deg,rgba(255,90,31,.1),transparent); }
+    .totem-admin-card-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .totem-admin-device-icon { display: grid; width: 36px; height: 36px; place-items: center; flex: none; border: 1px solid rgba(255,135,83,.38); border-radius: 10px; background: rgba(255,90,31,.14); color: #ffae88; font-size: 17px; }
+    .totem-admin-card-header h5 { margin: 3px 0 0; overflow: hidden; color: #fff1e7 !important; font-size: 18px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .totem-admin-card-header small { color: #95897e; font-size: 10px; }
+    .totem-admin-eyebrow { display: block; color: #ff9b72; font: 700 8px "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .totem-admin-card-status { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 5px 8px; border: 1px solid rgba(246,232,214,.16); border-radius: 999px; color: #bfb2a6; font: 700 9px "IBM Plex Mono",monospace; text-transform: uppercase; }
+    .totem-admin-card.online .totem-admin-card-status { border-color: rgba(112,183,139,.38); color: #a9ddb8; }
+    .totem-admin-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #746b63; box-shadow: 0 0 0 3px rgba(255,255,255,.04); }
+    .totem-admin-status-dot.online { background: #72c78b; box-shadow: 0 0 0 3px rgba(114,199,139,.13); }
+    .totem-admin-card-body { padding: 14px 16px 0; }
+    .totem-admin-credential-card { padding: 12px; border: 1px solid rgba(246,232,214,.1); border-radius: 9px; background: rgba(8,8,7,.28); }
+    .totem-admin-credential-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .totem-admin-credential-head span { color: #ffad88; font: 700 9px "IBM Plex Mono",monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .totem-admin-copy-btn { min-height: 25px; border: 1px solid rgba(255,135,83,.32); border-radius: 5px; padding: 0 8px; background: rgba(255,90,31,.1); color: #ffb08b; font: 700 8px "IBM Plex Mono",monospace; cursor: pointer; }
+    .totem-admin-credential-row { display: grid; grid-template-columns: 58px minmax(0,1fr); gap: 5px 8px; align-items: center; font-size: 11px; }
+    .totem-admin-credential-row span { color: #8f8378; font: 8px "IBM Plex Mono",monospace; text-transform: uppercase; }
+    .totem-admin-credential-row b { overflow: hidden; color: #f1e7dd; font-family: "IBM Plex Mono",monospace; text-overflow: ellipsis; white-space: nowrap; }
+    .totem-admin-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 7px; margin-top: 10px; }
+    .totem-admin-stat { padding: 9px; border: 1px solid rgba(246,232,214,.08); border-radius: 7px; background: rgba(255,255,255,.025); }
+    .totem-admin-stat span { display: block; color: #8f8378; font: 8px "IBM Plex Mono",monospace; text-transform: uppercase; }
+    .totem-admin-stat strong { display: block; margin-top: 5px; color: #f3e8dd; font-size: 15px; }
+    .totem-admin-last-active { margin: 10px 0 0; color: #92867b; font-size: 10px; }
+    .totem-admin-card-actions { display: flex; gap: 7px; flex-wrap: wrap; padding: 14px 16px 16px; }
+    .totem-admin-btn { min-height: 32px; border: 1px solid rgba(246,232,214,.13); border-radius: 6px; padding: 0 10px; background: #26221e; color: #e5d8cc; font: 700 9px "IBM Plex Mono",monospace; cursor: pointer; }
+    .totem-admin-btn.online-btn { border-color: rgba(112,183,139,.38); background: rgba(112,183,139,.12); color: #a9ddb8; }
+    .totem-admin-btn.offline-btn { border-color: rgba(231,172,119,.38); background: rgba(151,103,62,.15); color: #f0c18b; }
+    .totem-admin-btn.history-btn { border-color: rgba(156,116,220,.4); background: rgba(126,87,177,.15); color: #d0b9ff; }
+    .totem-admin-btn.delete-btn { border-color: rgba(209,131,131,.36); background: rgba(209,131,131,.1); color: #e4a5a5; }
+    .totem-admin-add-btn { min-height: 42px; border: 0; border-radius: 7px; padding: 0 16px; background: linear-gradient(135deg,#ff6a35,#de471b); color: #fff6f0; font: 800 10px "IBM Plex Mono",monospace; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; box-shadow: 0 7px 16px rgba(255,90,31,.2); }
+    .totem-admin-history-modal { position: fixed; inset: 0; background: rgba(0,0,0,.72); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .totem-admin-history-box { width: 100%; max-width: 600px; max-height: 80vh; overflow-y: auto; border: 1px solid rgba(255,135,83,.3); border-radius: 14px; padding: 24px; background: linear-gradient(145deg,#28231f,#181613); color: #eee5da; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+    .totem-admin-history-box h4 { margin: 0 0 16px; color: #fff1e7; font-size: 20px; }
+    .totem-admin-history-item { padding: 12px 0; border-bottom: 1px solid rgba(246,232,214,.1); color: #bcaea1; font-size: 12px; line-height: 1.55; }
+    .totem-admin-history-item b { color: #f1e7dd; }
+    .totem-admin-history-close { margin-top: 16px; min-height: 34px; border: 1px solid rgba(246,232,214,.15); border-radius: 6px; padding: 0 14px; background: #2b2723; color: #eee5da; cursor: pointer; font: 700 10px "IBM Plex Mono",monospace; }
 
     /* ====== RESPONSIVE: Mobile ====== */
     @media (max-width: 700px) {
@@ -19010,49 +19854,15 @@ updatedAt:changedAt };
   function renderAdmin() {
     const root = document.getElementById('totemAdminRoot');
     if (!root) return;
-
     const cards = totemMachines.map(t => {
       const orderCount = totemOrders.filter(o => o.totemId === t.id).length;
       const statusClass = t.online ? 'online' : 'offline';
       const statusLabel = t.online ? 'Online' : 'Offline';
-      return `
-        <div class="totem-admin-card">
-          <div class="totem-admin-card-header">
-            <h5>📱 ${escapeHtml(t.name)}</h5>
-            <div class="totem-admin-card-status">
-              <span class="totem-admin-status-dot ${statusClass}"></span>
-              ${statusLabel}
-            </div>
-          </div>
-          <div class="totem-admin-card-creds">
-            <div>Usuário: <b>${escapeHtml(t.username)}</b></div>
-            <div>Senha: <b>${escapeHtml(t.password)}</b></div>
-            <div>Pedidos: <b>${orderCount}</b> · Criado em: ${escapeHtml(formatDate(t.createdAt))}</div>
-            <div>Última atividade: ${t.lastActiveAt ? escapeHtml(formatDateTime(t.lastActiveAt)) : 'Nunca'}</div>
-          </div>
-          <div class="totem-admin-card-actions">
-            ${t.online
-              ? `<button class="totem-admin-btn offline-btn" data-totem-offline="${escapeAttr(t.id)}">🔴 Colcar Offline</button>`
-              : `<button class="totem-admin-btn online-btn" data-totem-online="${escapeAttr(t.id)}">🟢 Colocar Online</button>`
-            }
-            <button class="totem-admin-btn history-btn" data-totem-history="${escapeAttr(t.id)}">📜 Histórico</button>
-            <button class="totem-admin-btn delete-btn" data-totem-delete="${escapeAttr(t.id)}">🗑 Excluir</button>
-          </div>
-        </div>
-      `;
+      const lastActive = t.lastActiveAt ? `Última atividade: ${escapeHtml(formatDateTime(t.lastActiveAt))}` : 'Ainda não utilizado';
+      const credentials = `${t.username} · ${t.password}`;
+      return `<article class="totem-admin-card ${statusClass}"><div class="totem-admin-card-header"><div class="totem-admin-card-title"><span class="totem-admin-device-icon">▣</span><div><span class="totem-admin-eyebrow">Dispositivo de autoatendimento</span><h5>${escapeHtml(t.name)}</h5><small>Totem ${escapeHtml(String(t.number || '—'))}</small></div></div><div class="totem-admin-card-status"><span class="totem-admin-status-dot ${statusClass}"></span>${statusLabel}</div></div><div class="totem-admin-card-body"><div class="totem-admin-credential-card"><div class="totem-admin-credential-head"><span>Acesso do dispositivo</span><button type="button" class="totem-admin-copy-btn" data-copy-totem="${escapeAttr(credentials)}">Copiar acesso</button></div><div class="totem-admin-credential-row"><span>Usuário</span><b>${escapeHtml(t.username)}</b><span>Senha</span><b>${escapeHtml(t.password)}</b></div></div><div class="totem-admin-stats"><div class="totem-admin-stat"><span>Pedidos</span><strong>${orderCount}</strong></div><div class="totem-admin-stat"><span>Criado em</span><strong>${escapeHtml(formatDate(t.createdAt))}</strong></div></div><p class="totem-admin-last-active">${lastActive}</p></div><div class="totem-admin-card-actions">${t.online ? `<button class="totem-admin-btn offline-btn" data-totem-offline="${escapeAttr(t.id)}">Colocar offline</button>` : `<button class="totem-admin-btn online-btn" data-totem-online="${escapeAttr(t.id)}">Colocar online</button>`}<button class="totem-admin-btn history-btn" data-totem-history="${escapeAttr(t.id)}">Ver histórico</button><button class="totem-admin-btn delete-btn" data-totem-delete="${escapeAttr(t.id)}">Excluir</button></div></article>`;
     }).join('');
-
-    root.innerHTML = `
-      <div class="totem-admin-section">
-        <button class="totem-admin-add-btn" id="totemAddBtn">+ Cadastrar Novo Totem</button>
-        <p style="color:var(--muted);font-size:12px;margin-top:8px">Cada totem recebe credenciais automáticas (totem1/totem123, totem2/totem123, etc.). Use essas credenciais no modal de entrada para acessar o modo quiosque.</p>
-      </div>
-      ${totemMachines.length === 0
-        ? '<div style="text-align:center;padding:40px;color:var(--muted)">Nenhum totem cadastrado. Clique em "Cadastrar Novo Totem" para começar.</div>'
-        : `<div class="totem-admin-grid">${cards}</div>`
-      }
-    `;
-
+    root.innerHTML = `<div class="totem-admin-section"><button class="totem-admin-add-btn" id="totemAddBtn">+ Cadastrar novo totem</button><p>Cadastre um dispositivo e use o acesso gerado na tela de entrada do modo quiosque. O sistema mantém o histórico de pedidos separado por equipamento.</p></div>${totemMachines.length === 0 ? '<div style="text-align:center;padding:40px;color:#9f9287">Nenhum totem cadastrado. Clique em “Cadastrar novo totem” para começar.</div>' : `<div class="totem-admin-grid">${cards}</div>`}`;
     attachAdminEvents();
   }
 
@@ -19064,6 +19874,19 @@ updatedAt:changedAt };
       const t = createTotem(name);
       alert(`Totem cadastrado!\n\nUsuário: ${t.username}\nSenha: ${t.password}\n\nUse essas credenciais no modal de entrada para acessar o modo quiosque.`);
       renderAdmin();
+    });
+
+    document.querySelectorAll('[data-copy-totem]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const value = btn.dataset.copyTotem || '';
+        try {
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+          else { const area = document.createElement('textarea'); area.value = value; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); }
+          const previous = btn.textContent;
+          btn.textContent = 'Copiado';
+          setTimeout(() => { btn.textContent = previous; }, 1400);
+        } catch (_) { alert(`Acesso do totem: ${value}`); }
+      });
     });
 
     document.querySelectorAll('[data-totem-online]').forEach(btn => {
