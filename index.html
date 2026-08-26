@@ -2533,21 +2533,68 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 <style id="menu-promotions-same-size">
   #items .menu-promotions-grid{align-items:stretch}
   #items .menu-promotions-grid .menu-card{flex:0 0 var(--promo-card-width,calc((100% - 42px)/4));width:var(--promo-card-width,calc((100% - 42px)/4));height:var(--promo-card-height,auto);min-height:0;box-sizing:border-box;padding:12px;border:0;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-  #items .menu-promotions-grid .menu-card-img{flex:0 0 var(--promo-image-height,clamp(96px,12vw,140px));height:var(--promo-image-height,clamp(96px,12vw,140px));min-height:0;aspect-ratio:auto}
-  #items .menu-promotions-grid .menu-card-body{min-height:0;overflow:hidden;padding:9px 8px 8px}
-  @media(max-width:600px){#items .menu-promotions-grid .menu-card{flex-basis:var(--promo-card-width,calc((100% - 14px)/3));width:var(--promo-card-width,calc((100% - 14px)/3));padding:7px;border-radius:11px}#items .menu-promotions-grid .menu-card-img{height:var(--promo-image-height,clamp(88px,26vw,108px));border-radius:8px}#items .menu-promotions-grid .menu-card-body{padding:6px 3px 2px}}
+  #items .menu-promotions-grid .menu-card-img{flex:0 0 max(84px,calc(var(--promo-image-height,140px) - 20px));height:max(84px,calc(var(--promo-image-height,140px) - 20px));min-height:0;aspect-ratio:auto}
+  #items .menu-promotions-grid .menu-card-body{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow:visible;padding:9px 8px 8px}
+  #items .menu-promotions-grid .menu-card-title{display:-webkit-box;flex:0 0 auto;max-height:2.25em;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  #items .menu-promotions-grid .product-promo-badge{flex:0 0 auto;min-height:13px;margin:5px 0 0;padding:2px 6px;line-height:1.1}
+  #items .menu-promotions-grid .menu-card-price{flex:0 0 auto;margin:5px 0 0;line-height:1.1;white-space:nowrap}
+  #items .menu-promotions-grid .promo-current-price{font-size:15px;line-height:1.1}
+  #items .menu-promotions-grid .promo-original-price{font-size:9px;line-height:1.1}
+  #items .menu-promotions-grid .menu-card-btn{flex:0 0 32px;height:32px;min-height:32px;margin-top:auto;padding:7px 8px;line-height:1.1;white-space:nowrap}
+  @media(max-width:600px){#items .menu-promotions-grid .menu-card{flex-basis:var(--promo-card-width,calc((100% - 14px)/3));width:var(--promo-card-width,calc((100% - 14px)/3));padding:7px;border-radius:11px}#items .menu-promotions-grid .menu-card-img{height:max(84px,calc(var(--promo-image-height,108px) - 20px));border-radius:8px}#items .menu-promotions-grid .menu-card-body{padding:6px 3px 2px}#items .menu-promotions-grid .product-promo-badge{min-height:11px;margin-top:4px;padding:2px 5px;font-size:8px}#items .menu-promotions-grid .menu-card-price{margin-top:4px;font-size:12px}#items .menu-promotions-grid .promo-current-price{font-size:12px}#items .menu-promotions-grid .promo-original-price{font-size:8px}#items .menu-promotions-grid .menu-card-btn{flex-basis:28px;height:28px;min-height:28px;margin-top:auto;padding:6px 4px;font-size:10px}}
 </style>
 <style id="menu-promotions-carousel-style">
   #items .menu-promotions-carousel{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;align-items:center;gap:7px;min-width:0}
-  #items .menu-promotions-grid{min-width:0;overscroll-behavior-x:contain;scrollbar-width:none;scroll-behavior:smooth;touch-action:pan-x}
+  #items .menu-promotions-grid{min-width:0;overscroll-behavior-x:contain;scrollbar-width:none;scroll-behavior:auto;scroll-snap-type:none;touch-action:pan-x}
   #items .menu-promotions-grid::-webkit-scrollbar{display:none}
   #items .menu-promotions-nav{display:grid;width:32px;height:40px;place-items:center;border:1px solid rgba(255,172,119,.36);border-radius:10px;background:rgba(255,90,31,.13);color:#ffd0b5;font:400 27px/1 Arial,sans-serif;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
   #items .menu-promotions-nav:hover{border-color:rgba(255,188,139,.72);background:rgba(255,90,31,.27);transform:translateY(-1px)}
   #items .menu-promotions-nav:focus-visible{outline:2px solid #ffc09a;outline-offset:2px}
   #items .menu-promotions-loop-hint{margin:5px 2px 0;color:rgba(255,211,190,.72);font:9px/1.35 "IBM Plex Mono",monospace;letter-spacing:.02em;text-align:center}
-  @media(max-width:600px){#items .menu-promotions-carousel{grid-template-columns:26px minmax(0,1fr) 26px;gap:5px}#items .menu-promotions-nav{width:26px;height:35px;border-radius:8px;font-size:23px}#items .menu-promotions-loop-hint{font-size:8px}}
+  #items .menu-promotions-carousel.is-static{display:block}
+  #items .menu-promotions-carousel.is-static .menu-promotions-grid{justify-content:flex-start;overflow:visible;scroll-snap-type:none;flex-wrap:wrap}
+  #items .menu-promotions-carousel.is-carousel{grid-template-columns:32px minmax(0,calc(var(--promo-card-width,198px) * 3 + 24px)) 32px;justify-content:center}
+  #items .menu-promotions-carousel.is-carousel .menu-promotions-grid{width:min(100%,calc(var(--promo-card-width,198px) * 3 + 24px));max-width:calc(var(--promo-card-width,198px) * 3 + 24px);margin:0 auto}
+  @media(max-width:600px){#items .menu-promotions-carousel{grid-template-columns:26px minmax(0,1fr) 26px;gap:5px}#items .menu-promotions-carousel.is-static{display:block}#items .menu-promotions-nav{width:26px;height:35px;border-radius:8px;font-size:23px}#items .menu-promotions-loop-hint{font-size:8px}}
+  @media(max-width:470px){#items .menu-promotions-carousel.is-carousel{grid-template-columns:26px minmax(0,1fr) 26px}#items .menu-promotions-carousel.is-carousel .menu-promotions-grid{width:100%;max-width:100%}}
 </style>
 </head>
+<style id="menu-categories-visual-style">
+  #brasaPdvRail{display:none!important}
+  #cats.menu-category-visual-nav{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:14px;overflow-x:auto;margin:0 0 5px;padding:8px 2px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #cats.menu-category-visual-nav::-webkit-scrollbar{display:none}
+  #cats.menu-category-visual-nav>button.menu-category-card{display:flex;flex:0 0 78px;flex-direction:column;align-items:center;gap:7px;width:78px;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#b9aea3;font-family:"Manrope","Segoe UI",Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0;text-align:center;cursor:pointer;transition:color .18s ease,transform .18s ease}
+  #cats.menu-category-visual-nav>button.menu-category-card:hover{color:#ffd0b5;transform:translateY(-2px)}
+  #cats.menu-category-visual-nav>button.menu-category-card:focus-visible{outline:2px solid #ff9b72;outline-offset:4px;border-radius:9px}
+  #cats.menu-category-visual-nav .menu-category-image{display:grid;width:70px;height:70px;place-items:center;overflow:hidden;border:1px solid rgba(246,232,214,.16);border-radius:50%;background:radial-gradient(circle at 34% 24%,rgba(255,255,255,.2),rgba(255,255,255,.06) 42%,rgba(0,0,0,.28) 100%),linear-gradient(145deg,#443127,#1c1713);box-shadow:0 6px 12px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+  #cats.menu-category-visual-nav .menu-category-image img{display:block;width:100%;height:100%;object-fit:cover}
+  #cats.menu-category-visual-nav .menu-category-image-fallback{display:grid;width:100%;height:100%;place-items:center;color:#ffb28e;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:26px;font-weight:800;text-transform:uppercase}
+  #cats.menu-category-visual-nav .menu-category-name{display:-webkit-box;width:100%;min-height:24px;overflow:hidden;color:inherit;font-size:10px;line-height:1.16;text-overflow:ellipsis;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  #cats.menu-category-visual-nav>button.menu-category-card.active{color:#ffe0cf}
+  #cats.menu-category-visual-nav>button.menu-category-card.active .menu-category-image{border-color:#ff7d4a;box-shadow:0 0 0 3px rgba(255,90,31,.18),0 7px 15px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.18);transform:translateY(-1px)}
+  #cats.menu-category-visual-nav>button.menu-category-card.active .menu-category-name{color:#ffb18e}
+  .category-editor-card{width:min(560px,calc(100vw - 28px));max-height:88vh;overflow:auto;padding:0!important;border-color:rgba(255,135,83,.32)!important;background-image:linear-gradient(135deg,#211b16,#12110f),repeating-linear-gradient(112deg,transparent 0 13px,rgba(255,255,255,.013) 13px 14px)!important}
+  .category-editor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px 14px;border-bottom:1px solid var(--line)}
+  .category-editor-head h3{margin:3px 0 0;color:#fff3e8;font:800 28px/.95 "Barlow Condensed","Arial Narrow",sans-serif;text-transform:uppercase}
+  .category-editor-head p{margin:7px 0 0;color:#a79b8e;font-size:11px;line-height:1.45}
+  .category-editor-body{padding:18px 22px 21px}
+  .category-editor-body label{display:block;margin:0 0 7px;color:#d9cabe;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .category-editor-body input[type="text"]{width:100%;min-height:42px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:#211f1b;color:#f1e8df;font-size:13px}
+  .category-editor-body input[type="text"]:focus{outline:2px solid rgba(255,126,79,.42);outline-offset:1px}
+  .category-image-upload{display:flex;align-items:center;gap:14px;margin-top:16px;padding:13px;border:1px dashed rgba(255,156,112,.36);border-radius:9px;background:rgba(255,255,255,.025)}
+  .category-image-preview{display:grid;flex:0 0 86px;width:86px;height:86px;place-items:center;overflow:hidden;border:1px solid rgba(255,156,112,.28);border-radius:50%;background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.19),rgba(255,255,255,.05) 43%,rgba(0,0,0,.3)),#2a211a;color:#ffb18e;font:800 28px "Barlow Condensed","Arial Narrow",sans-serif}
+  .category-image-preview img{display:block;width:100%;height:100%;object-fit:cover}
+  .category-image-copy{min-width:0;flex:1}
+  .category-image-copy strong{display:block;color:#f4e8dd;font-size:12px}
+  .category-image-copy small{display:block;margin-top:4px;color:#a79b8e;font-size:10px;line-height:1.4}
+  .category-image-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+  .category-image-actions label,.category-image-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:30px;margin:0;padding:0 10px;border:1px solid rgba(255,156,112,.3);border-radius:5px;background:rgba(255,90,31,.1);color:#ffb18e;font-size:10px;font-weight:800;cursor:pointer}
+  .category-image-actions label:hover,.category-image-actions button:hover{border-color:#ff8f61;background:rgba(255,90,31,.2)}
+  .category-image-actions input{display:none}
+  .category-editor-feedback{min-height:18px;margin-top:10px;color:#ff9b82;font-size:10px}
+  .category-editor-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+  @media(max-width:600px){#cats.menu-category-visual-nav{gap:12px;padding-bottom:14px}#cats.menu-category-visual-nav>button.menu-category-card{flex-basis:72px;width:72px}#cats.menu-category-visual-nav .menu-category-image{width:64px;height:64px}.category-editor-head,.category-editor-body{padding-left:16px;padding-right:16px}.category-image-upload{align-items:flex-start;flex-direction:column}.category-image-copy{width:100%}}
+</style>
 <style id="brasa-settings-pro-style">
   .settings-pro-panel{padding:0!important;background:transparent!important;color:#efe6dc}
   .settings-pro-panel *{box-sizing:border-box}
@@ -2571,6 +2618,62 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
   .settings-pro-subsection .form-group{margin-bottom:10px}.settings-pro-subsection .form-group label{color:#cfc1b4;font:600 9px "IBM Plex Mono",monospace;text-transform:uppercase}.settings-pro-subsection .form-control,.settings-pro-subsection input[type=text],.settings-pro-subsection input[type=number],.settings-pro-subsection select{min-height:35px;border:1px solid rgba(246,232,214,.13);border-radius:5px;background:#1b1916;color:#eee4d9}.settings-pro-subsection .btn{min-height:34px;border-radius:5px;font-size:9px}
   .settings-pro-savebar{position:sticky;bottom:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 -1px -1px;padding:11px 0 0;border-top:1px solid rgba(246,232,214,.12);background:linear-gradient(180deg,rgba(21,19,17,.78),rgba(21,19,17,1) 30%)}.settings-pro-feedback{min-height:18px;color:#9d9084;font-size:10px}.settings-pro-feedback.success{color:#8fdda4}.settings-pro-feedback.warning{color:#ffd083}.settings-pro-feedback.error{color:#ff9a70}
   @media(max-width:800px){.settings-pro-header{display:block}.settings-pro-status-card{margin-top:12px;text-align:left}.settings-pro-summary{grid-template-columns:1fr}.settings-pro-grid-2,.settings-pro-brand-grid{grid-template-columns:1fr}.settings-pro-list .delivery-area-row{grid-template-columns:1fr}.settings-pro-savebar{align-items:stretch;flex-direction:column}.settings-pro-button.primary{width:100%}}
+</style>
+<style id="store-header-public-style">
+  header.store-header{position:relative;display:block;overflow:hidden;min-height:276px;margin-bottom:14px;padding:0;border:1px solid rgba(255,135,83,.32);border-radius:16px;background:linear-gradient(145deg,#251a13,#151311);box-shadow:0 12px 28px rgba(0,0,0,.2)}
+  .store-header-cover{position:relative;height:170px;overflow:hidden;background:radial-gradient(circle at 20% 25%,rgba(255,142,88,.32),transparent 38%),linear-gradient(120deg,#493022,#191512 70%)}
+  .store-header-cover-img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 48%;filter:saturate(1.06)}
+  .store-header-cover-img[hidden]{display:none!important}
+  .store-header-cover-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,9,7,.08) 0%,rgba(12,9,7,.18) 40%,rgba(18,13,10,.92) 100%);pointer-events:none}
+  .store-header-cover-label{position:absolute;top:14px;left:18px;padding:6px 9px;border:1px solid rgba(255,211,190,.22);border-radius:999px;background:rgba(10,8,7,.28);color:rgba(255,224,207,.82);font:700 9px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase}
+  .store-header-info{position:relative;z-index:2;display:block;margin-top:-47px;padding:0 18px 20px;text-align:center}
+  .store-header-logo-wrap{display:grid;position:relative;z-index:3;width:92px;height:92px;margin:0 auto;place-items:center;overflow:hidden;border:3px solid #251a13;border-radius:50%;background:#fff;box-shadow:0 7px 18px rgba(0,0,0,.42)}
+  header.store-header img.logo{display:block;width:100%;height:100%;border:0;border-radius:50%;background:#fff;object-fit:cover}
+  .store-header-copy{min-width:0;padding-top:12px}
+  .store-header-title-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+  .store-header-title-row h1{min-width:0;margin:0;color:#fff5ee;font:800 clamp(23px,4vw,34px)/.95 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.01em;text-align:center;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.24)}
+  .store-header-status{display:inline-flex;align-items:center;gap:7px;min-height:27px;padding:0 10px;border:1px solid rgba(113,216,137,.5);border-radius:999px;background:rgba(36,103,51,.28);color:#a8f0b4;font:700 9px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;box-shadow:0 0 0 1px rgba(113,216,137,.05),0 5px 16px rgba(19,92,40,.13)}
+  .store-header-status i,.store-info-status i{display:block;width:8px;height:8px;border-radius:50%;background:#71e58b;box-shadow:0 0 0 3px rgba(113,216,137,.14),0 0 12px rgba(113,216,137,.76);animation:store-header-pulse 1.22s cubic-bezier(.45,0,.25,1) infinite}
+  .store-header-status.is-closed,.store-info-status.is-closed{border-color:rgba(238,145,119,.38);background:rgba(130,54,38,.2);color:#ffb29a;box-shadow:none}
+  .store-header-status.is-closed i,.store-info-status.is-closed i{background:#ef8f73;box-shadow:0 0 0 3px rgba(239,143,115,.12);animation:none}
+  @keyframes store-header-pulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 3px rgba(113,216,137,.14),0 0 12px rgba(113,216,137,.76)}45%{opacity:.32;transform:scale(.78);box-shadow:0 0 0 3px rgba(113,216,137,.06),0 0 3px rgba(113,216,137,.2)}65%{opacity:1;transform:scale(1.08);box-shadow:0 0 0 5px rgba(113,216,137,.18),0 0 16px rgba(113,216,137,.92)}}
+  .store-header-copy #addr{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin:8px 0 0;color:#d8c6ba;font-size:12px;line-height:1.35;text-align:center}
+  .store-header-separator{color:#ff8f61;font-weight:800}
+  .store-header-description{display:block;max-width:620px;margin:5px auto 0;overflow:hidden;color:#a99b90;font-size:10px;line-height:1.4;text-overflow:ellipsis;white-space:nowrap}
+  .store-header-more{display:grid;position:absolute;top:17px;right:18px;z-index:4;width:42px;height:42px;place-items:center;margin:0;border:1px solid rgba(255,194,161,.3);border-radius:50%;background:rgba(10,8,7,.3);color:#ffe0cf;font:800 25px/1 Arial,sans-serif;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+  .store-header-more:hover,.store-header-more:focus-visible{border-color:#ff9d72;background:rgba(255,90,31,.2);transform:translateY(-1px);outline:none}
+  .store-header-more span{display:block;margin-top:-8px;letter-spacing:2px}
+  .store-info-modal{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:16px}
+  .store-info-modal[hidden]{display:none!important}
+  body.store-info-open{overflow:hidden}
+  .store-info-backdrop{position:absolute;inset:0;background:rgba(7,6,5,.74);backdrop-filter:blur(5px)}
+  .store-info-dialog{position:relative;z-index:1;width:min(520px,100%);max-height:min(760px,calc(100vh - 32px));overflow:auto;padding:22px;border:1px solid rgba(255,143,97,.36);border-radius:18px;background:linear-gradient(145deg,#282018,#171412);box-shadow:0 24px 70px rgba(0,0,0,.5);color:#f4e9df}
+  .store-info-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px}
+  .store-info-kicker,.store-info-section-label{display:block;color:#ff9b72;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+  .store-info-dialog h2{margin:6px 0 0;color:#fff5ed;font:800 30px/.95 "Barlow Condensed","Arial Narrow",sans-serif;text-transform:uppercase}
+  .store-info-close{display:grid;width:38px;height:38px;flex:none;place-items:center;border:1px solid rgba(246,232,214,.18);border-radius:50%;background:rgba(255,255,255,.04);color:#d6c7bb;font:400 25px/1 Arial,sans-serif;cursor:pointer}
+  .store-info-close:hover{border-color:rgba(255,143,97,.6);background:rgba(255,90,31,.14);color:#fff}
+  .store-info-status{display:flex;align-items:center;gap:8px;margin-bottom:17px;padding:11px 13px;border:1px solid rgba(113,216,137,.24);border-radius:10px;background:rgba(36,103,51,.13);color:#a6dfb0;font-size:12px}
+  .store-info-status strong{color:#d6f1db;font-size:13px;text-transform:uppercase}
+  .store-info-status span{color:#a6b8aa;font-size:11px}
+  .store-info-list{display:grid;gap:9px}
+  .store-info-row{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid rgba(246,232,214,.1);border-radius:11px;background:rgba(8,8,7,.22)}
+  .store-info-row-icon{display:grid;width:29px;height:29px;flex:none;place-items:center;border:1px solid rgba(255,143,97,.28);border-radius:9px;background:rgba(255,90,31,.1);color:#ffad88;font:700 15px/1 Arial,sans-serif}
+  .store-info-row small{display:block;color:#9b8d82;font:700 8px/1.2 "IBM Plex Mono",monospace;letter-spacing:.07em;text-transform:uppercase}
+  .store-info-row strong{display:block;margin-top:4px;color:#f1e5db;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+  .store-info-social-block{margin-top:18px;padding-top:16px;border-top:1px solid rgba(246,232,214,.1)}
+  .store-info-social-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+  .store-info-social-link{display:flex;align-items:center;gap:8px;min-height:42px;padding:0 11px;border:1px solid rgba(246,232,214,.13);border-radius:10px;background:rgba(255,255,255,.035);color:#f4e7dc;font-size:11px;font-weight:800;text-decoration:none;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+  .store-info-social-link:hover{border-color:rgba(255,143,97,.55);background:rgba(255,90,31,.13);transform:translateY(-1px)}
+  .store-info-social-link.whatsapp{border-color:rgba(92,207,123,.3);background:rgba(37,211,102,.09);color:#b6f0c3}
+  .store-info-social-link.whatsapp:hover{border-color:rgba(92,207,123,.65);background:rgba(37,211,102,.16)}
+  .store-info-social-link b{display:grid;width:24px;height:24px;place-items:center;border-radius:7px;background:rgba(255,255,255,.08);font-size:12px}
+  .settings-pro-brand-grid-extended{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .settings-pro-cover-preview img{height:110px!important;object-fit:cover!important}
+  .settings-pro-field textarea{min-height:78px!important;padding:10px!important;resize:vertical;line-height:1.4}
+  @media(max-width:800px){.settings-pro-brand-grid-extended{grid-template-columns:1fr}.settings-pro-cover-preview{min-height:130px}.settings-pro-cover-preview img{height:88px!important}}
+  @media(max-width:600px){header.store-header{min-height:254px}.store-header-cover{height:156px}.store-header-info{margin-top:-42px;padding:0 12px 16px}.store-header-logo-wrap{width:78px;height:78px;border-radius:50%}.store-header-logo-wrap img.logo{border-radius:50%}.store-header-copy{padding-top:10px}.store-header-title-row h1{font-size:25px}.store-header-copy #addr{justify-content:center;margin-top:6px;font-size:10px}.store-header-description{font-size:9px}.store-header-more{top:13px;right:13px;width:36px;height:36px;margin-left:0;font-size:22px}.store-info-dialog{padding:18px}.store-info-dialog h2{font-size:26px}.store-info-social-links{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){.store-header-status i{animation:none}}
 </style>
 <style id="initial-page-loader-style">
   html.initial-loading, body.initial-loading{overflow:hidden!important}
@@ -2695,15 +2798,42 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     </div>
   </div>
   <div class="app" id="app">
-    <header class="banner">
-      <img class="logo" id="logo" src="" alt="Logo">
-      <div class="meta">
-        <h1 id="name">Creamy Purple</h1>
-        <p id="addr">R ALCIDES RODRIGUES PONTES • <span id="status">Aberto até as 23:00</span></p>
+    <header class="banner store-header" id="storeHeader">
+      <div class="store-header-cover" id="storeHeaderCover">
+        <img id="storeCoverImg" class="store-header-cover-img" src="" alt="Capa da loja" hidden>
+        <div class="store-header-cover-shade" aria-hidden="true"></div>
+        <span class="store-header-cover-label">Cardápio da loja</span>
       </div>
-      <div style="margin-left:auto;text-align:right">
+      <div class="store-header-info">
+        <div class="store-header-logo-wrap"><img class="logo" id="logo" src="" alt="Logo da loja"></div>
+        <div class="store-header-copy">
+          <div class="store-header-title-row">
+            <h1 id="name">Creamy Purple</h1>
+            <span id="storeHeaderStatus" class="store-header-status is-open"><i aria-hidden="true"></i><span id="storeHeaderStatusText">Aberto</span></span>
+          </div>
+          <p id="addr"><span id="storeHeaderAddress">Rua Fictícia, 61</span><span class="store-header-separator" aria-hidden="true">•</span><span id="storeHeaderHours">Aberto até as 23:00</span></p>
+          <span id="storeHeaderDescription" class="store-header-description"></span>
+        </div>
+        <button type="button" class="store-header-more" id="storeInfoButton" aria-label="Ver informações da loja" aria-haspopup="dialog" aria-expanded="false"><span aria-hidden="true">⋯</span></button>
       </div>
-      </header>
+    </header>
+
+    <div id="storeInfoModal" class="store-info-modal" hidden>
+      <div class="store-info-backdrop" data-store-info-close></div>
+      <section class="store-info-dialog" role="dialog" aria-modal="true" aria-labelledby="storeInfoTitle">
+        <div class="store-info-dialog-head">
+          <div><span class="store-info-kicker">Informações da loja</span><h2 id="storeInfoTitle">Creamy Purple</h2></div>
+          <button type="button" class="store-info-close" data-store-info-close aria-label="Fechar informações">×</button>
+        </div>
+        <div id="storeInfoStatus" class="store-info-status is-open"><i aria-hidden="true"></i><strong id="storeInfoStatusText">Aberto</strong><span id="storeInfoStatusDetail">Aberto até as 23:00</span></div>
+        <div class="store-info-list">
+          <div class="store-info-row"><span class="store-info-row-icon" aria-hidden="true">⌖</span><div><small>Endereço</small><strong id="storeInfoAddress">Rua Fictícia, 61</strong></div></div>
+          <div class="store-info-row"><span class="store-info-row-icon" aria-hidden="true">◷</span><div><small>Horário de funcionamento</small><strong id="storeInfoHours">Aberto até as 23:00</strong></div></div>
+          <div class="store-info-row store-info-description-row" id="storeInfoDescriptionRow" hidden><span class="store-info-row-icon" aria-hidden="true">i</span><div><small>Sobre a loja</small><strong id="storeInfoDescription"></strong></div></div>
+        </div>
+        <div class="store-info-social-block" id="storeInfoSocialBlock" hidden><span class="store-info-section-label">Redes e contato</span><div id="storeInfoSocialLinks" class="store-info-social-links"></div></div>
+      </section>
+    </div>
 
     <section id="customerOrderTracker" class="customer-order-tracker" hidden aria-live="polite" aria-label="Acompanhamento do pedido">
       <div class="customer-order-tracker-head">
@@ -3094,21 +3224,36 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       <div class="settings-pro-grid settings-pro-grid-2">
         <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantName">Nome da loja</label><input type="text" id="restaurantName" required autocomplete="organization"><small>Nome principal exibido para os clientes.</small></div>
         <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantAddress">Endereço da loja</label><input type="text" id="restaurantAddress" required autocomplete="street-address"><small>Use um endereço completo para melhorar a localização da entrega.</small></div>
-        <div class="settings-pro-field"><label for="restaurantStatus">Status e horário de funcionamento</label><input type="text" id="restaurantStatus" placeholder="Ex.: Aberto até as 23:00" required><small>Texto mostrado no cabeçalho do cardápio.</small></div>
+        <div class="settings-pro-field"><label for="restaurantStatus">Status atual da loja</label><input type="text" id="restaurantStatus" placeholder="Ex.: Aberto até as 23:00" required><small>Texto curto exibido junto ao indicador de funcionamento.</small></div>
+        <div class="settings-pro-field"><label for="restaurantHours">Horário de funcionamento</label><input type="text" id="restaurantHours" placeholder="Ex.: Todos os dias, 18h às 23h"><small>Detalhe exibido na janela de informações.</small></div>
+        <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantDescription">Descrição da loja</label><textarea id="restaurantDescription" rows="3" placeholder="Conte brevemente sobre a loja, especialidades ou atendimento."></textarea><small>Texto opcional apresentado aos clientes.</small></div>
         <div class="settings-pro-field"><label for="preparationTime">Tempo médio de preparo</label><div class="settings-pro-input-suffix"><input type="number" id="preparationTime" min="5" max="120" placeholder="30" required><span>min</span></div><small>Informe um valor entre 5 e 120 minutos.</small></div>
       </div>
     </section>
 
     <section class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>02</span><div><h5>Marca e apresentação</h5><p>Atualize a identidade visual usada no sistema e na experiência do cliente.</p></div></div>
-      <div class="settings-pro-brand-grid">
-        <div class="settings-pro-field"><label for="restaurantLogoFile">Logo da loja</label><input type="file" id="restaurantLogoFile" accept="image/*"><small>Use uma imagem quadrada ou horizontal em boa resolução.</small><input type="hidden" id="restaurantLogoUrl"></div>
-        <div class="settings-pro-logo-preview"><span>Pré-visualização</span><img id="currentLogoPreview" src="" alt="Prévia do logo da loja"></div>
+      <div class="settings-pro-brand-grid settings-pro-brand-grid-extended">
+        <div class="settings-pro-field"><label for="restaurantLogoFile">Logo da loja</label><input type="file" id="restaurantLogoFile" accept="image/*"><small>Imagem quadrada usada no cabeçalho e nos pontos de contato.</small><input type="hidden" id="restaurantLogoUrl"></div>
+        <div class="settings-pro-logo-preview"><span>Prévia da logo</span><img id="currentLogoPreview" src="" alt="Prévia do logo da loja"></div>
+        <div class="settings-pro-field"><label for="restaurantCoverFile">Capa do cardápio</label><input type="file" id="restaurantCoverFile" accept="image/*"><small>Imagem horizontal para o destaque superior do cardápio.</small><input type="hidden" id="restaurantCoverUrl"></div>
+        <div class="settings-pro-logo-preview settings-pro-cover-preview"><span>Prévia da capa</span><img id="currentCoverPreview" src="" alt="Prévia da capa da loja"></div>
       </div>
     </section>
 
     <section class="settings-pro-section">
-      <div class="settings-pro-section-heading"><span>03</span><div><h5>Entrega e áreas atendidas</h5><p>Defina o modelo de cobrança e as áreas disponíveis para finalização do pedido.</p></div></div>
+      <div class="settings-pro-section-heading"><span>03</span><div><h5>Contato e canais públicos</h5><p>Facilite o contato direto e permita que o cliente encontre a loja nas redes sociais.</p></div></div>
+      <div class="settings-pro-grid settings-pro-grid-2">
+        <div class="settings-pro-field"><label for="restaurantWhatsapp">WhatsApp da loja</label><input type="tel" id="restaurantWhatsapp" placeholder="Ex.: (11) 99999-9999" autocomplete="tel"><small>O botão abrirá uma conversa direta com a loja.</small></div>
+        <div class="settings-pro-field"><label for="restaurantInstagram">Instagram</label><input type="text" id="restaurantInstagram" placeholder="@suamarca ou instagram.com/suamarca"><small>Link ou nome de usuário.</small></div>
+        <div class="settings-pro-field"><label for="restaurantFacebook">Facebook</label><input type="text" id="restaurantFacebook" placeholder="facebook.com/suamarca"><small>Link público da página.</small></div>
+        <div class="settings-pro-field"><label for="restaurantTikTok">TikTok</label><input type="text" id="restaurantTikTok" placeholder="@suamarca ou tiktok.com/@suamarca"><small>Link opcional.</small></div>
+        <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantWebsite">Site ou outro canal</label><input type="url" id="restaurantWebsite" placeholder="https://www.sualoja.com.br"><small>Use para cardápio externo, site ou outro canal oficial.</small></div>
+      </div>
+    </section>
+
+    <section class="settings-pro-section">
+      <div class="settings-pro-section-heading"><span>04</span><div><h5>Entrega e áreas atendidas</h5><p>Defina o modelo de cobrança e as áreas disponíveis para finalização do pedido.</p></div></div>
       <div class="settings-pro-toggle-row"><div><strong>Calcular taxa automaticamente por raio</strong><small>Usa a localização da loja e o endereço do cliente para estimar a taxa.</small></div><label class="settings-pro-switch"><input type="checkbox" id="useRadiusDelivery"><span></span></label></div>
       <div class="settings-pro-grid settings-pro-grid-2 settings-pro-delivery-fields">
         <div class="settings-pro-field"><label for="deliveryBaseFee">Taxa base de entrega</label><div class="settings-pro-input-suffix"><span>R$</span><input type="number" id="deliveryBaseFee" step="0.01" min="0" value="0"></div></div>
@@ -3121,14 +3266,14 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     </section>
 
     <section class="settings-pro-section">
-      <div class="settings-pro-section-heading"><span>04</span><div><h5>Cupons e promoções</h5><p>Gerencie cupons manuais e acompanhe as regras automáticas de incentivo.</p></div></div>
+      <div class="settings-pro-section-heading"><span>05</span><div><h5>Cupons e promoções</h5><p>Gerencie cupons manuais e acompanhe as regras automáticas de incentivo.</p></div></div>
       <div class="settings-pro-list-heading"><div><strong>Cupons de desconto</strong><small>Controle validade, limite de uso e ativação de cada código.</small></div><button type="button" class="settings-pro-button secondary" id="btnAddCoupon">+ Criar cupom</button></div>
       <div id="couponsList" class="settings-pro-list"></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Automação</span><strong>Cupons inteligentes</strong></div><div id="smartCouponAdminPanel"></div></div>
     </section>
 
     <section class="settings-pro-section">
-      <div class="settings-pro-section-heading"><span>05</span><div><h5>Relacionamento e confiança</h5><p>Configure indicação de clientes e consulte avaliações recebidas pela loja.</p></div></div>
+      <div class="settings-pro-section-heading"><span>06</span><div><h5>Relacionamento e confiança</h5><p>Configure indicação de clientes e consulte avaliações recebidas pela loja.</p></div></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Indicação</span><strong>Programa de indicação</strong></div><div id="referralAdminPanel"></div></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Avaliações</span><strong>Feedback dos clientes</strong></div><div id="reviewsAdminPanel"></div></div>
       <div id="cashbackConfigContainer"></div>
@@ -3666,6 +3811,39 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       </div>
     </div>
     
+<div class="modal" id="categoryEditorModal">
+  <div class="card category-editor-card" role="dialog" aria-modal="true" aria-labelledby="categoryEditorTitleLabel">
+    <div class="category-editor-head">
+      <div>
+        <span class="brasa-checkout-kicker">CARDÁPIO</span>
+        <h3 id="categoryEditorTitleLabel">Nova categoria</h3>
+        <p>Use uma imagem do produto ou uma arte 3D para representar esta categoria.</p>
+      </div>
+      <button type="button" id="categoryEditorClose" class="pill brasa-checkout-close" aria-label="Fechar configuração da categoria">×</button>
+    </div>
+    <form id="categoryEditorForm" class="category-editor-body">
+      <label for="categoryEditorName">Nome da categoria</label>
+      <input type="text" id="categoryEditorName" maxlength="60" autocomplete="off" placeholder="Ex.: Burgers artesanais" required>
+      <div class="category-image-upload">
+        <div class="category-image-preview" id="categoryEditorImagePreview" aria-label="Prévia da imagem da categoria">C</div>
+        <div class="category-image-copy">
+          <strong>Imagem representativa</strong>
+          <small>Ela aparecerá acima do nome no menu público. Prefira uma foto ou render 3D quadrado, com até 5 MB.</small>
+          <div class="category-image-actions">
+            <label for="categoryEditorImage">Escolher imagem<input type="file" id="categoryEditorImage" accept="image/jpeg,image/png,image/webp"></label>
+            <button type="button" id="categoryEditorImageRemove">Remover imagem</button>
+          </div>
+        </div>
+      </div>
+      <div class="category-editor-feedback" id="categoryEditorFeedback" aria-live="polite"></div>
+      <div class="category-editor-actions">
+        <button type="button" id="categoryEditorCancel" class="pill">Cancelar</button>
+        <button type="submit" class="btn">Salvar categoria</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal" id="checkoutModal">
   <div class="card brasa-checkout-card" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle" style="max-width:980px">
     <div class="brasa-checkout-header">
@@ -4391,6 +4569,7 @@ function filterAndSortCustomers() {
 
 // Função auxiliar para formatar o status do pedido
 function formatOrderStatus(status, order = null) {
+    if (order?.decisionStatus === 'expired') return '<span style="color:#c97878;font-weight:600;">Cancelado · prazo de aceite expirado</span>';
     if (order?.decisionStatus === 'rejected' || status === 'cancelled' || status === 'canceled') return '<span style="color:#c97878;font-weight:600;">Recusado pela loja</span>';
     if (order?.decisionStatus === 'accepted') return '<span style="color:#72b78b;font-weight:600;">Aceito pela loja</span>';
     const statusMap = {
@@ -5019,6 +5198,7 @@ let adminOrdersHistoryCursor = null;
 let adminOrdersHistoryHasMore = false;
 let adminOrdersHistoryLoading = false;
 let adminOrdersHistoryError = '';
+let adminOrdersRealtimeError = '';
 let adminOrdersRealtimeInitialized = false;
 
 function adminOrderDateValue(value) {
@@ -5125,6 +5305,8 @@ async function fetchMenuData() {
         window.DATA = DATA; // CORREÇÃO: expõe DATA no escopo global para o módulo do totem
         activeCat = DATA.categories?.[0]?.id || null;
         renderAll();
+        // Mantém o Business disponível mesmo quando o cardápio precisou usar o fallback local.
+        setupRealtimeOrdersListener();
         hideInitialPageLoader();
 
         // Notifica o módulo do totem que o cardápio carregou (mesmo demo)
@@ -5160,10 +5342,35 @@ async function saveMenuData() {
  * Mantém o array 'orders' atualizado em tempo real e notifica o admin.
  */
 function setupRealtimeOrdersListener() {
-    // Busca todos os pedidos, ordenados pelo mais recente
-    const q = query(ordersCollectionRef, orderBy("createdAt", "desc"), limit(ADMIN_ORDERS_REALTIME_PAGE_SIZE));
+    adminOrdersRealtimeError = '';
+    const handleRealtimeError = (error) => {
+        const code = String(error?.code || '').trim();
+        const detail = code === 'permission-denied'
+            ? 'Permissão negada para consultar os pedidos.'
+            : code === 'failed-precondition'
+                ? 'O Firebase exige um índice para esta consulta.'
+                : 'Não foi possível conectar ao Firebase.';
+        adminOrdersRealtimeError = detail;
+        console.error('Erro no listener de pedidos:', error);
+        const summary = document.getElementById('ordersHistorySummary');
+        if (summary) summary.textContent = `${detail} Verifique a conexão e atualize a página.`;
+        if (document.querySelector('#adminModal')?.classList.contains('open')) renderAdminOrders();
+    };
+    if (typeof query !== 'function' || typeof orderBy !== 'function' || typeof limit !== 'function' || typeof onSnapshot !== 'function' || typeof ordersCollectionRef === 'undefined') {
+        handleRealtimeError(new Error('Dependências do Firebase ainda não estão disponíveis.'));
+        return false;
+    }
+    let q;
+    try {
+        // Busca todos os pedidos, ordenados pelo mais recente
+        q = query(ordersCollectionRef, orderBy("createdAt", "desc"), limit(ADMIN_ORDERS_REALTIME_PAGE_SIZE));
+    } catch (error) {
+        handleRealtimeError(error);
+        return false;
+    }
 
     // onSnapshot: mantém a conexão aberta para updates em tempo real
+    try {
     onSnapshot(q, (snapshot) => {
         const newOrders = ((snapshot.docs || [])).map(doc => ({ id: doc.id, ...doc.data() }));
         if (adminOrdersRealtimeInitialized) {
@@ -5237,6 +5444,7 @@ function setupRealtimeOrdersListener() {
 
         orders = mergeAdminOrdersPages(adminOrdersLivePage, adminOrdersHistoryPage);
         window.orders = orders;
+        if (isAdmin) startPendingAcceptanceMonitor();
         window.__ordersVersion = (window.__ordersVersion || 0) + 1;
         notifyCustomerDecision(newOrders);
         
@@ -5254,8 +5462,13 @@ function setupRealtimeOrdersListener() {
             if (activeTimelineOrder) showOrderTimeline(activeTimelineOrder.id);
         }
     }, (error) => {
-        console.error("Erro no listener de pedidos:", error);
+        handleRealtimeError(error);
     });
+    return true;
+    } catch (error) {
+        handleRealtimeError(error);
+        return false;
+    }
 }
 // === MOTOBOYS FUNCTIONS (single clean block) ===
 
@@ -5942,6 +6155,10 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
   if (!isAdmin) throw new Error('Acesso negado.');
   const currentOrder = (orders || []).find(order => order.id === orderId);
   if (!currentOrder) throw new Error('Pedido não encontrado.');
+  if (newStatus === 'in_production' && isPendingAcceptanceOrder(currentOrder) && getOrderAcceptanceState(currentOrder)?.expired) {
+    await expirePendingAcceptanceOrder(currentOrder);
+    throw new Error('O prazo de cinco minutos para aceitar este pedido terminou. Ele foi cancelado automaticamente.');
+  }
   if (newStatus === 'in_production' && currentOrder?.payment?.requiresOnlineConfirmation && currentOrder.paymentStatus !== 'paid') {
     throw new Error('A confirmação do pagamento online ainda não foi recebida.');
   }
@@ -5999,13 +6216,8 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
       if (window.FiadoModule && currentOrder.userId && window.FiadoModule.isFiado(currentOrder.userId)) {
         try { window.FiadoModule.registrarLancamento(currentOrder.userId, currentOrder); } catch(e) { console.error('Erro fiado:', e); }
       }
-      // 4. Emissão de NFC-e (se ativada)
-      if (window.IntegracoesModule) {
-        try {
-          const nota = window.IntegracoesModule.emitirNFCe(currentOrder);
-          if (nota) console.log('NFC-e emitida:', nota.numero);
-        } catch(e) { console.error('Erro NFC-e:', e); }
-      }
+      // 4. Emissão fiscal: indisponível neste HTML; nenhuma tentativa é feita.
+      // A emissão só deve ser reintroduzida após integrar backend/provedor homologado, com retorno autorizado.
     }
     // === FIM INTEGRAÇÃO ===
 
@@ -6160,6 +6372,8 @@ function applyLocalSession(user = getLocalSession()){
     toggleAdminUI();
     restoreCustomerOrderTrackerForCurrentUser();
     if(DATA){ renderCategories(); renderItems(); }
+    if (isAdmin) startPendingAcceptanceMonitor();
+    else stopPendingAcceptanceMonitor();
     return currentUser;
 }
 
@@ -6402,9 +6616,11 @@ async function finalizeOrder(e) {
     return;
   }
 
-  // NOVO: Calcula ETA de preparo baseado na configuração
+  // Calcula o prazo fixo e obrigatório para aceite do pedido.
   const preparationTime = DATA.restaurant.preparationTime || 30;
   const estimatedReadyTime = new Date(Date.now() + preparationTime * 60 * 1000);
+  const acceptanceStartedAt = paymentPolicy.requiresOnlineConfirmation ? null : new Date().toISOString();
+  const acceptanceDeadlineAt = acceptanceStartedAt ? new Date(new Date(acceptanceStartedAt).getTime() + ORDER_ACCEPTANCE_TIMEOUT_MS).toISOString() : null;
   
   const newOrder = {
     userId: currentUser.id,
@@ -6467,6 +6683,8 @@ async function finalizeOrder(e) {
       createdAt: new Date().toISOString()
     },
     status: paymentPolicy.requiresOnlineConfirmation ? 'awaiting_payment' : 'pending',
+    acceptanceStartedAt,
+    acceptanceDeadlineAt,
     createdAt: new Date().toISOString()
   };
   
@@ -6547,7 +6765,12 @@ function loadDemoData(){
             tables: [],
             address:"Rua Fictícia, 61",
             status:"Aberto até as 23:00",
+            hours:"Todos os dias, 18h às 23h",
+            description:"Hambúrgueres artesanais, combos e acompanhamentos preparados na hora.",
             logo:blankSVG(),
+            cover:"",
+            whatsapp:"",
+            socialLinks:{ instagram:"", facebook:"", tiktok:"", website:"" },
             deliveryAreas: [
                 { id: 'area1', name: 'Centro da Cidade', fee: 5.00 },
                 { id: 'area2', name: 'Região Oeste', fee: 8.00 }
@@ -6648,14 +6871,142 @@ function fileToBase64(file) {
     });
 }
 
+function escapeStoreAttr(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+}
+
+function compressStoreCoverImage(file) {
+    if (!file) return Promise.resolve('');
+    const accepted = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!accepted.includes(file.type)) return Promise.reject(new Error('Escolha uma imagem JPG, PNG ou WEBP para a capa.'));
+    if (file.size > 5 * 1024 * 1024) return Promise.reject(new Error('A capa deve ter no máximo 5 MB.'));
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Não foi possível ler a imagem da capa.'));
+        reader.onload = () => {
+            const image = new Image();
+            image.onerror = () => reject(new Error('A imagem da capa não pôde ser carregada.'));
+            image.onload = () => {
+                const maxWidth = 1200;
+                const sourceWidth = image.width || maxWidth;
+                const sourceHeight = image.height || Math.round(maxWidth * 0.45);
+                const ratio = Math.min(1, maxWidth / sourceWidth);
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, Math.round(sourceWidth * ratio));
+                canvas.height = Math.max(1, Math.round(sourceHeight * ratio));
+                const context = canvas.getContext('2d');
+                if (!context) return reject(new Error('Seu navegador não conseguiu preparar a capa.'));
+                context.fillStyle = '#21150f';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.82));
+            };
+            image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function normalizeStoreExternalUrl(value, platform = '') {
+    let raw = String(value || '').trim();
+    if (!raw) return '';
+    if (platform === 'instagram' || platform === 'tiktok') {
+        raw = raw.replace(/^@+/, '');
+        if (!/^https?:\/\//i.test(raw) && !raw.includes('/') && !raw.includes('.')) {
+            raw = `https://${platform}.com/${platform === 'tiktok' ? '@' : ''}${raw}`;
+        }
+    }
+    if (!/^https?:\/\//i.test(raw)) raw = `https://${raw.replace(/^\/\//, '')}`;
+    try {
+        const parsed = new URL(raw);
+        return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+    } catch (_) {
+        return '';
+    }
+}
+
+function normalizeStoreWhatsApp(value) {
+    let digits = String(value || '').replace(/\D/g, '');
+    if (!digits) return '';
+    if (digits.length === 10 || digits.length === 11) digits = `55${digits}`;
+    if (digits.length < 12 || digits.length > 15) return '';
+    return `https://wa.me/${digits}?text=${encodeURIComponent('Olá! Vim pelo cardápio digital da loja.')}`;
+}
+
+function isStoreCurrentlyOpen(status) {
+    const value = String(status || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return !/(fechad|encerrad|pausad|indisponivel|closed|offline)/.test(value);
+}
+
+function updateStoreInfoSocialLinks(restaurant) {
+    const block = document.getElementById('storeInfoSocialBlock');
+    const list = document.getElementById('storeInfoSocialLinks');
+    if (!block || !list) return;
+    const social = restaurant.socialLinks && typeof restaurant.socialLinks === 'object' ? restaurant.socialLinks : {};
+    const channels = [
+        { key: 'instagram', label: 'Instagram', icon: '◎', url: normalizeStoreExternalUrl(social.instagram, 'instagram') },
+        { key: 'facebook', label: 'Facebook', icon: 'f', url: normalizeStoreExternalUrl(social.facebook, 'facebook') },
+        { key: 'tiktok', label: 'TikTok', icon: '♪', url: normalizeStoreExternalUrl(social.tiktok, 'tiktok') },
+        { key: 'website', label: 'Site oficial', icon: '↗', url: normalizeStoreExternalUrl(social.website, 'website') },
+        { key: 'whatsapp', label: 'Falar no WhatsApp', icon: '◉', url: normalizeStoreWhatsApp(restaurant.whatsapp) }
+    ].filter(channel => channel.url);
+    list.innerHTML = channels.map(channel => `<a class="store-info-social-link${channel.key === 'whatsapp' ? ' whatsapp' : ''}" href="${escapeStoreAttr(channel.url)}" target="_blank" rel="noopener noreferrer"><b aria-hidden="true">${channel.icon}</b><span>${channel.label}</span></a>`).join('');
+    block.hidden = channels.length === 0;
+}
+
+function updateStoreHeader() {
+    const restaurant = DATA?.restaurant || {};
+    const name = String(restaurant.name || 'Loja').trim();
+    const address = String(restaurant.address || 'Endereço não informado').trim();
+    const status = String(restaurant.status || 'Aberta').trim();
+    const hours = String(restaurant.hours || status || 'Horário não informado').trim();
+    const description = String(restaurant.description || '').trim();
+    const isOpen = isStoreCurrentlyOpen(status);
+    const logo = restaurant.logo || blankSVG();
+    const cover = String(restaurant.cover || restaurant.coverImage || '').trim();
+    const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
+    setText('name', name);
+    setText('storeHeaderAddress', address);
+    setText('storeHeaderHours', hours);
+    setText('storeHeaderDescription', description);
+    setText('storeInfoTitle', name);
+    setText('storeInfoAddress', address);
+    setText('storeInfoHours', hours);
+    setText('storeInfoDescription', description);
+    setText('storeHeaderStatusText', isOpen ? 'Aberta' : 'Fechada');
+    setText('storeInfoStatusText', isOpen ? 'Aberta' : 'Fechada');
+    setText('storeInfoStatusDetail', status || hours);
+    const descriptionRow = document.getElementById('storeInfoDescriptionRow');
+    if (descriptionRow) descriptionRow.hidden = !description;
+    const logoNode = document.getElementById('logo');
+    if (logoNode) { logoNode.src = logo; logoNode.alt = `Logo da ${name}`; }
+    const coverNode = document.getElementById('storeCoverImg');
+    if (coverNode) { coverNode.src = cover; coverNode.hidden = !cover; coverNode.alt = `Capa da ${name}`; }
+    ['storeHeaderStatus', 'storeInfoStatus'].forEach(id => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.classList.toggle('is-open', isOpen);
+        node.classList.toggle('is-closed', !isOpen);
+    });
+    updateStoreInfoSocialLinks(restaurant);
+}
+
+function setStoreInfoModal(open) {
+    const modal = document.getElementById('storeInfoModal');
+    const button = document.getElementById('storeInfoButton');
+    if (!modal) return;
+    modal.hidden = !open;
+    document.body.classList.toggle('store-info-open', Boolean(open));
+    if (button) button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) document.querySelector('.store-info-close')?.focus();
+}
+
 function renderAll(){
     if (!DATA) {
         renderMenuLoadState();
         return;
     }
-    document.querySelector("#name").textContent = DATA.restaurant.name;
-    document.querySelector("#addr").textContent = DATA.restaurant.address + " • " + DATA.restaurant.status;
-    document.querySelector("#logo").src = DATA.restaurant.logo || blankSVG();
+    updateStoreHeader();
     renderCategories();
     renderItems();
     renderCart();
@@ -7150,15 +7501,168 @@ function getCategory(id){
     return DATA.categories.find(c => c.id === id);
 }
 
-function editCategory(id) {
-    const cat = DATA.categories.find(c => c.id === id);
-    if (!cat) return;
-    const newTitle = prompt(`Novo nome para \"${cat.title}\":`, cat.title);
-    if (newTitle && newTitle !== cat.title) {
-        cat.title = newTitle;
-        saveMenuData();
-        renderCategories();
+let categoryEditorState = null;
+
+function getCategoryImage(category) {
+    return String(category?.image || category?.imageUrl || category?.img || '').trim();
+}
+
+function getCategoryInitial(category) {
+    return String(category?.title || category?.name || 'C').trim().charAt(0).toUpperCase() || 'C';
+}
+
+function isUsableCategoryImage(value) {
+    const image = String(value || '').trim();
+    if (!image) return false;
+    const placeholder = typeof blankSVG === 'function' ? String(blankSVG()).trim() : '';
+    return !placeholder || image !== placeholder;
+}
+
+function getCategoryVisualImage(category) {
+    const configuredImage = getCategoryImage(category);
+    if (isUsableCategoryImage(configuredImage)) return configuredImage;
+    const representativeItem = (DATA?.items || []).find(item => String(item?.category || '') === String(category?.id || '') && isUsableCategoryImage(item?.img));
+    return isUsableCategoryImage(representativeItem?.img) ? String(representativeItem.img).trim() : '';
+}
+
+function slugifyCategoryName(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 48) || `categoria_${Date.now()}`;
+}
+
+function compressCategoryImage(file) {
+    if (!file) return Promise.resolve('');
+    const accepted = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!accepted.includes(file.type)) return Promise.reject(new Error('Escolha uma imagem JPG, PNG ou WEBP.'));
+    if (file.size > 5 * 1024 * 1024) return Promise.reject(new Error('A imagem deve ter no máximo 5 MB.'));
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Não foi possível ler a imagem.'));
+        reader.onload = () => {
+            const image = new Image();
+            image.onerror = () => reject(new Error('A imagem não pôde ser carregada.'));
+            image.onload = () => {
+                const maxSize = 520;
+                const ratio = Math.min(1, maxSize / Math.max(image.width || maxSize, image.height || maxSize));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, Math.round((image.width || maxSize) * ratio));
+                canvas.height = Math.max(1, Math.round((image.height || maxSize) * ratio));
+                const context = canvas.getContext('2d');
+                if (!context) return reject(new Error('Seu navegador não conseguiu preparar a imagem.'));
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.84));
+            };
+            image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function setCategoryEditorPreview(imageValue, titleValue) {
+    const preview = document.getElementById('categoryEditorImagePreview');
+    if (!preview) return;
+    preview.innerHTML = '';
+    if (imageValue) {
+        const image = document.createElement('img');
+        image.src = imageValue;
+        image.alt = `Prévia da categoria ${titleValue || ''}`.trim();
+        preview.appendChild(image);
+    } else {
+        preview.textContent = getCategoryInitial({ title: titleValue });
     }
+}
+
+function ensureCategoryEditorBindings() {
+    const modal = document.getElementById('categoryEditorModal');
+    if (!modal || modal.dataset.bound === 'true') return;
+    modal.dataset.bound = 'true';
+    document.getElementById('categoryEditorClose')?.addEventListener('click', closeCategoryEditor);
+    document.getElementById('categoryEditorCancel')?.addEventListener('click', closeCategoryEditor);
+    modal.addEventListener('click', event => { if (event.target === modal) closeCategoryEditor(); });
+    document.getElementById('categoryEditorName')?.addEventListener('input', event => {
+        if (!categoryEditorState) return;
+        setCategoryEditorPreview(categoryEditorState.image, event.target.value);
+    });
+    document.getElementById('categoryEditorImageRemove')?.addEventListener('click', () => {
+        if (!categoryEditorState) return;
+        categoryEditorState.image = '';
+        const input = document.getElementById('categoryEditorImage');
+        if (input) input.value = '';
+        setCategoryEditorPreview('', document.getElementById('categoryEditorName')?.value || '');
+    });
+    document.getElementById('categoryEditorImage')?.addEventListener('change', async event => {
+        const file = event.target.files?.[0];
+        if (!file || !categoryEditorState) return;
+        const feedback = document.getElementById('categoryEditorFeedback');
+        if (feedback) feedback.textContent = 'Preparando imagem…';
+        try {
+            categoryEditorState.image = await compressCategoryImage(file);
+            setCategoryEditorPreview(categoryEditorState.image, document.getElementById('categoryEditorName')?.value || '');
+            if (feedback) feedback.textContent = 'Imagem pronta para salvar.';
+        } catch (error) {
+            event.target.value = '';
+            if (feedback) feedback.textContent = error.message || 'Não foi possível usar esta imagem.';
+        }
+    });
+    document.getElementById('categoryEditorForm')?.addEventListener('submit', saveCategoryEditor);
+}
+
+function openCategoryEditor(id = null) {
+    ensureCategoryEditorBindings();
+    const category = id ? DATA.categories.find(item => item.id === id) : null;
+    categoryEditorState = { id: category?.id || null, image: getCategoryImage(category) };
+    const nameInput = document.getElementById('categoryEditorName');
+    const title = document.getElementById('categoryEditorTitleLabel');
+    const feedback = document.getElementById('categoryEditorFeedback');
+    const imageInput = document.getElementById('categoryEditorImage');
+    if (title) title.textContent = category ? 'Editar categoria' : 'Nova categoria';
+    if (nameInput) nameInput.value = category?.title || '';
+    if (feedback) feedback.textContent = '';
+    if (imageInput) imageInput.value = '';
+    setCategoryEditorPreview(categoryEditorState.image, category?.title || '');
+    document.getElementById('categoryEditorModal')?.classList.add('open');
+    window.setTimeout(() => nameInput?.focus(), 40);
+}
+
+function closeCategoryEditor() {
+    document.getElementById('categoryEditorModal')?.classList.remove('open');
+    document.getElementById('categoryEditorForm')?.reset();
+    categoryEditorState = null;
+}
+
+async function saveCategoryEditor(event) {
+    event?.preventDefault();
+    const nameInput = document.getElementById('categoryEditorName');
+    const feedback = document.getElementById('categoryEditorFeedback');
+    const title = String(nameInput?.value || '').trim();
+    if (!title) {
+        if (feedback) feedback.textContent = 'Informe o nome da categoria.';
+        nameInput?.focus();
+        return;
+    }
+    const image = categoryEditorState?.image || '';
+    if (categoryEditorState?.id) {
+        const category = DATA.categories.find(item => item.id === categoryEditorState.id);
+        if (!category) return;
+        category.title = title;
+        category.image = image;
+        if ('imageUrl' in category) category.imageUrl = image;
+        if ('img' in category) category.img = image;
+    } else {
+        let id = slugifyCategoryName(title);
+        let suffix = 2;
+        while (DATA.categories.some(item => item.id === id)) id = `${slugifyCategoryName(title)}_${suffix++}`;
+        DATA.categories.push({ id, title, image });
+        activeCat = id;
+    }
+    const saved = await saveMenuData();
+    if (!saved) return;
+    closeCategoryEditor();
+    renderCategories();
+    renderItems();
+}
+
+function editCategory(id) {
+    openCategoryEditor(id);
 }
 
 async function removeCategory(id) {
@@ -7174,65 +7678,67 @@ async function removeCategory(id) {
 
 function renderCategories(){
     const catsEl = document.querySelector("#cats");
+    if (!catsEl) return;
     catsEl.innerHTML = '';
-    
+    catsEl.classList.toggle('menu-category-visual-nav', !isAdmin);
+    catsEl.classList.toggle('menu-category-admin-nav', isAdmin);
+
     ((DATA.categories || [])).forEach(cat => {
         const btn = document.createElement('button');
-        btn.textContent = cat.title;
         btn.dataset.id = cat.id;
         if(cat.id === activeCat) btn.classList.add('active');
         btn.addEventListener("click", () => { activeCat = cat.id; renderCategories(); renderItems(); });
 
         if (isAdmin) {
-          // Se for admin, envolve o botão da categoria e os botões de edição/exclusão em um container flexível
+          btn.textContent = cat.title;
           const container = document.createElement("div");
-          container.style.display = 'flex'; container.style.alignItems = 'center'; container.style.gap = '4px'; 
-          // O botão da categoria precisa ser estilizado como pílula e ter margem zero
-          btn.style.margin = '0'; 
+          container.style.display = 'flex'; container.style.alignItems = 'center'; container.style.gap = '4px';
+          btn.style.margin = '0';
           container.appendChild(btn);
-          
-          // Botão de Edição
+
           const editBtn = document.createElement("button");
-          editBtn.textContent = '✏️'; editBtn.classList.add('pill'); 
+          editBtn.textContent = '✏️'; editBtn.classList.add('pill');
           editBtn.style.cssText = 'padding: 6px 8px; font-size: 14px; margin: 0;';
-          editBtn.addEventListener('click', (e) => { e.stopPropagation(); editCategory(cat.id); }); 
+          editBtn.addEventListener('click', (e) => { e.stopPropagation(); editCategory(cat.id); });
           container.appendChild(editBtn);
-          
-          // Botão de Exclusão
+
           const removeBtn = document.createElement("button");
-          removeBtn.textContent = '❌'; removeBtn.classList.add('pill'); 
+          removeBtn.textContent = '❌'; removeBtn.classList.add('pill');
           removeBtn.style.cssText = 'padding: 6px 8px; font-size: 14px; margin: 0;';
-          removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeCategory(cat.id); }); 
+          removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeCategory(cat.id); });
           container.appendChild(removeBtn);
-          
-          // Adiciona o container (que tem a categoria e os botões de admin)
           catsEl.appendChild(container);
         } else {
-          // Se não for admin, apenas adiciona o botão da categoria (que já está estilizado como pílula pelo CSS)
+          btn.className = 'menu-category-card';
+          if (cat.id === activeCat) btn.classList.add('active');
+          const imageWrap = document.createElement('span');
+          imageWrap.className = 'menu-category-image';
+          const imageSource = getCategoryVisualImage(cat);
+          if (imageSource) {
+              const image = document.createElement('img');
+              image.src = imageSource;
+              image.alt = cat.title || 'Categoria';
+              image.loading = 'lazy';
+              imageWrap.appendChild(image);
+          } else {
+              const fallback = document.createElement('span');
+              fallback.className = 'menu-category-image-fallback';
+              fallback.textContent = getCategoryInitial(cat);
+              imageWrap.appendChild(fallback);
+          }
+          const name = document.createElement('span');
+          name.className = 'menu-category-name';
+          name.textContent = cat.title || 'Categoria';
+          btn.append(imageWrap, name);
           catsEl.appendChild(btn);
         }
     });
-    
+
     if (isAdmin) {
-        // Botão para adicionar nova categoria (Admin) - Implementação simplificada
         const btnAdd = document.createElement('button');
         btnAdd.textContent = '+ Adicionar Categoria';
         btnAdd.style.cssText = 'background:#e6ffe6; color:#28a745; font-weight:700; border: 1px dashed #28a745; margin-top: 10px;';
-        btnAdd.addEventListener('click', () => {
-            const title = prompt("Qual o nome da nova categoria?");
-            if(title){
-                const newCat = { id: title.toLowerCase().replace(/\s/g, '_'), title };
-                if(DATA.categories.find(c => c.id === newCat.id)){ 
-                    alert("Uma categoria com nome similar já existe. Tente outro nome."); 
-                    return;
-                } 
-                DATA.categories.push(newCat);
-                saveMenuData();
-                activeCat = newCat.id;
-                renderCategories();
-                renderItems();
-            }
-        });
+        btnAdd.addEventListener('click', () => openCategoryEditor());
         catsEl.appendChild(btnAdd);
     }
 }
@@ -7339,30 +7845,32 @@ function renderItems(){
 
     if (promotionalItems.length) {
         const promotionsSection = document.createElement('section');
-        promotionsSection.className = 'menu-promotions-section';
+        const promotionsUseCarousel = promotionalItems.length > 3;
+        promotionsSection.className = `menu-promotions-section${promotionsUseCarousel ? ' has-promotion-carousel' : ' is-promotion-row'}`;
         promotionsSection.setAttribute('aria-label', 'Ofertas em destaque');
         promotionsSection.innerHTML = `
           <div class="menu-promotions-heading">
             <div><span class="menu-promotions-kicker">OFERTAS DA CASA</span><h3>Promoções em destaque</h3></div>
             <span class="menu-promotions-count">${promotionalItems.length} ${promotionalItems.length === 1 ? 'oferta' : 'ofertas'}</span>
           </div>
-          <div class="menu-promotions-carousel" data-promo-carousel="true">
-            <button type="button" class="menu-promotions-nav" data-promo-nav="-1" aria-label="Promoção anterior">‹</button>
-            <div class="menu-promotions-grid" tabindex="0" aria-label="Carrossel de promoções"></div>
-            <button type="button" class="menu-promotions-nav" data-promo-nav="1" aria-label="Próxima promoção">›</button>
+          <div class="menu-promotions-carousel${promotionsUseCarousel ? ' is-carousel' : ' is-static'}" data-promo-carousel="${promotionsUseCarousel ? 'true' : 'false'}">
+            ${promotionsUseCarousel ? '<button type="button" class="menu-promotions-nav" data-promo-nav="-1" aria-label="Promoção anterior">‹</button>' : ''}
+            <div class="menu-promotions-grid" tabindex="0" aria-label="${promotionsUseCarousel ? 'Carrossel de promoções' : 'Ofertas em destaque'}"></div>
+            ${promotionsUseCarousel ? '<button type="button" class="menu-promotions-nav" data-promo-nav="1" aria-label="Próxima promoção">›</button>' : ''}
           </div>
-          <div class="menu-promotions-loop-hint">Arraste para os lados · o carrossel retorna ao início automaticamente</div>`;
+          ${promotionsUseCarousel ? '<div class="menu-promotions-loop-hint">Arraste para os lados · o carrossel passa pelas ofertas sem repetir produtos</div>' : ''}`;
         const promoGrid = promotionsSection.querySelector('.menu-promotions-grid');
-        const promoCopies = Math.max(5, Math.min(8, Math.ceil(900 / Math.max(210, promotionalItems.length * 210)) + 3));
-        for (let copyIndex = 0; copyIndex < promoCopies; copyIndex += 1) {
-          promotionalItems.forEach(item => {
-            const card = renderCustomerCard(item);
-            card.dataset.promoCopy = String(copyIndex);
-            promoGrid.appendChild(card);
-          });
+        const realPromoCards = promotionalItems.map(item => renderCustomerCard(item));
+        realPromoCards.forEach(card => promoGrid.appendChild(card));
+        if (promotionsUseCarousel) {
+            const firstCloneBlock = realPromoCards.map(card => card.cloneNode(true));
+            const secondCloneBlock = realPromoCards.map(card => card.cloneNode(true));
+            firstCloneBlock.forEach(card => { card.dataset.promoClone = 'true'; promoGrid.appendChild(card); });
+            secondCloneBlock.forEach(card => { card.dataset.promoClone = 'true'; promoGrid.appendChild(card); });
         }
-        promoGrid.dataset.promoCopies = String(promoCopies);
         promoGrid.dataset.promoCount = String(promotionalItems.length);
+        promoGrid.dataset.promoBlockSize = String(promotionalItems.length);
+        promoGrid.dataset.promoMode = promotionsUseCarousel ? 'carousel' : 'static';
         itemsEl.appendChild(promotionsSection);
     }
 
@@ -7414,58 +7922,119 @@ function renderItems(){
 
     if (promotionsGrid) {
         const carousel = promotionsGrid.closest('[data-promo-carousel="true"]');
-        const cards = [...promotionsGrid.querySelectorAll('.menu-card')];
         const promoCount = Number(promotionsGrid.dataset.promoCount) || 0;
-        const promoCopies = Number(promotionsGrid.dataset.promoCopies) || 0;
-        let copyDistance = 0;
-        let wrapTimer = 0;
+        const isCircularCarousel = promotionsGrid.dataset.promoMode === 'carousel' && promoCount > 3 && Boolean(carousel);
+        if (isCircularCarousel) {
+            let settleTimer = 0;
+            let motionFrame = 0;
+            let userInteracted = false;
+            let pointerActive = false;
+            let programmaticUntil = 0;
 
-        const measurePromoLoop = () => {
-            if (!promotionsGrid.isConnected || !promoCount || cards.length < promoCount * 2) return;
-            const first = cards[0]?.getBoundingClientRect();
-            const nextCopyFirst = cards[promoCount]?.getBoundingClientRect();
-            if (!first || !nextCopyFirst || nextCopyFirst.left <= first.left) return;
-            copyDistance = nextCopyFirst.left - first.left;
-            const middleCopy = Math.floor(promoCopies / 2);
-            const maxScroll = Math.max(0, promotionsGrid.scrollWidth - promotionsGrid.clientWidth);
-            if (!promotionsGrid.dataset.promoLoopStarted && copyDistance > 0) {
-                promotionsGrid.scrollLeft = Math.min(copyDistance * middleCopy, Math.max(0, maxScroll - copyDistance));
-                promotionsGrid.dataset.promoLoopStarted = 'true';
-            }
-        };
+            const getCards = () => [...promotionsGrid.querySelectorAll('.menu-card')];
+            const getBlockSize = () => Number(promotionsGrid.dataset.promoBlockSize) || promoCount;
+            const getStep = () => {
+                const first = getCards()[0]?.getBoundingClientRect();
+                const styles = getComputedStyle(promotionsGrid);
+                const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+                return first ? Math.max(1, first.width + gap) : 220;
+            };
+            const getBlockWidth = () => getBlockSize() * getStep();
+            const getMaxScroll = () => Math.max(0, promotionsGrid.scrollWidth - promotionsGrid.clientWidth);
+            const getMiddleRange = () => {
+                const blockWidth = getBlockWidth();
+                const maxScroll = getMaxScroll();
+                return { blockWidth, min: blockWidth, max: Math.min(maxScroll, blockWidth * 2) };
+            };
+            const cancelMotion = () => {
+                if (motionFrame) window.cancelAnimationFrame(motionFrame);
+                motionFrame = 0;
+            };
+            const setScrollInstant = (left) => {
+                promotionsGrid.scrollLeft = Math.max(0, Math.min(getMaxScroll(), left));
+            };
+            const normalizeMiddlePosition = () => {
+                const {blockWidth, min, max} = getMiddleRange();
+                if (blockWidth <= 0) return;
+                let current = promotionsGrid.scrollLeft;
+                const tolerance = Math.max(1, getStep() * 0.04);
+                while (current < min - tolerance) current += blockWidth;
+                while (current >= max - tolerance) current -= blockWidth;
+                if (Math.abs(current - promotionsGrid.scrollLeft) > 0.5) setScrollInstant(current);
+            };
+            const animateTo = target => {
+                cancelMotion();
+                const start = promotionsGrid.scrollLeft;
+                const distance = target - start;
+                if (Math.abs(distance) < 0.5) {
+                    setScrollInstant(target);
+                    return;
+                }
+                const startedAt = performance.now();
+                const duration = Math.min(360, Math.max(220, Math.abs(distance) * 1.25));
+                const tick = now => {
+                    const progress = Math.min(1, (now - startedAt) / duration);
+                    const eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                    setScrollInstant(start + distance * eased);
+                    if (progress < 1) motionFrame = window.requestAnimationFrame(tick);
+                    else { motionFrame = 0; normalizeMiddlePosition(); }
+                };
+                motionFrame = window.requestAnimationFrame(tick);
+            };
+            const scheduleBoundaryCheck = () => {
+                window.clearTimeout(settleTimer);
+                settleTimer = window.setTimeout(() => {
+                    if (!userInteracted || pointerActive || motionFrame || performance.now() < programmaticUntil) return;
+                    normalizeMiddlePosition();
+                }, 160);
+            };
+            const movePromoCarousel = (direction) => {
+                const step = getStep();
+                const {blockWidth, min, max} = getMiddleRange();
+                if (!direction || step <= 1 || max <= min) return;
+                cancelMotion();
+                userInteracted = true;
+                pointerActive = false;
+                programmaticUntil = performance.now() + 720;
+                let current = promotionsGrid.scrollLeft;
+                const tolerance = Math.max(1, step * 0.04);
+                while (current < min - tolerance) current += blockWidth;
+                while (current >= max - tolerance) current -= blockWidth;
+                const target = current + Number(direction) * step;
+                animateTo(target);
+            };
 
-        const keepPromoLoopContinuous = () => {
-            if (!copyDistance || !promoCopies) return;
-            const maxScroll = Math.max(0, promotionsGrid.scrollWidth - promotionsGrid.clientWidth);
-            const lowerLimit = copyDistance;
-            const upperLimit = Math.max(lowerLimit, maxScroll - copyDistance);
-            if (promotionsGrid.scrollLeft < lowerLimit) promotionsGrid.scrollLeft += copyDistance;
-            else if (promotionsGrid.scrollLeft > upperLimit) promotionsGrid.scrollLeft -= copyDistance;
-        };
-
-        const movePromoCarousel = (direction) => {
-            measurePromoLoop();
-            const first = cards[0]?.getBoundingClientRect();
-            const second = cards[1]?.getBoundingClientRect();
-            const step = second && first ? Math.max(1, second.left - first.left) : 220;
-            promotionsGrid.scrollBy({ left: Number(direction) * step, behavior: 'smooth' });
-        };
-
-        window.requestAnimationFrame(measurePromoLoop);
-        window.setTimeout(measurePromoLoop, 120);
-        promotionsGrid.addEventListener('scroll', () => {
-            window.clearTimeout(wrapTimer);
-            wrapTimer = window.setTimeout(keepPromoLoopContinuous, 90);
-        }, { passive: true });
-        promotionsGrid.addEventListener('keydown', event => {
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                event.preventDefault();
-                movePromoCarousel(event.key === 'ArrowRight' ? 1 : -1);
-            }
-        });
-        carousel?.querySelectorAll('[data-promo-nav]').forEach(button => {
-            button.addEventListener('click', () => movePromoCarousel(Number(button.dataset.promoNav) || 1));
-        });
+            window.requestAnimationFrame(() => setScrollInstant(getBlockWidth()));
+            promotionsGrid.addEventListener('pointerdown', () => {
+                cancelMotion();
+                userInteracted = true;
+                pointerActive = true;
+                programmaticUntil = 0;
+            }, { passive: true });
+            ['pointerup', 'pointercancel'].forEach(type => {
+                promotionsGrid.addEventListener(type, () => {
+                    pointerActive = false;
+                    scheduleBoundaryCheck();
+                }, { passive: true });
+            });
+            promotionsGrid.addEventListener('wheel', () => {
+                cancelMotion();
+                userInteracted = true;
+                programmaticUntil = 0;
+                scheduleBoundaryCheck();
+            }, { passive: true });
+            promotionsGrid.addEventListener('scroll', scheduleBoundaryCheck, { passive: true });
+            promotionsGrid.addEventListener('scrollend', scheduleBoundaryCheck, { passive: true });
+            promotionsGrid.addEventListener('keydown', event => {
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    movePromoCarousel(event.key === 'ArrowRight' ? 1 : -1);
+                }
+            });
+            carousel.querySelectorAll('[data-promo-nav]').forEach(button => {
+                button.addEventListener('click', () => movePromoCarousel(Number(button.dataset.promoNav) || 1));
+            });
+        }
     }
 }
 function handleItemAction(action, itemId){
@@ -8005,6 +8574,8 @@ async function finalizePDVOrder(clientName = "") {
         changeNeeded: 0,
         status: "pending",
         createdAt: new Date().toISOString(),
+        acceptanceStartedAt: new Date().toISOString(),
+        acceptanceDeadlineAt: new Date(Date.now() + ORDER_ACCEPTANCE_TIMEOUT_MS).toISOString(),
         pdvTable: pdvCartState.tableId,
         tableId: pdvCartState.tableId,
         waiterId: window.__garcomSession?.id || '',
@@ -9215,18 +9786,130 @@ function formatDeliveryCancellationDate(value) {
   return date && !Number.isNaN(date.getTime()) ? date.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : 'Não informado';
 }
 
+const ORDER_ACCEPTANCE_TIMEOUT_MS = 5 * 60 * 1000;
+let orderAcceptanceMonitorHandle = null;
+function acceptanceValueToMs(value) {
+  if (value?.toDate) return value.toDate().getTime();
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'number') return value > 1e12 ? value : value * 1000;
+  const parsed = value ? new Date(value).getTime() : NaN;
+  return Number.isFinite(parsed) ? parsed : NaN;
+}
+function isPendingAcceptanceOrder(order) {
+  if (!order) return false;
+  const normalized = STATUS_MAP?.[order.status] || order.status || 'pending';
+  return normalized === 'pending' && !['accepted','rejected','expired'].includes(String(order.decisionStatus || '').toLowerCase());
+}
+function getOrderAcceptanceDeadline(order) {
+  if (!isPendingAcceptanceOrder(order)) return null;
+  const explicitDeadline = acceptanceValueToMs(order.acceptanceDeadlineAt);
+  if (Number.isFinite(explicitDeadline)) return explicitDeadline;
+  // Pedidos legados sem marcadores não podem ser expirados retroativamente.
+  // Os fluxos de criação/confirmação devem gravar acceptanceStartedAt.
+  const startedAt = acceptanceValueToMs(order.acceptanceStartedAt);
+  return Number.isFinite(startedAt) ? startedAt + ORDER_ACCEPTANCE_TIMEOUT_MS : null;
+}
+function getOrderAcceptanceState(order, now = Date.now()) {
+  const deadline = getOrderAcceptanceDeadline(order);
+  if (!Number.isFinite(deadline)) return null;
+  const remainingMs = deadline - now;
+  return { deadline, remainingMs, expired: remainingMs <= 0, urgent: remainingMs <= 60 * 1000 };
+}
+function formatAcceptanceCountdown(remainingMs) {
+  const totalSeconds = Math.max(0, Math.ceil(remainingMs / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
+function updateAcceptanceCountdowns() {
+  const now = Date.now();
+  document.querySelectorAll('[data-acceptance-countdown]').forEach(node => {
+    const orderId = node.getAttribute('data-acceptance-countdown');
+    const order = (Array.isArray(window.orders) ? window.orders : orders || []).find(item => String(item.id) === String(orderId));
+    if (!order || !isPendingAcceptanceOrder(order)) { node.remove(); return; }
+    const state = getOrderAcceptanceState(order, now);
+    if (!state) return;
+    node.classList.toggle('urgent', state.urgent && !state.expired);
+    node.classList.toggle('expired', state.expired);
+    node.textContent = state.expired ? '⏳ Prazo encerrado — cancelando automaticamente' : `⏱️ Aceite em até ${formatAcceptanceCountdown(state.remainingMs)}`;
+    const acceptButton = node.parentElement?.querySelector('.accept-order-btn');
+    const rejectButton = node.parentElement?.querySelector('.reject-order-btn');
+    if (acceptButton) acceptButton.disabled = state.expired;
+    if (rejectButton) rejectButton.disabled = state.expired;
+  });
+}
+async function expirePendingAcceptanceOrder(order) {
+  if (!order || !isPendingAcceptanceOrder(order) || order.__acceptanceExpiryInFlight) return false;
+  const state = getOrderAcceptanceState(order);
+  if (!state?.expired) return false;
+  order.__acceptanceExpiryInFlight = true;
+  const changedAt = new Date().toISOString();
+  const reason = 'O pedido foi cancelado automaticamente porque a loja não confirmou o aceite em cinco minutos.';
+  const patch = {
+    status: 'cancelled',
+    decisionStatus: 'expired',
+    rejectionReason: reason,
+    acceptanceExpiredAt: changedAt,
+    expiredAt: changedAt,
+    updatedAt: changedAt,
+    customerNotification: { type:'order_expired', title:'Pedido cancelado', message:reason, createdAt:changedAt, read:false }
+  };
+  if (order?.payment?.requiresOnlineConfirmation && order.paymentStatus === 'paid') {
+    patch.paymentStatus = 'refund_pending';
+    patch.refund = { status:'pending', reason, requestedAt:changedAt, amount:Number(order.total || 0), provider:order.payment?.provider || 'gateway' };
+  }
+  try {
+    if (typeof window.updateDoc !== 'function' || typeof window.doc !== 'function' || !window.db) throw new Error('Firebase indisponível para cancelar o pedido.');
+    await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), patch);
+    Object.assign(order, patch);
+    delete order.__acceptanceExpiryInFlight;
+    let pendingOrders = [];
+    try { pendingOrders = JSON.parse(localStorage.getItem('pendingOrders') || '[]'); } catch (_) { pendingOrders = []; }
+    localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders.filter(id => String(id) !== String(order.id))));
+    renderAdminOrders();
+    return true;
+  } catch (error) {
+    order.__acceptanceExpiryInFlight = false;
+    order.__acceptanceExpiryError = 'Não foi possível cancelar automaticamente. Verifique a conexão.';
+    console.error('Falha ao cancelar pedido por prazo de aceite:', error);
+    updateAcceptanceCountdowns();
+    return false;
+  }
+}
+function stopPendingAcceptanceMonitor() {
+  if (orderAcceptanceMonitorHandle) {
+    window.clearInterval(orderAcceptanceMonitorHandle);
+    orderAcceptanceMonitorHandle = null;
+  }
+}
+function startPendingAcceptanceMonitor() {
+  if (!isAdmin || orderAcceptanceMonitorHandle) return;
+  orderAcceptanceMonitorHandle = window.setInterval(() => {
+    if (!isAdmin) {
+      window.clearInterval(orderAcceptanceMonitorHandle);
+      orderAcceptanceMonitorHandle = null;
+      return;
+    }
+    updateAcceptanceCountdowns();
+    (Array.isArray(window.orders) ? window.orders : orders || []).filter(isPendingAcceptanceOrder).forEach(order => {
+      if (getOrderAcceptanceState(order)?.expired) expirePendingAcceptanceOrder(order);
+    });
+  }, 1000);
+  updateAcceptanceCountdowns();
+}
 function renderAdminOrders(){
   const colPending = document.getElementById("col_pending");
   const colInProduction = document.getElementById("col_in_production"); // Novo ID
   const colReadyForDelivery = document.getElementById("col_ready_for_delivery"); // Novo ID
-  const colDelivered = document.getElementById("col_delivered");
-
+    const colDelivered = document.getElementById("col_delivered");
+  const liveOrders = Array.isArray(window.orders) ? window.orders : (orders || []);
   colPending.innerHTML = `<div class='kanban-title'>🟧 Em análise</div>`;
+
   colInProduction.innerHTML = `<div class='kanban-title'>🟨 Em produção</div>`;
   colReadyForDelivery.innerHTML = `<div class='kanban-title'>🟦 Pronto para entrega</div>`;
   colDelivered.innerHTML = `<div class='kanban-title'>✔️ Entregues</div>`;
 
-  (orders || []).forEach(order => {
+  liveOrders.forEach(order => {
     // Normaliza o status para os novos IDs, tratando 'accepted' como 'in_production'
     const normalizedStatus = STATUS_MAP[order.status] || order.status;
     const cancellationRequested = order.cancellationRequest?.status === 'requested';
@@ -9277,11 +9960,19 @@ function renderAdminOrders(){
     if (normalizedStatus === 'awaiting_payment') {
       decisionHTML = `<div class="payment-waiting-note">Aguardando confirmação do pagamento pelo gateway. Este pedido ainda não pode ser aceito pela loja.</div>`;
     } else if (normalizedStatus === 'pending') {
+      const acceptanceState = getOrderAcceptanceState(order);
+      const acceptanceText = acceptanceState?.expired ? '⏳ Prazo encerrado — cancelando automaticamente' : acceptanceState ? `⏱️ Aceite em até ${formatAcceptanceCountdown(acceptanceState.remainingMs)}` : '⏱️ Prazo de aceite não iniciado para este pedido';
+      const acceptanceClass = acceptanceState?.expired ? ' expired' : acceptanceState?.urgent ? ' urgent' : acceptanceState ? '' : ' not-started';
+      const acceptanceDisabled = acceptanceState?.expired ? ' disabled' : '';
+      const acceptanceCountdown = acceptanceState
+        ? `<div class="acceptance-countdown${acceptanceClass}" data-acceptance-countdown="${escapeOrderText(order.id)}" aria-live="polite">${acceptanceText}</div>`
+        : `<div class="acceptance-countdown${acceptanceClass}" aria-live="polite">${acceptanceText}</div>`;
       decisionHTML = `
         <div class="decision-actions">
           <span class="decision-label">Ação necessária · confirmar este pedido</span>
-          <button type="button" class="accept-order-btn" onclick='event.stopPropagation(); handleStatusUpdate("${order.id}", "in_production")'>✓ Aceitar pedido</button>
-          <button type="button" class="reject-order-btn" onclick='event.stopPropagation(); openRejectOrderModal("${order.id}")'>× Recusar pedido</button>
+          ${acceptanceCountdown}
+          <button type="button" class="accept-order-btn"${acceptanceDisabled} onclick='event.stopPropagation(); handleStatusUpdate("${escapeOrderText(order.id)}", "in_production")'>✓ Aceitar pedido</button>
+          <button type="button" class="reject-order-btn"${acceptanceDisabled} onclick='event.stopPropagation(); openRejectOrderModal("${escapeOrderText(order.id)}")'>× Recusar pedido</button>
         </div>`;
     } else if (order.decisionStatus === 'accepted') {
       decisionHTML = `<div class="order-customer-alert">✓ Aceito pela loja · ${order.acceptedAt ? new Date(order.acceptedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : 'agora'}</div>`;
@@ -9312,6 +10003,7 @@ function renderAdminOrders(){
                 ${(motoboys||[]).filter(isMotoboySelectable).map(m => `<option value="${m.id}" ${order.motoboyId === m.id ? 'selected' : ''}>${m.name} · ${automaticMotoboyStatus(m) === 'entrega' ? 'Em entrega' : 'Disponível'}</option>`).join('') || '<option value="" disabled>Nenhum motoboy conectado</option>'}
               </select>
             </div>` : order.motoboyName ? `<span class="order-motoboy-assigned" style="display:inline-flex;align-items:center;padding:5px 8px;border:1px solid rgba(90,160,120,.35);border-radius:5px;color:#3f8059;background:rgba(90,160,120,.08);font-size:11px;">🏍️ ${escapeOrderText(order.motoboyName)} em entrega</span>` : '');
+    const storeChatControl = !internalOrder && order.userId ? `<button type='button' class='order-chat-admin-btn' data-order-chat-open='1' data-order-chat-id='${escapeOrderText(order.id)}' data-order-chat-role='store' onclick='event.stopPropagation()'>💬 Chat do pedido</button>` : '';
     const timelineControl = internalOrder ? '' : `<button type='button' class='history-order-btn' style='background:#9c27b0;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); showOrderTimeline("${order.id}")'>📜 Histórico</button>`;
     const cancellationReview = !internalOrder && cancellationRequested ? `<div class="delivery-cancellation-review"><strong>Solicitação de cancelamento em análise</strong><small>Motivo: ${escapeOrderText(order.cancellationRequest.reasonLabel || order.cancellationRequest.reason || 'Não informado')} · Solicitado por ${escapeOrderText(order.cancellationRequest.motoboyName || order.motoboyName || 'Motoboy')} em ${escapeOrderText(formatDeliveryCancellationDate(order.cancellationRequest.requestedAt))}</small>${order.cancellationRequest.details ? `<small>Detalhes: ${escapeOrderText(order.cancellationRequest.details)}</small>` : ''}<div class="delivery-cancellation-review-actions"><button type="button" class="approve" onclick='event.stopPropagation(); window.approveDeliveryCancellation && window.approveDeliveryCancellation("${order.id}")'>Aprovar cancelamento</button><button type="button" class="keep" onclick='event.stopPropagation(); window.rejectDeliveryCancellation && window.rejectDeliveryCancellation("${order.id}")'>Manter entrega ativa</button></div></div>` : '';
 
@@ -9338,6 +10030,7 @@ function renderAdminOrders(){
           <button type='button' class='status-update-btn' style='background:#ff9800;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer; position: relative;' onclick='event.stopPropagation(); openStatusSelector(this, "${order.id}")'>Atualizar status</button>
           ${operationalControls}
           <button type='button' class='print-order-btn' style='background:#4caf50;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); printOrder("${order.id}")'>🖨️ Imprimir</button>
+          ${storeChatControl}
           ${timelineControl}
         </div>
         ${adminLiveMapMarkup}
@@ -9381,6 +10074,7 @@ function renderAdminOrders(){
     ['delivered', colDelivered]
   ];
   columnDefinitions.forEach(([columnKey, column]) => {
+    if (columnKey !== 'delivered') return;
     const footer = document.createElement('div');
     footer.className = 'orders-load-more-wrap';
     footer.dataset.ordersMore = columnKey;
@@ -9399,7 +10093,7 @@ function renderAdminOrders(){
 
   const historySummary = document.getElementById('ordersHistorySummary');
   if (historySummary) {
-    const loaded = orders.length;
+    const loaded = liveOrders.length;
     historySummary.textContent = adminOrdersHistoryLoading
       ? `Exibindo ${loaded} pedidos carregados · buscando a próxima página…`
       : adminOrdersHistoryError
@@ -9407,13 +10101,13 @@ function renderAdminOrders(){
         : adminOrdersHistoryHasMore
           ? `Exibindo ${loaded} pedidos carregados · os pedidos mais antigos permanecem no Firebase até você clicar em “Carregar mais pedidos”.`
           : `Exibindo ${loaded} pedidos · histórico carregado até o fim desta sessão.`;
-  }
-
+    }
+  startPendingAcceptanceMonitor();
   window.setTimeout(() => window.refreshLiveDeliveryMaps?.(), 0);
     window.restoreLiveMapFullscreenState?.();
 }
-
 window.renderAdminOrders = renderAdminOrders;
+
 
 window.loadMoreAdminOrders = async function loadMoreAdminOrders() {
   if (adminOrdersHistoryLoading || !adminOrdersHistoryHasMore || !adminOrdersHistoryCursor) return false;
@@ -9982,8 +10676,16 @@ function loadStoreSettings() {
     setValue('restaurantName', restaurant.name || '');
     setValue('restaurantAddress', restaurant.address || '');
     setValue('restaurantStatus', restaurant.status || '');
+    setValue('restaurantHours', restaurant.hours || restaurant.status || '');
+    setValue('restaurantDescription', restaurant.description || '');
     setValue('preparationTime', restaurant.preparationTime || 30);
     setValue('restaurantLogoUrl', restaurant.logo || '');
+    setValue('restaurantCoverUrl', restaurant.cover || restaurant.coverImage || '');
+    setValue('restaurantWhatsapp', restaurant.whatsapp || '');
+    setValue('restaurantInstagram', restaurant.socialLinks?.instagram || '');
+    setValue('restaurantFacebook', restaurant.socialLinks?.facebook || '');
+    setValue('restaurantTikTok', restaurant.socialLinks?.tiktok || '');
+    setValue('restaurantWebsite', restaurant.socialLinks?.website || '');
     setValue('deliveryBaseFee', Number.isFinite(Number(restaurant.deliveryBaseFee)) ? restaurant.deliveryBaseFee : 0);
     setValue('deliveryFeePerKm', Number.isFinite(Number(restaurant.deliveryFeePerKm)) ? restaurant.deliveryFeePerKm : 0);
     setValue('restaurantLat', restaurant.restaurantLat || 0);
@@ -9991,6 +10693,8 @@ function loadStoreSettings() {
     setChecked('useRadiusDelivery', restaurant.useRadiusDelivery);
     const preview = document.getElementById('currentLogoPreview');
     if (preview) preview.src = restaurant.logo || blankSVG();
+    const coverPreview = document.getElementById('currentCoverPreview');
+    if (coverPreview) coverPreview.src = restaurant.cover || restaurant.coverImage || blankSVG();
     restaurant.deliveryAreas = Array.isArray(restaurant.deliveryAreas) ? restaurant.deliveryAreas : [];
     restaurant.coupons = Array.isArray(restaurant.coupons) ? restaurant.coupons : [];
     renderDeliveryAreas();
@@ -10056,6 +10760,9 @@ async function saveStoreSettings(e) {
     const name = get('restaurantName')?.value.trim() || '';
     const address = get('restaurantAddress')?.value.trim() || '';
     const status = get('restaurantStatus')?.value.trim() || '';
+    const hours = get('restaurantHours')?.value.trim() || status;
+    const description = get('restaurantDescription')?.value.trim() || '';
+    const whatsapp = get('restaurantWhatsapp')?.value.trim() || '';
     const preparationTime = Number(get('preparationTime')?.value || 30);
     const baseFee = Number(get('deliveryBaseFee')?.value || 0);
     const feePerKm = Number(get('deliveryFeePerKm')?.value || 0);
@@ -10078,6 +10785,12 @@ async function saveStoreSettings(e) {
         try { newLogoUrl = await fileToBase64(fileInput.files[0]); }
         catch (error) { setSettingsFeedback('Não foi possível ler o arquivo de logo.', 'error'); return; }
     }
+    const coverFileInput = get('restaurantCoverFile');
+    let newCoverUrl = DATA.restaurant?.cover || DATA.restaurant?.coverImage || '';
+    if (coverFileInput?.files?.length) {
+        try { newCoverUrl = await compressStoreCoverImage(coverFileInput.files[0]); }
+        catch (error) { setSettingsFeedback(error.message || 'Não foi possível preparar o arquivo da capa.', 'error'); return; }
+    }
 
     DATA.restaurant = DATA.restaurant || {};
     DATA.restaurant.deliveryAreas = Array.isArray(DATA.restaurant.deliveryAreas) ? DATA.restaurant.deliveryAreas : [];
@@ -10085,7 +10798,17 @@ async function saveStoreSettings(e) {
     DATA.restaurant.name = name;
     DATA.restaurant.address = address;
     DATA.restaurant.status = status;
+    DATA.restaurant.hours = hours;
+    DATA.restaurant.description = description;
     DATA.restaurant.logo = newLogoUrl;
+    DATA.restaurant.cover = newCoverUrl;
+    DATA.restaurant.whatsapp = whatsapp;
+    DATA.restaurant.socialLinks = {
+        instagram: get('restaurantInstagram')?.value.trim() || '',
+        facebook: get('restaurantFacebook')?.value.trim() || '',
+        tiktok: get('restaurantTikTok')?.value.trim() || '',
+        website: get('restaurantWebsite')?.value.trim() || ''
+    };
     DATA.restaurant.preparationTime = Math.round(preparationTime);
     DATA.restaurant.useRadiusDelivery = Boolean(get('useRadiusDelivery')?.checked);
     DATA.restaurant.deliveryBaseFee = Number(baseFee.toFixed(2));
@@ -11306,15 +12029,30 @@ function initListeners(){
   document.querySelector("#couponCancel").addEventListener("click", closeCouponModal);
   document.querySelector("#applyCouponBtn").addEventListener("click", applyCoupon);
 
-  // Preview do logo
-  document.querySelector("#restaurantLogoFile").addEventListener("change", (e) => {
-    if (e.target.files && e.target.files[0]) {
+  // Preview da logo e da capa
+  const bindImagePreview = (inputId, previewId, fit = 'contain') => {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    if (!input || !preview) return;
+    input.addEventListener('change', event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
       const reader = new FileReader();
-      reader.onload = (r) => {
-        document.querySelector("#currentLogoPreview").src = r.target.result;
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
+      reader.onload = result => { preview.src = result.target.result; preview.style.objectFit = fit; };
+      reader.readAsDataURL(file);
+    });
+  };
+  bindImagePreview('restaurantLogoFile', 'currentLogoPreview', 'contain');
+  bindImagePreview('restaurantCoverFile', 'currentCoverPreview', 'cover');
+
+  // Informações públicas da loja
+  document.querySelector('#storeInfoButton')?.addEventListener('click', () => {
+    updateStoreHeader();
+    setStoreInfoModal(true);
+  });
+  document.querySelectorAll('[data-store-info-close]').forEach(node => node.addEventListener('click', () => setStoreInfoModal(false)));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !document.getElementById('storeInfoModal')?.hidden) setStoreInfoModal(false);
   });
   
   // --- Modals de Item CRUD ---
@@ -11455,17 +12193,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function mountBrasaPdvShell(){
-  const controls = document.querySelector(".controls");
-  if(controls && !document.getElementById("brasaPdvRail")){
-    controls.insertAdjacentHTML("afterend", `
-      <section class="brasa-pdv-rail" id="brasaPdvRail" aria-label="Fluxo operacional do pedido">
-        <div class="brasa-pdv-step"><b class="brasa-pdv-index">01</b><div><strong>Origem</strong><span id="brasaPdvOrigin">Cardápio</span></div></div>
-        <div class="brasa-pdv-step is-current"><b class="brasa-pdv-index">02</b><div><strong>Seleção</strong><span id="brasaPdvSelection">Escolha os itens</span></div></div>
-        <div class="brasa-pdv-step"><b class="brasa-pdv-index">03</b><div><strong>Fechamento</strong><span id="brasaPdvTotal">R$ 0,00</span></div></div>
-        <div class="brasa-pdv-step"><b class="brasa-pdv-index">04</b><div><strong>Cozinha</strong><span id="brasaPdvKitchen">Aguardando comanda</span></div></div>
-      </section>`);
-  }
-
+  // A faixa operacional foi removida do cardápio público para manter a experiência limpa.
+  // Esta atualização permanece inócua para preservar a chamada existente no boot.
   const refreshRail = () => {
     const items = Array.isArray(cart) ? cart : [];
     const quantity = items.reduce((total, item) => total + (item.qty || 1), 0);
@@ -11511,6 +12240,9 @@ window.saveReferralConfig = saveReferralConfig;
 
 window.editCategory = editCategory;
 window.removeCategory = removeCategory;
+window.openCategoryEditor = openCategoryEditor;
+window.closeCategoryEditor = closeCategoryEditor;
+window.saveCategoryEditor = saveCategoryEditor;
 
 // === FUNÇÕES DE AVALIAÇÃO ===
 window.openFeedbackModal = openFeedbackModal;
@@ -12809,6 +13541,12 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   #ordersPanel .history-order-btn{background:#63576f!important;color:#fff6ff!important;border:1px solid rgba(218,193,230,.25)!important}
   #ordersPanel .accept-order-btn{background:linear-gradient(135deg,#5d9377,#3e6f58)!important;color:#fff!important;border:1px solid rgba(176,230,196,.3)!important}
   #ordersPanel .reject-order-btn{background:linear-gradient(135deg,#965e5e,#704444)!important;color:#fff!important;border:1px solid rgba(238,181,181,.28)!important}
+  #ordersPanel .acceptance-countdown{display:inline-flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;margin:2px 0 7px;padding:7px 9px;border:1px solid rgba(255,177,104,.28);border-radius:8px;background:rgba(151,103,62,.16);color:#ffd09e;font:800 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.02em}
+  #ordersPanel .acceptance-countdown.urgent{border-color:rgba(255,128,91,.5);background:rgba(159,64,45,.22);color:#ffd0bf;animation:acceptance-countdown-pulse 1.25s ease-in-out infinite}
+  #ordersPanel .acceptance-countdown.expired{border-color:rgba(226,123,123,.48);background:rgba(125,55,55,.22);color:#ffc1b7;animation:none}
+  #ordersPanel .decision-actions .acceptance-countdown{order:-2}
+  #ordersPanel .accept-order-btn:disabled,#ordersPanel .reject-order-btn:disabled{filter:grayscale(.7);opacity:.45;cursor:not-allowed;pointer-events:none}
+  @keyframes acceptance-countdown-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,128,91,0);transform:scale(1)}50%{box-shadow:0 0 0 4px rgba(255,128,91,.12);transform:scale(1.012)}}
   #ordersPanel .decision-label{display:block;color:#bfaea1;font-size:10px;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;margin:2px 0 6px}
   #ordersPanel .decision-actions{display:flex;gap:7px;flex-wrap:wrap;width:100%;padding:9px 0 2px;margin-top:8px;border-top:1px solid rgba(255,219,190,.12)}
   #ordersPanel .decision-actions button{flex:1 1 120px}
@@ -14051,7 +14789,9 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     if (!order) return;
     const changedAt = new Date().toISOString();
     const payment = { ...(order.payment || {}), status: 'paid', confirmedAt: changedAt, transactionId: `TEST-${String(order.id).slice(0,8).toUpperCase()}` };
-    const patch = { status: 'pending', paymentStatus: 'paid', payment, paidAt: changedAt, updatedAt: changedAt, customerNotification: { type:'payment_confirmed', title:'Pagamento confirmado', message:'Seu pagamento de demonstração foi confirmado.', createdAt:changedAt, read:false } };
+    const acceptanceStartedAt = order.acceptanceStartedAt || changedAt;
+    const acceptanceDeadlineAt = order.acceptanceDeadlineAt || new Date(new Date(acceptanceStartedAt).getTime() + 5 * 60 * 1000).toISOString();
+    const patch = { status: 'pending', paymentStatus: 'paid', payment, paidAt: changedAt, acceptanceStartedAt, acceptanceDeadlineAt, updatedAt: changedAt, customerNotification: { type:'payment_confirmed', title:'Pagamento confirmado', message:'Seu pagamento de demonstração foi confirmado.', createdAt:changedAt, read:false } };
     try {
       await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), patch);
       Object.assign(order, patch);
@@ -14835,9 +15575,47 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   };
 
   function load() {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) { const parsed = JSON.parse(raw); data = { ifood: { ...data.ifood, ...parsed.ifood }, fiscal: { ...data.fiscal, ...parsed.fiscal } }; } } catch(e) {}
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        data = { ifood: { ...data.ifood, ...parsed.ifood }, fiscal: { ...data.fiscal, ...parsed.fiscal } };
+      }
+      // Este HTML não possui backend seguro para OAuth. Nunca reidrata segredos ou tokens locais.
+      data.ifood.clientSecret = '';
+      data.ifood.accessToken = '';
+      data.ifood.tokenExpiry = 0;
+      data.ifood.enabled = false;
+      data.ifood.status = 'disconnected';
+      data.ifood.lastPolling = 0;
+      data.ifood.autoAccept = false;
+      data.ifood.pollingInterval = null;
+      data.fiscal.enabled = false;
+      data.fiscal.csc = '';
+      data.fiscal.idCsc = '';
+      // Regrava somente a configuração saneada para remover segredos legados do navegador.
+      save();
+    } catch(e) {}
   }
-  function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {} }
+  function save() {
+    try {
+      const persisted = JSON.parse(JSON.stringify(data));
+      if (persisted.ifood) {
+        persisted.ifood.clientSecret = '';
+        persisted.ifood.accessToken = '';
+        persisted.ifood.tokenExpiry = 0;
+        persisted.ifood.lastPolling = 0;
+        persisted.ifood.autoAccept = false;
+        persisted.ifood.pollingInterval = null;
+      }
+      if (persisted.fiscal) {
+        persisted.fiscal.enabled = false;
+        persisted.fiscal.csc = '';
+        persisted.fiscal.idCsc = '';
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted));
+    } catch(e) {}
+  }
 
   function fmtBRL(v) { return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
   function fmtDate(ts) { if (!ts) return '-'; return new Date(ts).toLocaleDateString('pt-BR') + ' ' + new Date(ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
@@ -14863,7 +15641,9 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
       .int-form-group label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:4px}
       .int-form-group input,.int-form-group select{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px}
       .int-btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
+      .int-btn:disabled{opacity:.55;cursor:not-allowed}
       .int-btn-primary{background:#ff5a1f;color:#fff}.int-btn-sec{background:#e9ecef;color:#333}.int-btn-danger{background:#dc3545;color:#fff}
+      .int-warning{background:#fff8e1;border:1px solid #f0c36d;color:#6b4f00;border-radius:8px;padding:11px 12px;margin-bottom:14px;font-size:12px;line-height:1.5}
       .int-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
       .int-status-connected{background:#d4edda;color:#155724}
       .int-status-disconnected{background:#f8d7da;color:#721c24}
@@ -14905,10 +15685,9 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     }
 
     function renderIFood(c) {
-      const st = data.ifood.status;
-      const statusClass = st === 'connected' ? 'int-status-connected' : st === 'error' ? 'int-status-error' : 'int-status-disconnected';
-      const statusLabel = st === 'connected' ? 'Conectado' : st === 'error' ? 'Erro' : 'Desconectado';
-      const dotColor = st === 'connected' ? '#28a745' : st === 'error' ? '#ffc107' : '#dc3545';
+      const statusClass = 'int-status-disconnected';
+      const statusLabel = 'Indisponível neste HTML';
+      const dotColor = '#dc3545';
 
       c.innerHTML = `
         <div class="int-card">
@@ -14922,6 +15701,8 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
             </div>
           </div>
 
+          <div class="int-warning" role="status"><strong>Configuração somente local:</strong> este arquivo não implementa OAuth, backend seguro, polling de eventos, acknowledgment, detalhes/ações de pedidos ou sincronização real do catálogo iFood. Os controles de conexão permanecem bloqueados para evitar afirmar uma integração que não foi executada.</div>
+
           <div class="int-kpi-grid">
             <div class="int-kpi"><span>Pedidos importados</span><strong>${data.ifood.importedOrders}</strong></div>
             <div class="int-kpi"><span>Último polling</span><strong>${data.ifood.lastPolling ? fmtDate(data.ifood.lastPolling) : 'Nunca'}</strong></div>
@@ -14930,8 +15711,8 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           </div>
 
           <div class="int-toggle">
-            <input type="checkbox" id="ifoodEnabled" ${data.ifood.enabled ? 'checked' : ''}>
-            <label for="ifoodEnabled" style="font-weight:600;cursor:pointer">Ativar integração com iFood</label>
+            <input type="checkbox" id="ifoodEnabled" disabled>
+            <label for="ifoodEnabled" style="font-weight:600;color:#777">Ativar integração com iFood (backend necessário)</label>
           </div>
 
           <div class="int-form-group">
@@ -14940,7 +15721,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           </div>
           <div class="int-form-group">
             <label>Client Secret</label>
-            <input type="password" id="ifoodClientSecret" value="${data.ifood.clientSecret}" placeholder="Chave secreta do aplicativo">
+            <input type="password" id="ifoodClientSecret" value="" autocomplete="new-password" placeholder="Não armazenado neste HTML; usar backend seguro">
           </div>
           <div class="int-form-group">
             <label>Merchant ID (ID da loja)</label>
@@ -14948,14 +15729,14 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           </div>
 
           <div class="int-toggle">
-            <input type="checkbox" id="ifoodAutoAccept" ${data.ifood.autoAccept ? 'checked' : ''}>
-            <label for="ifoodAutoAccept" style="cursor:pointer">Aceitar pedidos automaticamente (sem confirmação manual)</label>
+            <input type="checkbox" id="ifoodAutoAccept" disabled>
+            <label for="ifoodAutoAccept" style="cursor:pointer;color:#777">Aceitar pedidos automaticamente (backend necessário)</label>
           </div>
 
           <div style="display:flex;gap:8px;margin-top:14px">
-            <button class="int-btn int-btn-primary" id="btnSaveIFood">Salvar configuração</button>
-            <button class="int-btn int-btn-sec" id="btnTestIFood">Testar conexão</button>
-            <button class="int-btn int-btn-sec" id="btnPollIFood">Polling agora</button>
+            <button class="int-btn int-btn-primary" id="btnSaveIFood">Salvar configuração local</button>
+            <button class="int-btn int-btn-sec" id="btnTestIFood" disabled>Testar conexão (backend)</button>
+            <button class="int-btn int-btn-sec" id="btnPollIFood" disabled>Polling (backend)</button>
             ${data.ifood.enabled ? '<button class="int-btn int-btn-danger" id="btnStopPolling">Parar polling</button>' : ''}
           </div>
         </div>
@@ -14965,10 +15746,10 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           <div style="font-size:12px;color:#666;line-height:1.6">
             <p><strong>1. Credenciamento:</strong> Acesse <a href="https://developer.ifood.com.br" target="_blank">developer.ifood.com.br</a>, crie um aplicativo do tipo "Integradora" e obtenha Client ID e Client Secret.</p>
             <p><strong>2. Autorização:</strong> No Portal do Parceiro do iFood, aba "Aplicativos", autorize a conexão da integradora com sua loja. Copie o Merchant ID.</p>
-            <p><strong>3. Polling:</strong> O sistema consulta a API do iFood a cada 30 segundos (GET /events:polling) buscando novos pedidos. Se o polling parar, a loja fica offline.</p>
-            <p><strong>4. Eventos:</strong> Cada pedido gera eventos: PLACED → CONFIRMED → PREPARATION_STARTED → READY_FOR_DISPATCHION → DISPATCHED → CONCLUDED. O sistema processa cada um.</p>
-            <p><strong>5. Catálogo:</strong> O cardápio pode ser sincronizado via API de Catalog (categorias, itens, complementos). Use o "Código PDV" (external_code) para vincular produtos.</p>
-            <p><strong>6. Cancelamento:</strong> Pedidos podem ser cancelados via API com motivos específicos (endpoint /requestCancellation + /cancellationReasons).</p>
+            <p><strong>3. Polling necessário:</strong> uma implementação real precisa consultar os eventos a cada 30 segundos em backend seguro, persistir cada evento antes do acknowledgment e tratar duplicidade, expiração de token e falhas.</p>
+            <p><strong>4. Eventos e pedidos:</strong> a implementação real deve consultar detalhes, mapear estados e executar confirmações, preparo, despacho e cancelamentos por endpoints autenticados.</p>
+            <p><strong>5. Catálogo:</strong> a sincronização real exige chamadas autenticadas à API de Catalog e vínculo consistente por código externo/PDV.</p>
+            <p><strong>6. Estado atual:</strong> este HTML não executa esses fluxos; nenhum pedido iFood pode ser recebido, confirmado, cancelado ou sincronizado por ele.</p>
           </div>
         </div>
 
@@ -14976,7 +15757,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           <h5 style="margin:0 0 10px">🔄 Sincronização de Catálogo</h5>
           <p style="font-size:12px;color:#888;margin:0 0 10px">Envia seu cardápio para o iFood. Produtos são vinculados pelo Código PDV (external_code).</p>
           <div style="display:flex;gap:8px;align-items:center">
-            <button class="int-btn int-btn-primary" id="btnSyncCatalog">Sincronizar catálogo</button>
+            <button class="int-btn int-btn-primary" id="btnSyncCatalog" disabled>Sincronizar catálogo (backend)</button>
             <span id="syncStatus" style="font-size:12px;color:#888"></span>
           </div>
           <table class="int-table" style="margin-top:14px">
@@ -14989,51 +15770,26 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
       `;
 
       document.getElementById('btnSaveIFood').onclick = () => {
-        data.ifood.enabled = document.getElementById('ifoodEnabled').checked;
+        data.ifood.enabled = false;
+        data.ifood.status = 'disconnected';
         data.ifood.clientId = document.getElementById('ifoodClientId').value.trim();
-        data.ifood.clientSecret = document.getElementById('ifoodClientSecret').value.trim();
+        data.ifood.clientSecret = '';
+        data.ifood.accessToken = '';
+        data.ifood.tokenExpiry = 0;
         data.ifood.merchantId = document.getElementById('ifoodMerchantId').value.trim();
         data.ifood.autoAccept = document.getElementById('ifoodAutoAccept').checked;
+        stopPolling();
         save();
-        if (data.ifood.enabled && data.ifood.clientId && data.ifood.clientSecret) {
-          startPolling();
-        }
         render();
-        alert('Configuração do iFood salva.');
+        alert('Configuração local do iFood salva. A integração permanece desativada: este HTML não possui backend OAuth/polling seguro.');
       };
 
-      document.getElementById('btnTestIFood').onclick = async () => {
-        if (!data.ifood.clientId || !data.ifood.clientSecret) { alert('Preencha Client ID e Client Secret primeiro.'); return; }
-        const btn = document.getElementById('btnTestIFood');
-        btn.textContent = 'Testando...'; btn.disabled = true;
-        try {
-          // Simulação da chamada OAuth (em produção, isso vai para um backend/worker)
-          await new Promise(r => setTimeout(r, 1500));
-          data.ifood.status = 'connected';
-          data.ifood.accessToken = 'sim_' + Date.now();
-          data.ifood.tokenExpiry = Date.now() + 3600000;
-          data.ifood.lastPolling = Date.now();
-          save();
-          alert('Conexão estabelecida com o iFood! A loja está online.');
-          render();
-        } catch(e) {
-          data.ifood.status = 'error';
-          save();
-          alert('Erro ao conectar: ' + e.message);
-          render();
-        }
+      document.getElementById('btnTestIFood').onclick = () => {
+        alert('Teste não executado. A integração iFood requer backend seguro para OAuth, renovação de token e chamadas autenticadas; este HTML não faz conexão externa.');
       };
 
-      document.getElementById('btnPollIFood').onclick = async () => {
-        if (data.ifood.status !== 'connected') { alert('Conecte primeiro usando "Testar conexão".'); return; }
-        const btn = document.getElementById('btnPollIFood');
-        btn.textContent = 'Buscando...'; btn.disabled = true;
-        await new Promise(r => setTimeout(r, 1000));
-        data.ifood.lastPolling = Date.now();
-        save();
-        btn.textContent = 'Polling agora'; btn.disabled = false;
-        document.getElementById('syncStatus') && (document.getElementById('syncStatus').textContent = 'Polling realizado em ' + fmtDate(Date.now()));
-        render();
+      document.getElementById('btnPollIFood').onclick = () => {
+        alert('Polling não executado. Não há endpoint, token OAuth, persistência de eventos ou acknowledgment implementado neste HTML.');
       };
 
       document.getElementById('btnStopPolling')?.addEventListener('click', () => {
@@ -15043,13 +15799,8 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
         render();
       });
 
-      document.getElementById('btnSyncCatalog').onclick = async () => {
-        const btn = document.getElementById('btnSyncCatalog');
-        btn.textContent = 'Sincronizando...'; btn.disabled = true;
-        document.getElementById('syncStatus').textContent = 'Enviando catálogo...';
-        await new Promise(r => setTimeout(r, 2000));
-        document.getElementById('syncStatus').textContent = 'Catálogo sincronizado com sucesso!';
-        btn.textContent = 'Sincronizar catálogo'; btn.disabled = false;
+      document.getElementById('btnSyncCatalog').onclick = () => {
+        alert('Sincronização não executada. Este HTML não chama a API Catalog do iFood nem registra resultados externos.');
       };
     }
 
@@ -15062,22 +15813,24 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
               <h5 style="margin:0">Emissão Fiscal — NFC-e (Modelo 65)</h5>
               <p style="font-size:12px;color:#888;margin:4px 0 0">Cupom fiscal eletrônico para consumidor final. Substitui o ECF (cupom fiscal em papel).</p>
             </div>
-            <div class="int-status ${f.enabled ? 'int-status-connected' : 'int-status-disconnected'}">
-              <div class="int-status-dot" style="background:${f.enabled ? '#28a745' : '#dc3545'}"></div>
-              ${f.enabled ? 'Ativo' : 'Inativo'}
+              <div class="int-status int-status-disconnected">
+              <div class="int-status-dot" style="background:#dc3545"></div>
+              Não implementado neste HTML
             </div>
           </div>
 
+          <div class="int-warning" role="status"><strong>Modo de configuração/simulação local:</strong> esta tela não é um emissor fiscal. Não há provedor fiscal, certificado seguro, geração/assinatura de XML, autorização SEFAZ, protocolo, QR Code autorizado, cancelamento, contingência ou arquivamento fiscal implementados neste arquivo.</div>
+
           <div class="int-kpi-grid">
-            <div class="int-kpi"><span>Notas emitidas</span><strong>${f.notas.length}</strong></div>
+            <div class="int-kpi"><span>Registros locais (sem validade)</span><strong>${f.notas.length}</strong></div>
             <div class="int-kpi"><span>Último número</span><strong>${f.ultimoNumero}</strong></div>
             <div class="int-kpi"><span>Ambiente</span><strong style="font-size:14px">${f.ambiente === 'producao' ? 'Produção' : 'Homologação'}</strong></div>
             <div class="int-kpi"><span>Regime</span><strong style="font-size:14px">${f.regimeTributario === 'simples' ? 'Simples Nacional' : f.regimeTributario === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'}</strong></div>
           </div>
 
           <div class="int-toggle">
-            <input type="checkbox" id="fiscalEnabled" ${f.enabled ? 'checked' : ''}>
-            <label for="fiscalEnabled" style="font-weight:600;cursor:pointer">Ativar emissão de NFC-e no fechamento de vendas</label>
+            <input type="checkbox" id="fiscalEnabled" disabled>
+            <label for="fiscalEnabled" style="font-weight:600;color:#777">Ativar emissão de NFC-e (backend/provedor fiscal necessário)</label>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -15182,7 +15935,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
                 <td>${fmtDate(n.data)}</td>
                 <td>${n.cliente}</td>
                 <td>${fmtBRL(n.valor)}</td>
-                <td><span class="int-status ${n.status === 'autorizada' ? 'int-status-connected' : n.status === 'rejeitada' ? 'int-status-disconnected' : 'int-status-error'}">${n.status}</span></td>
+                <td><span class="int-status int-status-error">Registro local — sem autorização</span></td>
                 <td><button class="int-btn int-btn-sec" style="padding:4px 8px;font-size:11px" onclick="window.IntegracoesModule.verDANFE('${n.id}')">Ver DANFE</button></td>
               </tr>`).join('')}
             </tbody>
@@ -15193,17 +15946,17 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
           <h5 style="margin:0 0 10px">📋 Como funciona a NFC-e</h5>
           <div style="font-size:12px;color:#666;line-height:1.6">
             <p><strong>1. Pré-requisitos:</strong> CNPJ ativo com Inscrição Estadual, certificado digital e-CNPJ A1 ou A3, credenciamento na SEFAZ do seu estado.</p>
-            <p><strong>2. Fluxo de emissão:</strong> Ao fechar uma venda no PDV → sistema gera XML da NFC-e → assina com certificado digital → envia ao webservice da SEFAZ → SEFAZ valida e autoriza → devolve chave de 44 dígitos → imprime DANFE com QR Code.</p>
-            <p><strong>3. Cancelamento:</strong> NFC-e pode ser cancelada em até 30 min após autorização (varia por estado). Exige justificativa.</p>
-            <p><strong>4. Contingência:</strong> Se a SEFAZ estiver indisponível, o modo contingência permite emitir com transmissão posterior.</p>
-            <p><strong>5. Arquivamento:</strong> O XML autorizado deve ser guardado por 5 anos. Envie ao contador mensalmente.</p>
-            <p><strong>6. Gateway fiscal:</strong> Para evitar complexidade de comunicação direta com SEFAZ, pode-se usar gateways como NFE.io, FocusNFe ou Tecnospeed. O sistema suporta ambos os modelos.</p>
+            <p><strong>2. Fluxo necessário em um emissor real:</strong> gerar XML conforme MOC/leiautes, assinar com certificado digital, transmitir ao autorizador ou provedor fiscal, obter protocolo/chave e produzir DANFE/QR Code a partir do retorno autorizado.</p>
+            <p><strong>3. Eventos fiscais:</strong> cancelamento, inutilização e demais eventos exigem endpoint, certificado, justificativa e regras da UF.</p>
+            <p><strong>4. Contingência:</strong> exige fluxo próprio, numeração, guarda e transmissão posterior conforme regras estaduais; não é implementada por esta tela.</p>
+            <p><strong>5. Arquivamento:</strong> XMLs e retornos autorizados precisam ser mantidos em armazenamento seguro e auditável, fora do localStorage deste HTML.</p>
+            <p><strong>6. Estado atual:</strong> nenhum provedor NFE.io, FocusNFe ou Tecnospeed foi configurado e este arquivo não suporta emissão fiscal real por nenhum dos modelos.</p>
           </div>
         </div>
       `;
 
       document.getElementById('btnSaveFiscal').onclick = () => {
-        f.enabled = document.getElementById('fiscalEnabled').checked;
+        f.enabled = false;
         f.cnpj = document.getElementById('fiscalCNPJ').value.trim();
         f.razaoSocial = document.getElementById('fiscalRazao').value.trim();
         f.inscricaoEstadual = document.getElementById('fiscalIE').value.trim();
@@ -15221,13 +15974,15 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
         render();
       };
 
-      document.getElementById('btnTestFiscal').onclick = async () => {
-        if (!f.cnpj) { alert('Preencha o CNPJ primeiro.'); return; }
-        const btn = document.getElementById('btnTestFiscal');
-        btn.textContent = 'Comunicando...'; btn.disabled = true;
-        await new Promise(r => setTimeout(r, 2000));
-        btn.textContent = 'Testar comunicação SEFAZ'; btn.disabled = false;
-        alert('Comunicação com SEFAZ-' + f.uf + ' estabelecida com sucesso no ambiente de ' + (f.ambiente === 'producao' ? 'produção' : 'homologação') + '.');
+      document.getElementById('btnTestFiscal').onclick = () => {
+        const cnpjDigits = String(f.cnpj || '').replace(/\D/g, '');
+        const missing = [];
+        if (cnpjDigits.length !== 14) missing.push('CNPJ com 14 dígitos');
+        if (!f.inscricaoEstadual) missing.push('Inscrição Estadual');
+        if (!f.csc) missing.push('CSC');
+        if (!f.idCsc) missing.push('ID do CSC');
+        const detail = missing.length ? 'Pendências locais: ' + missing.join(', ') + '.' : 'Campos básicos presentes.';
+        alert('Validação local concluída (' + detail + ') Comunicação real com a SEFAZ não foi testada: não existe certificado, provedor ou endpoint configurado neste HTML.');
       };
     }
   }
@@ -15235,12 +15990,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   // --- Funções de polling ---
   function startPolling() {
     stopPolling();
-    data.ifood.pollingInterval = setInterval(async () => {
-      if (!data.ifood.enabled) { stopPolling(); return; }
-      // Em produção: GET https://merchant-api.ifood.com.br/orders/v1.0/events:polling
-      data.ifood.lastPolling = Date.now();
-      save();
-    }, 30000);
+    console.warn('[Integrações] Polling iFood não iniciado: falta backend OAuth/eventos; este HTML não simula atividade de conexão.');
   }
 
   function stopPolling() {
@@ -15298,7 +16048,8 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     const bg = document.createElement('div');
     bg.className = 'est-modal-bg';
     bg.innerHTML = `<div class="est-modal" style="max-width:420px">
-      <h5 style="margin:0 0 10px">DANFE NFC-e — Nota ${n.numero}</h5>
+      <h5 style="margin:0 0 10px">Registro local de NFC-e — Nota ${n.numero}</h5>
+      <div class="int-warning" style="margin-bottom:10px"><strong>SEM VALIDADE FISCAL:</strong> esta é uma prévia local; não representa DANFE autorizado pela SEFAZ.</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:#f9f9f9;padding:14px;border-radius:8px;line-height:1.6">
         <div style="text-align:center;font-weight:700;font-size:13px;margin-bottom:6px">${data.fiscal.razaoSocial || '---'}</div>
         <div style="text-align:center">CNPJ: ${data.fiscal.cnpj || '---'}</div>
@@ -15316,9 +16067,9 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
         <hr style="margin:8px 0">
         <div style="font-size:9px;word-break:break-all">Chave: ${n.chave}</div>
         <div style="text-align:center;margin-top:8px">
-          <div style="display:inline-block;width:120px;height:120px;background:#fff;border:1px solid #000;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999">QR CODE</div>
+          <div style="display:inline-block;width:120px;height:120px;background:#fff;border:1px solid #000;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;text-align:center">QR CODE NÃO GERADO</div>
         </div>
-        <div style="text-align:center;margin-top:6px;font-size:9px">Consulte pela chave de acesso em<br>https://www.nfce.fazenda.gov.br</div>
+        <div style="text-align:center;margin-top:6px;font-size:9px">Consulta pública/QR Code não gerados: registro local sem autorização SEFAZ.</div>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
         <button class="int-btn int-btn-sec" onclick="this.closest('.est-modal-bg').remove()">Fechar</button>
@@ -15329,31 +16080,11 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     document.body.appendChild(bg);
   }
 
-  // --- Emissão de NFC-e (chamada no fechamento de venda) ---
+  // --- Emissão de NFC-e (bloqueada até existir backend/provedor fiscal real) ---
   function emitirNFCe(order) {
     load();
-    if (!data.fiscal.enabled) return null;
-    const f = data.fiscal;
-    const numero = f.ultimoNumero + 1;
-    const chave = gerarChaveNFCe(f, numero);
-    const itens = (order.items || []).map(i => ({ nome: i.name, qtd: i.quantity || i.qty || 1, total: (i.price || 0) * (i.quantity || i.qty || 1) }));
-    const nota = {
-      id: 'nfce-' + Date.now(),
-      numero,
-      serie: f.serie,
-      chave,
-      data: Date.now(),
-      cliente: order.userName || 'Consumidor',
-      clienteDoc: order.userCpf || '',
-      valor: order.total || 0,
-      status: f.ambiente === 'homologacao' ? 'autorizada' : 'autorizada',
-      itens,
-      orderId: order.id
-    };
-    f.ultimoNumero = numero;
-    f.notas.push(nota);
-    save();
-    return nota;
+    console.warn('[Integrações] NFC-e não emitida: este HTML não gera XML, assina certificado nem transmite à SEFAZ.');
+    return null;
   }
 
   function gerarChaveNFCe(f, numero) {
@@ -17502,7 +18233,7 @@ updatedAt:changedAt };
       ${isActive ? `<div class="moto-live ${isCancellationRequested ? 'pending' : location ? '' : 'warning'}">${isCancellationRequested ? 'Solicitação de cancelamento enviada. Aguarde a avaliação da loja; a entrega ainda não foi encerrada.' : location ? esc(locationText) : 'A entrega está ativa, mas a localização não foi compartilhada. O cliente continuará recebendo os status da operação.'}</div>` : ''}
       ${liveMapMarkup}
       ${isOffer ? (isQueueNext ? `<div class="moto-queue-next"><strong>Próximo percurso</strong><span>Este é o destino mais próximo da sua posição atual.</span></div><div class="moto-order-actions"><button type="button" class="moto-button primary" data-action="accept-location" data-order-id="${esc(order.id)}">Aceitar e compartilhar localização</button><button type="button" class="moto-button good" data-action="accept-manual" data-order-id="${esc(order.id)}">Aceitar sem compartilhar localização</button><button type="button" class="moto-button" data-action="decline" data-order-id="${esc(order.id)}">Recusar oferta</button>${externalRouteMarkup(order)}</div>${manual}` : `<div class="moto-queue-locked"><strong>${hasQueueDestination ? 'Aguardando sequência' : 'Destino ainda não localizado'}</strong><span>${hasQueueDestination ? `Finalize os pedidos anteriores para liberar este percurso. Posição ${esc(queueInfo.position || '—')} · ${esc(queueDistanceLabel(queueInfo.distanceKm))}.` : 'A loja precisa confirmar um endereço ou coordenada válida antes de liberar este percurso.'}</span></div>`) : ''}
-      ${isActive ? `<div class="moto-order-actions">${externalRouteMarkup(order)}<button type="button" class="moto-button" data-action="report-issue" data-order-id="${esc(order.id)}">Avisar loja</button>${isCancellationRequested ? '<button type="button" class="moto-button pending" disabled>Cancelamento em análise</button>' : `<button type="button" class="moto-button danger" data-action="request-cancel" data-order-id="${esc(order.id)}">Cancelar pedido</button>`}</div>${isCancellationRequested ? '' : (isQueueCurrent ? `<form class="moto-code-form" data-action="finish-form" data-order-id="${esc(order.id)}"><label for="delivery-code-${esc(order.id)}">Código de 4 dígitos do cliente</label><input id="delivery-code-${esc(order.id)}" class="moto-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" placeholder="0000" required><button type="submit" class="moto-button primary">Confirmar entrega</button></form>` : '<div class="moto-queue-locked"><span>Este pedido aguarda a conclusão do percurso atual.</span></div>')}` : ''}
+      ${isActive ? `<div class="moto-order-actions">${externalRouteMarkup(order)}<button type="button" class="moto-button moto-chat-button" data-action="chat" data-order-id="${esc(order.id)}">💬 Chat com cliente e loja</button><button type="button" class="moto-button" data-action="report-issue" data-order-id="${esc(order.id)}">Avisar loja</button>${isCancellationRequested ? '<button type="button" class="moto-button pending" disabled>Cancelamento em análise</button>' : `<button type="button" class="moto-button danger" data-action="request-cancel" data-order-id="${esc(order.id)}">Cancelar pedido</button>`}</div>${isCancellationRequested ? '' : (isQueueCurrent ? `<form class="moto-code-form" data-action="finish-form" data-order-id="${esc(order.id)}"><label for="delivery-code-${esc(order.id)}">Código de 4 dígitos do cliente</label><input id="delivery-code-${esc(order.id)}" class="moto-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" placeholder="0000" required><button type="submit" class="moto-button primary">Confirmar entrega</button></form>` : '<div class="moto-queue-locked"><span>Este pedido aguarda a conclusão do percurso atual.</span></div>')}` : ''}
     </article>`;
   }
 
@@ -17744,8 +18475,7 @@ updatedAt:changedAt };
     const avatarMarkup = photo ? `<img src="${esc(photo)}" alt="${esc(riderName)}">` : esc(initials);
     const phoneDigits = phone && typeof normalizePhone === 'function' ? normalizePhone(phone) : phone.replace(/\D/g, '');
     const callMarkup = phoneDigits ? `<a href="tel:${esc(phoneDigits)}" aria-label="Ligar para o motoboy" title="Ligar para o motoboy">☎</a>` : '<button type="button" disabled aria-label="Telefone do motoboy não informado" title="Telefone do motoboy não informado">☎</button>';
-    const messageUrl = phone ? whatsappUrl(phone) : '';
-    const messageMarkup = messageUrl ? `<a href="${esc(messageUrl)}" target="_blank" rel="noopener">Enviar mensagem ao motoboy</a>` : '<button type="button" disabled>Contato não informado</button>';
+    const chatMarkup = `<button type="button" class="customer-live-chat-button" data-order-chat-open="1" data-order-chat-id="${esc(order.id)}" data-order-chat-role="customer">💬 Falar pelo chat</button>`;
     const destination = directDestination(order);
     const remainingKm = location && destination ? distanceKm(location, destination) : null;
     const etaMinutes = remainingKm !== null ? Math.max(1, Math.round(remainingKm * 4)) : null;
@@ -17763,7 +18493,7 @@ updatedAt:changedAt };
     const mapExists = Boolean(byId(mapId));
     const needsMarkup = panel.dataset.liveMapOrderId !== panelOrderKey || !mapExists || panel.dataset.liveDeliveryUiVersion !== '3';
     if (needsMarkup) {
-      panel.innerHTML = `<div class="customer-live-map-stage"><section class="live-delivery-map-panel" data-live-map-panel="1"><div class="live-delivery-map-head"><strong>Acompanhamento da entrega</strong><span>${location ? 'Localização compartilhada' : 'Aguardando localização'}</span></div><div id="${esc(mapId)}" class="live-delivery-map-canvas" data-live-map-order="${esc(order.id)}" data-live-map-audience="customer"></div><div class="live-delivery-map-status" data-live-map-status>${esc(locationText)}</div><div class="live-delivery-map-legend"><span class="store"><i></i>Loja</span><span class="customer"><i></i>Destino</span><span class="rider"><i></i>Motoboy</span></div></section><div class="customer-live-map-eta" aria-label="Distância e tempo aproximados"><strong data-live-eta-distance>${esc(distanceLabel)}</strong><span>até você</span><small data-live-eta-time>${esc(etaLabel)}</small><em class="customer-live-approach-badge ${approachClass}" data-live-approach-badge${approach.active ? '' : ' hidden'}>${esc(approachLabel)}</em></div><button type="button" class="customer-live-map-locate" data-live-map-locate aria-label="Centralizar mapa" title="Centralizar mapa">⌖</button><div class="customer-live-map-safety"><span class="customer-live-map-safety-icon" aria-hidden="true">✓</span><div><strong>Confira o entregador e o veículo</strong><small>Informe o código somente quando receber o pedido.</small></div></div></div><div class="customer-live-sheet"><div class="customer-live-status"><strong data-live-status-label>${esc(statusLabel)}</strong><small data-live-status-subline>${esc(statusSubline)}</small></div><div class="customer-live-driver"><div class="customer-live-driver-copy"><span class="customer-live-driver-badge">Entrega em andamento</span><strong class="customer-live-driver-name" data-live-driver-name>${esc(riderName)}</strong><span class="customer-live-driver-vehicle" data-live-driver-vehicle>${esc(vehicleLabel)}${plate ? ` · ${esc(plate)}` : ''}</span>${rating ? `<span class="customer-live-driver-rating" data-live-driver-rating><b>★</b> ${esc(rating)}</span>` : '<span class="customer-live-driver-rating" data-live-driver-rating>Perfil do entregador</span>'}</div><div class="customer-live-driver-avatar" data-live-driver-avatar>${avatarMarkup}</div></div><div class="customer-live-actions">${callMarkup}${messageMarkup}</div><div class="customer-live-address"><span class="customer-live-address-dot" aria-hidden="true"></span><div><small>Endereço de entrega</small><strong data-live-address>${esc(order.address || order.deliveryAddress || 'Endereço informado no pedido')}</strong></div></div><div class="customer-live-order-summary" data-live-order-summary>Pedido #${esc(order.orderNumber || String(order.id || '').substring(0, 7).toUpperCase())} · Total ${esc(money(Number(order.total) || 0))} · Código ${esc(code)}</div></div>`;
+      panel.innerHTML = `<div class="customer-live-map-stage"><section class="live-delivery-map-panel" data-live-map-panel="1"><div class="live-delivery-map-head"><strong>Acompanhamento da entrega</strong><span>${location ? 'Localização compartilhada' : 'Aguardando localização'}</span></div><div id="${esc(mapId)}" class="live-delivery-map-canvas" data-live-map-order="${esc(order.id)}" data-live-map-audience="customer"></div><div class="live-delivery-map-status" data-live-map-status>${esc(locationText)}</div><div class="live-delivery-map-legend"><span class="store"><i></i>Loja</span><span class="customer"><i></i>Destino</span><span class="rider"><i></i>Motoboy</span></div></section><div class="customer-live-map-eta" aria-label="Distância e tempo aproximados"><strong data-live-eta-distance>${esc(distanceLabel)}</strong><span>até você</span><small data-live-eta-time>${esc(etaLabel)}</small><em class="customer-live-approach-badge ${approachClass}" data-live-approach-badge${approach.active ? '' : ' hidden'}>${esc(approachLabel)}</em></div><button type="button" class="customer-live-map-locate" data-live-map-locate aria-label="Centralizar mapa" title="Centralizar mapa">⌖</button><div class="customer-live-map-safety"><span class="customer-live-map-safety-icon" aria-hidden="true">✓</span><div><strong>Confira o entregador e o veículo</strong><small>Informe o código somente quando receber o pedido.</small></div></div></div><div class="customer-live-sheet"><div class="customer-live-status"><strong data-live-status-label>${esc(statusLabel)}</strong><small data-live-status-subline>${esc(statusSubline)}</small></div><div class="customer-live-driver"><div class="customer-live-driver-copy"><span class="customer-live-driver-badge">Entrega em andamento</span><strong class="customer-live-driver-name" data-live-driver-name>${esc(riderName)}</strong><span class="customer-live-driver-vehicle" data-live-driver-vehicle>${esc(vehicleLabel)}${plate ? ` · ${esc(plate)}` : ''}</span>${rating ? `<span class="customer-live-driver-rating" data-live-driver-rating><b>★</b> ${esc(rating)}</span>` : '<span class="customer-live-driver-rating" data-live-driver-rating>Perfil do entregador</span>'}</div><div class="customer-live-driver-avatar" data-live-driver-avatar>${avatarMarkup}</div></div><div class="customer-live-actions">${callMarkup}${chatMarkup}</div><div class="customer-live-address"><span class="customer-live-address-dot" aria-hidden="true"></span><div><small>Endereço de entrega</small><strong data-live-address>${esc(order.address || order.deliveryAddress || 'Endereço informado no pedido')}</strong></div></div><div class="customer-live-order-summary" data-live-order-summary>Pedido #${esc(order.orderNumber || String(order.id || '').substring(0, 7).toUpperCase())} · Total ${esc(money(Number(order.total) || 0))} · Código ${esc(code)}</div></div>`;
       panel.dataset.liveMapOrderId = panelOrderKey;
       panel.dataset.liveDeliveryUiVersion = '3';
       panel.querySelector('[data-live-map-locate]')?.addEventListener('click', () => window.focusLiveDeliveryMap?.(mapId, order));
@@ -17822,6 +18552,7 @@ updatedAt:changedAt };
       if (action === 'decline') declineDelivery(orderId);
       if (action === 'report-issue') reportIssue(orderId);
       if (action === 'request-cancel') openCancellationModal(orderId);
+      if (action === 'chat') window.openOrderChat?.(orderId, 'motoboy');
       if (action === 'close-cancel-modal') closeCancellationModal();
     });
     root.addEventListener('submit', event => {
@@ -18772,34 +19503,54 @@ updatedAt:changedAt };
     }
     @keyframes totem-fade-in { from { opacity: 0; } to { opacity: 1; } }
     .totem-addon-modal {
-      background: linear-gradient(145deg, #1e1b18, #1a1714); border-radius: 18px; padding: 28px; max-width: 520px; width: 100%;
+      background: linear-gradient(145deg, #1e1b18, #1a1714); border-radius: 18px; padding: 28px; max-width: 560px; width: min(560px, 100%);
       max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,90,31,0.25);
       box-shadow: 0 24px 60px rgba(0,0,0,0.5);
       animation: totem-slide-up 0.25s ease;
+      box-sizing: border-box;
     }
     @keyframes totem-slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .totem-addon-modal h3 { font-size: 24px; color: #fff; margin: 0 0 8px; font-weight: 800; letter-spacing: -0.01em; }
-    .totem-addon-modal p { font-size: 14px; color: #958b80; margin: 0 0 20px; }
-    .totem-addon-group { margin-bottom: 18px; }
-    .totem-addon-group h4 { font-size: 16px; color: #ff8f61; margin: 0 0 10px; font-weight: 700; }
+    .totem-addon-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+    .totem-addon-modal h3 { font-size: 24px; color: #fff; margin: 0 0 8px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; }
+    .totem-addon-modal p { font-size: 14px; color: #958b80; margin: 0 0 20px; line-height: 1.45; }
+    .totem-addon-close { flex: none; width: 38px; height: 38px; margin: -5px -5px 0 0; border: 1px solid rgba(246,232,214,.16); border-radius: 50%; background: rgba(255,255,255,.04); color: #c9bdb0; font-size: 23px; line-height: 1; cursor: pointer; }
+    .totem-addon-close:hover { border-color: rgba(255,90,31,.5); background: rgba(255,90,31,.12); color: #fff; }
+    .totem-addon-group { margin-bottom: 20px; padding: 14px; border: 1px solid rgba(246,232,214,.1); border-radius: 14px; background: rgba(10,9,8,.18); }
+    .totem-addon-group h4 { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-size: 16px; color: #ff8f61; margin: 0 0 12px; font-weight: 700; line-height: 1.35; }
     .totem-addon-option {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px; background: #221e1a; border: 1px solid #3a342e; border-radius: 10px;
-      margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      min-height: 66px; padding: 12px 14px; background: #221e1a; border: 1px solid #3a342e; border-radius: 11px;
+      margin-bottom: 8px; cursor: pointer; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .15s ease;
+      box-sizing: border-box;
     }
-    .totem-addon-option:hover { border-color: rgba(255,90,31,0.35); background: #251f1b; }
-    .totem-addon-option .totem-addon-name { font-size: 15px; color: #f4ece2; font-weight: 600; }
-    .totem-addon-option .totem-addon-price { font-size: 15px; color: #ff9b72; font-weight: 700; }
-    .totem-addon-qty { display: flex; align-items: center; gap: 6px; }
-    .totem-addon-actions { display: flex; gap: 12px; margin-top: 24px; }
+    .totem-addon-option:last-child { margin-bottom: 0; }
+    .totem-addon-option:hover { border-color: rgba(255,90,31,0.45); background: #251f1b; }
+    .totem-addon-option.is-selected { border-color: #ff6a35; background: linear-gradient(90deg, rgba(255,90,31,.16), rgba(255,90,31,.05)); box-shadow: 0 0 0 2px rgba(255,90,31,.12), inset 3px 0 0 #ff6a35; }
+    .totem-addon-option:active { transform: scale(.99); }
+    .totem-addon-option .totem-addon-copy { min-width: 0; flex: 1; }
+    .totem-addon-option .totem-addon-name { overflow: hidden; color: #f4ece2; font-size: 15px; font-weight: 700; line-height: 1.25; text-overflow: ellipsis; }
+    .totem-addon-option .totem-addon-price { margin-top: 4px; color: #ffb08b; font-size: 13px; font-weight: 700; }
+    .totem-addon-option .totem-addon-check { display: none; flex: none; color: #ff8f61; font-size: 14px; font-weight: 900; }
+    .totem-addon-option.is-selected .totem-addon-check { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #ff6a35; color: #fff; }
+    .totem-addon-qty { display: flex; align-items: center; gap: 7px; flex: none; }
+    .totem-addon-qty .totem-addon-qty-btn { width: 38px; height: 38px; padding: 0; border: 1px solid rgba(255,90,31,.4); border-radius: 10px; background: rgba(255,90,31,.1); color: #ffb08b; font-size: 21px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; }
+    .totem-addon-qty .totem-addon-qty-btn:hover { background: rgba(255,90,31,.22); border-color: #ff8f61; }
+    .totem-addon-qty .totem-addon-qty-btn:active { transform: scale(.92); }
+    .totem-addon-qty .totem-addon-qty-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .totem-addon-qty .totem-addon-qty-btn:disabled:hover { background: rgba(255,90,31,.1); border-color: rgba(255,90,31,.4); }
+    .totem-addon-qty .totem-addon-qty-num { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; color: #fff; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .totem-addon-actions { display: flex; gap: 12px; margin-top: 24px; position: sticky; bottom: -28px; padding-top: 14px; background: linear-gradient(180deg, rgba(26,23,20,0), #1a1714 30%); }
+    .totem-addon-actions button { min-height: 52px; }
+    .totem-addon-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding: 12px 14px; border: 1px solid rgba(246,232,214,.1); border-radius: 10px; background: rgba(8,8,7,.25); color: #bfb2a6; font-size: 13px; }
+    .totem-addon-summary strong { color: #fff; font-size: 18px; }
     .totem-addon-cancel {
-      flex: 1; padding: 16px; background: transparent; color: #c97878; border: 1px solid rgba(74,48,48,0.5);
-      border-radius: 12px; font-size: 16px; cursor: pointer; transition: all 0.15s;
+      flex: 1; padding: 16px; background: transparent; color: #e2b1a0; border: 1px solid rgba(226,177,160,.35);
+      border-radius: 12px; font-size: 16px; cursor: pointer; transition: all 0.15s; font-weight: 700;
     }
-    .totem-addon-cancel:hover { background: rgba(201,120,120,0.08); }
+    .totem-addon-cancel:hover { background: rgba(226,177,160,.08); border-color: rgba(226,177,160,.6); }
     .totem-addon-confirm {
       flex: 1; padding: 16px; background: linear-gradient(135deg, #ff5a1f, #ff7340); color: #fff; border: none;
-      border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+      border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer;
       transition: all 0.15s; box-shadow: 0 2px 12px rgba(255,90,31,0.25);
     }
     .totem-addon-confirm:hover { box-shadow: 0 4px 20px rgba(255,90,31,0.4); }
@@ -19319,16 +20070,19 @@ updatedAt:changedAt };
           const qty = addonState ? addonState.qty : 0;
           const plusDisabled = (currentCount >= maxVal && qty === 0) ? 'disabled' : '';
           const minusDisabled = (qty === 0) ? 'disabled' : '';
+          const selectedClass = qty > 0 ? ' is-selected' : '';
+          const selectedLabel = qty > 0 ? ' selecionado' : '';
           return `
-            <div class="totem-addon-option">
-              <div>
+            <div class="totem-addon-option${selectedClass}" role="group" aria-label="${escapeAttr(a.name + selectedLabel)}">
+              <div class="totem-addon-copy">
                 <div class="totem-addon-name">${escapeHtml(a.name)}</div>
-                <div class="totem-addon-price">${a.price > 0 ? formatPrice(a.price) : 'Grátis'}</div>
+                <div class="totem-addon-price">${a.price > 0 ? formatPrice(a.price) : 'Grátis'}${qty > 0 ? ` · ${qty} selecionado${qty > 1 ? 's' : ''}` : ''}</div>
               </div>
-              <div class="totem-addon-qty">
-                <button class="totem-qty-btn" data-gid="${escapeAttr(g.id)}" data-aid="${escapeAttr(a.id)}" data-action="dec" ${minusDisabled}>−</button>
-                <span class="totem-qty-num" data-count="${escapeAttr(g.id)}:${escapeAttr(a.id)}">${qty}</span>
-                <button class="totem-qty-btn" data-gid="${escapeAttr(g.id)}" data-aid="${escapeAttr(a.id)}" data-action="inc" ${plusDisabled}>+</button>
+              <span class="totem-addon-check" aria-hidden="true">✓</span>
+              <div class="totem-addon-qty" aria-label="Quantidade de ${escapeAttr(a.name)}">
+                <button type="button" class="totem-addon-qty-btn" data-gid="${escapeAttr(g.id)}" data-aid="${escapeAttr(a.id)}" data-action="dec" aria-label="Remover ${escapeAttr(a.name)}" ${minusDisabled}>−</button>
+                <span class="totem-addon-qty-num" data-count="${escapeAttr(g.id)}:${escapeAttr(a.id)}" aria-live="polite">${qty}</span>
+                <button type="button" class="totem-addon-qty-btn" data-gid="${escapeAttr(g.id)}" data-aid="${escapeAttr(a.id)}" data-action="inc" aria-label="Adicionar ${escapeAttr(a.name)}" ${plusDisabled}>+</button>
               </div>
             </div>
           `;
@@ -19336,7 +20090,7 @@ updatedAt:changedAt };
 
         return `
           <div class="totem-addon-group">
-            <h4>${escapeHtml(g.name)} <span style="font-size:12px;color:#958b80;font-weight:400">${infoText}</span></h4>
+            <h4><span>${escapeHtml(g.name)}</span><span style="font-size:12px;color:#958b80;font-weight:400">${infoText}</span></h4>
             ${options}
           </div>
         `;
@@ -19383,31 +20137,54 @@ updatedAt:changedAt };
       const confirmText = canConfirm ? `Adicionar · ${formatPrice(itemTotal)}` : 'Selecione opções obrigatórias';
       const confirmDisabled = canConfirm ? '' : 'disabled';
 
+      const selectedCount = modalState.addons.reduce((sum, groupState) => sum + groupState.selected.reduce((groupSum, addonState) => groupSum + addonState.qty, 0), 0);
       modalBg.innerHTML = `
-        <div class="totem-addon-modal">
-          <h3>${escapeHtml(product.name)}</h3>
-          <p>Personalize seu pedido selecionando os adicionais desejados.</p>
+        <div class="totem-addon-modal" role="dialog" aria-modal="true" aria-labelledby="totemAddonTitle">
+          <div class="totem-addon-modal-head">
+            <div>
+              <h3 id="totemAddonTitle">${escapeHtml(product.name)}</h3>
+              <p>Personalize seu pedido selecionando os adicionais desejados.</p>
+            </div>
+            <button type="button" class="totem-addon-close" id="totemAddonClose" aria-label="Fechar personalização">×</button>
+          </div>
           ${groupsHTML}
+          <div class="totem-addon-summary"><span>${selectedCount ? `${selectedCount} ${selectedCount > 1 ? 'adicionais selecionados' : 'adicional selecionado'}` : 'Nenhum adicional selecionado'}</span><strong>${formatPrice(itemTotal)}</strong></div>
           <div class="totem-addon-actions">
-            <button class="totem-addon-cancel" id="totemAddonCancel">Cancelar</button>
-            <button class="totem-addon-confirm" id="totemAddonConfirm" ${confirmDisabled}>${confirmText}</button>
+            <button type="button" class="totem-addon-cancel" id="totemAddonCancel">Cancelar</button>
+            <button type="button" class="totem-addon-confirm" id="totemAddonConfirm" ${confirmDisabled}>${confirmText}</button>
           </div>
         </div>
       `;
 
       // Eventos +/-
       modalBg.querySelectorAll('[data-action]').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation();
           const gid = btn.dataset.gid;
           const aid = btn.dataset.aid;
           const action = btn.dataset.action;
           handleAddonChange(gid, aid, action);
+          resetIdleTimer();
         });
       });
 
-      // Cancelar
-      document.getElementById('totemAddonCancel').addEventListener('click', () => {
+      // Toque na linha também adiciona uma unidade, sem duplicar o clique dos controles.
+      modalBg.querySelectorAll('.totem-addon-option').forEach(option => {
+        option.addEventListener('click', (event) => {
+          if (event.target.closest('button')) return;
+          const incButton = option.querySelector('[data-action="inc"]:not(:disabled)');
+          if (incButton) incButton.click();
+        });
+      });
+
+      const closeAddonModal = () => {
         modalBg.remove();
+        resetIdleTimer();
+      };
+      document.getElementById('totemAddonClose').addEventListener('click', closeAddonModal);
+      document.getElementById('totemAddonCancel').addEventListener('click', closeAddonModal);
+      modalBg.addEventListener('click', (event) => {
+        if (event.target === modalBg) closeAddonModal();
       });
 
       // Confirmar
@@ -19431,6 +20208,7 @@ updatedAt:changedAt };
         });
         addToCart(product, selectedAddons);
         modalBg.remove();
+        resetIdleTimer();
       });
     }
 
@@ -19644,6 +20422,8 @@ updatedAt:changedAt };
     const subtotal = cartItems.reduce((s, i) => s + (i.totalPrice * i.qty), 0);
     const preparationTime = (window.DATA && window.DATA.restaurant && window.DATA.restaurant.preparationTime) || 30;
     const estimatedReadyTime = new Date(Date.now() + preparationTime * 60000);
+    const acceptanceStartedAt = new Date().toISOString();
+    const acceptanceDeadlineAt = new Date(new Date(acceptanceStartedAt).getTime() + 5 * 60 * 1000).toISOString();
     const orderNumber = generateOrderNumber();
 
     const newOrder = {
@@ -19687,6 +20467,8 @@ updatedAt:changedAt };
         createdAt: new Date().toISOString()
       },
       status: 'pending',
+      acceptanceStartedAt,
+      acceptanceDeadlineAt,
       source: 'totem',
       totemId: kioskState.totem.id,
       totemNumber: kioskState.totem.number,
@@ -20025,5 +20807,407 @@ updatedAt:changedAt };
   }
 
   console.log('[TotemModule] Módulo de autoatendimento carregado.');
+})();
+</script>
+
+<script id="order-chat-module">
+(() => {
+  'use strict';
+
+  const CHAT_MAX_LENGTH = 500;
+  const CHAT_MESSAGE_LIMIT = 200;
+  const CHAT_SEND_COOLDOWN_MS = 700;
+  const state = {
+    order: null,
+    orderId: '',
+    role: '',
+    messages: [],
+    orderUnsubscribe: null,
+    messagesUnsubscribe: null,
+    sending: false,
+    lastSentAt: 0,
+    openToken: 0,
+    notice: '',
+    noticeKind: ''
+  };
+
+  const byId = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const text = value => String(value ?? '').trim();
+  const idOf = value => text(value?.id || value?.uid);
+  const nowIso = () => new Date().toISOString();
+  const orderKey = value => String(value || '').trim();
+  const orderLabel = order => text(order?.orderNumber || order?.id).slice(0, 18).toUpperCase();
+  const roleLabels = { customer: 'Cliente', motoboy: 'Motoboy', store: 'Loja' };
+  const statusValue = value => ({ accepted:'in_production', preparing:'in_production', delivering:'out_for_delivery', canceled:'cancelled' }[text(value).toLowerCase()] || text(value).toLowerCase() || 'pending');
+  const terminalStatus = value => ['delivered','cancelled','rejected'].includes(statusValue(value));
+  const activeDeliveryStatus = value => ['out_for_delivery','cancellation_requested'].includes(statusValue(value));
+  const internalOrder = order => {
+    if (!order) return false;
+    const source = text(order.source).toLowerCase();
+    const serviceType = text(order.serviceType).toLowerCase();
+    const address = text(order.address || order.deliveryAddress).toLowerCase();
+    const userId = text(order.userId).toLowerCase();
+    return source === 'garcom' || source === 'pdv' || source === 'totem' || serviceType === 'mesa' || serviceType === 'totem' || Boolean(order.tableId || order.pdvTable) || address.includes('(pdv)') || userId.startsWith('pdv_') || userId.startsWith('totem_');
+  };
+  const currentCustomer = () => window.currentUser && !window.currentUser.isAdmin && !window.currentUser.isMotoboy ? window.currentUser : null;
+  const currentMotoboy = () => window.__motoboySession || (window.currentUser?.isMotoboy ? window.currentUser : null);
+  const currentStore = () => window.currentUser?.isAdmin === true ? window.currentUser : null;
+
+  function identityFor(role, order) {
+    if (role === 'store') {
+      const user = currentStore();
+      if (!user) return null;
+      return { id: idOf(user) || 'store_admin', role, name: text(window.DATA?.restaurant?.name) || text(user.name) || 'Loja' };
+    }
+    if (role === 'motoboy') {
+      const user = currentMotoboy();
+      if (!user) return null;
+      return { id: text(user.motoboyId || user.id || user.uid), role, name: text(user.name) || text(order?.motoboyName) || 'Motoboy' };
+    }
+    const user = currentCustomer();
+    if (!user) return null;
+    return { id: idOf(user), role: 'customer', name: text(user.name) || text(order?.userName) || 'Cliente' };
+  }
+
+  function canRead(order, role) {
+    if (!order || !orderKey(order.id) || internalOrder(order)) return false;
+    const identity = identityFor(role, order);
+    if (!identity?.id) return false;
+    if (role === 'store') return Boolean(currentStore());
+    if (role === 'motoboy') return Boolean(text(order.motoboyId) && text(order.motoboyId) === identity.id && !terminalStatus(order.status));
+    return Boolean(text(order.userId) && text(order.userId) === identity.id && text(order.motoboyId));
+  }
+
+  function canSend(order, role) {
+    if (!canRead(order, role) || terminalStatus(order.status)) return false;
+    if (role === 'store') return true;
+    return activeDeliveryStatus(order.status) && Boolean(text(order.motoboyId));
+  }
+
+  function ensureMarkup() {
+    if (byId('orderChatModal')) return;
+    const style = document.createElement('style');
+    style.id = 'order-chat-styles';
+    style.textContent = `
+      body.order-chat-open{overflow:hidden}
+      #orderChatModal{position:fixed;inset:0;z-index:2300;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(7,10,11,.72);backdrop-filter:blur(5px)}
+      #orderChatModal.is-open{display:flex}
+      #orderChatModal .order-chat-backdrop{position:absolute;inset:0}
+      #orderChatModal .order-chat-dialog{position:relative;display:flex;flex-direction:column;width:min(560px,calc(100vw - 24px));height:min(720px,calc(100vh - 28px));overflow:hidden;border:1px solid rgba(255,178,132,.3);border-radius:20px;background:linear-gradient(160deg,#26211e,#151515);color:#f6eee8;box-shadow:0 24px 70px rgba(0,0,0,.48)}
+      #orderChatModal .order-chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 20px 15px;border-bottom:1px solid rgba(255,224,208,.12);background:linear-gradient(135deg,rgba(99,62,43,.5),rgba(30,27,24,.25))}
+      #orderChatModal .order-chat-kicker{display:block;color:#e8a173;font:700 10px/1.2 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+      #orderChatModal h2{margin:5px 0 3px;color:#fff7f1;font:800 24px/1.05 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.015em}
+      #orderChatModal .order-chat-meta{display:block;color:#bcaea4;font-size:11px;line-height:1.35}
+      #orderChatModal .order-chat-close{display:grid;flex:none;width:36px;height:36px;place-items:center;border:1px solid rgba(255,255,255,.18);border-radius:50%;background:rgba(255,255,255,.06);color:#fff;font-size:23px;line-height:1;cursor:pointer}
+      #orderChatModal .order-chat-close:hover{background:rgba(255,125,74,.2)}
+      #orderChatModal .order-chat-notice{display:none;margin:12px 16px 0;padding:10px 12px;border:1px solid rgba(255,179,117,.28);border-radius:10px;background:rgba(130,81,45,.18);color:#f2c49f;font-size:11px;line-height:1.4}
+      #orderChatModal .order-chat-notice.is-visible{display:block}
+      #orderChatModal .order-chat-notice.error{border-color:rgba(238,137,137,.35);background:rgba(117,55,55,.25);color:#ffc0b5}
+      #orderChatModal .order-chat-messages{display:flex;flex:1 1 auto;flex-direction:column;gap:9px;min-height:0;overflow:auto;padding:16px 16px 12px;scroll-behavior:smooth}
+      #orderChatModal .order-chat-empty{display:grid;min-height:180px;place-items:center;padding:28px;color:#ae9f95;font-size:12px;text-align:center;line-height:1.5}
+      #orderChatModal .order-chat-message{display:flex;max-width:88%;flex-direction:column;gap:4px;padding:9px 11px;border:1px solid rgba(255,228,212,.12);border-radius:13px 13px 13px 4px;background:rgba(255,255,255,.065);align-self:flex-start}
+      #orderChatModal .order-chat-message.mine{border-color:rgba(255,151,100,.3);border-radius:13px 13px 4px 13px;background:linear-gradient(135deg,rgba(189,91,47,.38),rgba(103,57,38,.32));align-self:flex-end}
+      #orderChatModal .order-chat-message-head{display:flex;align-items:center;gap:7px;color:#e8b18e;font:700 10px/1.2 'IBM Plex Mono',monospace}
+      #orderChatModal .order-chat-message-role{padding:3px 6px;border-radius:5px;background:rgba(255,255,255,.1);color:#ead8cc;font-size:9px;letter-spacing:.04em;text-transform:uppercase}
+      #orderChatModal .order-chat-message-time{margin-left:auto;color:#a99589;font-size:9px;font-weight:500}
+      #orderChatModal .order-chat-message-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#fff8f3;font-size:13px;line-height:1.4}
+      #orderChatModal .order-chat-quick-replies{display:flex;gap:7px;overflow:auto;padding:0 16px 10px;scrollbar-width:none}
+      #orderChatModal .order-chat-quick-replies:empty{display:none}
+      #orderChatModal .order-chat-quick-reply{flex:none;padding:7px 10px;border:1px solid rgba(255,175,135,.3);border-radius:999px;background:rgba(255,125,74,.08);color:#f1c1a4;font-size:10px;cursor:pointer;white-space:nowrap}
+      #orderChatModal .order-chat-quick-reply:hover{background:rgba(255,125,74,.18)}
+      #orderChatModal .order-chat-form{display:flex;align-items:flex-end;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,224,208,.12);background:rgba(12,12,12,.3)}
+      #orderChatModal .order-chat-input{flex:1;min-height:42px;max-height:120px;resize:none;padding:11px 12px;border:1px solid rgba(255,221,203,.18);border-radius:12px;background:#211e1c;color:#fff;font:13px/1.35 inherit;outline:none}
+      #orderChatModal .order-chat-input:focus{border-color:#e89468;box-shadow:0 0 0 3px rgba(232,148,104,.12)}
+      #orderChatModal .order-chat-input:disabled{opacity:.55;cursor:not-allowed}
+      #orderChatModal .order-chat-send{min-width:78px;height:42px;padding:0 13px;border:0;border-radius:11px;background:linear-gradient(135deg,#ff8b56,#e65c28);color:#fff;font:800 12px 'IBM Plex Mono',monospace;cursor:pointer}
+      #orderChatModal .order-chat-send:disabled{filter:grayscale(.55);opacity:.45;cursor:not-allowed}
+      #orderChatModal .order-chat-safety{padding:0 16px 13px;color:#94857c;font-size:10px;line-height:1.35;text-align:center}
+      .order-chat-admin-btn{padding:5px 9px!important;border:1px solid rgba(236,161,115,.38)!important;border-radius:6px!important;background:rgba(180,86,48,.2)!important;color:#ffc39f!important;font-weight:700!important;cursor:pointer!important}
+      .order-chat-admin-btn:hover{background:rgba(220,98,53,.35)!important}
+      .moto-chat-button{border-color:rgba(255,174,125,.48)!important;background:rgba(194,91,48,.22)!important;color:#ffd0b6!important}
+      .moto-chat-button:hover{background:rgba(220,105,57,.35)!important}
+      .customer-live-chat-button{flex:1!important;background:#fff3ed!important;color:#b85028!important;border-color:#f0c2ad!important}
+      .customer-live-chat-button:hover{background:#ffe9de!important}
+      @media(max-width:600px){#orderChatModal{align-items:flex-end;padding:0}#orderChatModal .order-chat-dialog{width:100%;height:min(88vh,760px);max-height:calc(100vh - 8px);border-radius:20px 20px 0 0}#orderChatModal h2{font-size:22px}}
+    `;
+    document.head.appendChild(style);
+    document.body.insertAdjacentHTML('beforeend', `
+      <div id="orderChatModal" aria-hidden="true">
+        <div class="order-chat-backdrop" data-order-chat-close></div>
+        <section class="order-chat-dialog" role="dialog" aria-modal="true" aria-labelledby="orderChatTitle">
+          <header class="order-chat-head">
+            <div><span class="order-chat-kicker" id="orderChatKicker">Conversa protegida</span><h2 id="orderChatTitle">Chat do pedido</h2><span class="order-chat-meta" id="orderChatMeta">Carregando conversa…</span></div>
+            <button type="button" class="order-chat-close" data-order-chat-close aria-label="Fechar chat">×</button>
+          </header>
+          <div id="orderChatNotice" class="order-chat-notice" role="status" aria-live="polite"></div>
+          <div id="orderChatMessages" class="order-chat-messages" role="log" aria-live="polite" aria-label="Mensagens do pedido"></div>
+          <div id="orderChatQuickReplies" class="order-chat-quick-replies" aria-label="Respostas rápidas"></div>
+          <form id="orderChatForm" class="order-chat-form">
+            <textarea id="orderChatInput" class="order-chat-input" rows="1" maxlength="500" placeholder="Escreva uma mensagem…" autocomplete="off"></textarea>
+            <button id="orderChatSend" class="order-chat-send" type="submit">Enviar</button>
+          </form>
+          <div class="order-chat-safety">Use este canal para a entrega. Não compartilhe senhas, códigos de verificação, dados de cartão ou links externos.</div>
+        </section>
+      </div>
+    `);
+    byId('orderChatModal')?.addEventListener('click', event => {
+      if (event.target.closest('[data-order-chat-close]')) closeOrderChat();
+    });
+    byId('orderChatForm')?.addEventListener('submit', event => { event.preventDefault(); sendMessage(); });
+    byId('orderChatInput')?.addEventListener('input', () => { updateComposer(); });
+    byId('orderChatInput')?.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); byId('orderChatForm')?.requestSubmit(); }
+    });
+    document.addEventListener('click', event => {
+      const opener = event.target.closest('[data-order-chat-open]');
+      if (!opener) return;
+      event.preventDefault();
+      event.stopPropagation();
+      openOrderChat(opener.dataset.orderChatId || opener.dataset.orderId || '', opener.dataset.orderChatRole || 'customer');
+    }, true);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && byId('orderChatModal')?.classList.contains('is-open')) closeOrderChat(); });
+  }
+
+  function setNotice(message = '', kind = '') {
+    state.notice = text(message);
+    state.noticeKind = kind;
+    const node = byId('orderChatNotice');
+    if (!node) return;
+    node.textContent = state.notice;
+    node.className = `order-chat-notice${state.notice ? ' is-visible' : ''}${kind ? ` ${kind}` : ''}`;
+  }
+
+  function setModalOpen(open) {
+    const modal = byId('orderChatModal');
+    if (!modal) return;
+    modal.classList.toggle('is-open', Boolean(open));
+    modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.classList.toggle('order-chat-open', Boolean(open));
+  }
+
+  function cleanupSubscriptions() {
+    if (typeof state.orderUnsubscribe === 'function') state.orderUnsubscribe();
+    if (typeof state.messagesUnsubscribe === 'function') state.messagesUnsubscribe();
+    state.orderUnsubscribe = null;
+    state.messagesUnsubscribe = null;
+  }
+
+  function orderFromMemory(orderId) {
+    const list = Array.isArray(window.orders) ? window.orders : [];
+    return list.find(order => String(order?.id) === String(orderId)) || null;
+  }
+
+  async function loadOrder(orderId) {
+    const cached = orderFromMemory(orderId);
+    if (cached) return { ...cached, id: cached.id || orderId };
+    if (!window.db || typeof window.getDoc !== 'function' || typeof window.doc !== 'function') return null;
+    const snapshot = await window.getDoc(window.doc(window.db, 'orders', String(orderId)));
+    return snapshot?.exists?.() ? { id: snapshot.id, ...snapshot.data() } : null;
+  }
+
+  function renderHeader() {
+    const order = state.order;
+    const role = roleLabels[state.role] || 'Participante';
+    const title = byId('orderChatTitle');
+    const meta = byId('orderChatMeta');
+    const kicker = byId('orderChatKicker');
+    if (title) title.textContent = order ? `Chat do pedido #${orderLabel(order)}` : 'Chat do pedido';
+    if (meta) meta.textContent = order ? `Você está como ${role} · conversa entre cliente, motoboy e loja` : 'Carregando conversa…';
+    if (kicker) kicker.textContent = terminalStatus(order?.status) ? 'Conversa encerrada' : 'Conversa protegida';
+  }
+
+  function dateValue(value) {
+    if (value?.toDate) return value.toDate().getTime();
+    if (value?.toMillis) return value.toMillis();
+    if (typeof value === 'number') return value < 100000000000 ? value * 1000 : value;
+    const parsed = Date.parse(String(value || ''));
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function timeLabel(value) {
+    const ms = dateValue(value);
+    return ms ? new Date(ms).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : 'agora';
+  }
+
+  function renderMessages() {
+    const list = byId('orderChatMessages');
+    if (!list) return;
+    if (!state.order || !canRead(state.order, state.role)) {
+      list.innerHTML = '<div class="order-chat-empty">Esta conversa não está disponível para esta conta.</div>';
+      return;
+    }
+    if (!state.messages.length) {
+      list.innerHTML = '<div class="order-chat-empty">Nenhuma mensagem ainda.<br>Use este canal para combinar a entrega com segurança.</div>';
+      return;
+    }
+    const identity = identityFor(state.role, state.order);
+    list.innerHTML = state.messages.map(message => {
+      const senderRole = roleLabels[text(message.senderRole).toLowerCase()] || 'Participante';
+      const mine = identity && text(message.senderId) === identity.id;
+      const senderName = text(message.senderName) || senderRole;
+      return `<article class="order-chat-message${mine ? ' mine' : ''}"><div class="order-chat-message-head"><span>${esc(senderName)}</span><span class="order-chat-message-role">${esc(senderRole)}</span><time class="order-chat-message-time">${esc(timeLabel(message.createdAt || message.createdAtMs))}</time></div><div class="order-chat-message-body">${esc(String(message.body || ''))}</div></article>`;
+    }).join('');
+    window.requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  }
+
+  function quickRepliesFor(role) {
+    if (role === 'motoboy') return ['Estou a caminho', 'Cheguei ao endereço', 'Pode me orientar sobre o local?'];
+    if (role === 'store') return ['Estou verificando o pedido', 'O entregador já está a caminho', 'Por favor, confirme o endereço'];
+    return ['Estou descendo', 'Pode deixar na portaria', 'Estou no endereço'];
+  }
+
+  function renderQuickReplies() {
+    const root = byId('orderChatQuickReplies');
+    if (!root) return;
+    root.innerHTML = quickRepliesFor(state.role).map(value => `<button type="button" class="order-chat-quick-reply" data-order-chat-quick="${esc(value)}">${esc(value)}</button>`).join('');
+    root.querySelectorAll('[data-order-chat-quick]').forEach(button => button.addEventListener('click', () => {
+      const input = byId('orderChatInput');
+      if (!input || input.disabled) return;
+      input.value = button.dataset.orderChatQuick || '';
+      input.focus();
+      updateComposer();
+    }));
+  }
+
+  function updateComposer() {
+    const input = byId('orderChatInput');
+    const send = byId('orderChatSend');
+    const allowed = Boolean(state.order && canSend(state.order, state.role));
+    if (input) {
+      input.disabled = !allowed || state.sending;
+      input.placeholder = terminalStatus(state.order?.status) ? 'Conversa encerrada após a entrega' : allowed ? 'Escreva uma mensagem…' : 'Chat indisponível para esta conta';
+    }
+    if (send) {
+      send.disabled = !allowed || state.sending || !text(input?.value);
+      send.textContent = state.sending ? '…' : 'Enviar';
+    }
+    const quick = byId('orderChatQuickReplies');
+    if (quick) quick.hidden = !allowed;
+  }
+
+  function renderAll() {
+    renderHeader();
+    renderMessages();
+    renderQuickReplies();
+    updateComposer();
+    if (state.order && terminalStatus(state.order.status) && !state.notice) setNotice('A entrega foi encerrada. O histórico da conversa permanece disponível para os participantes.', '');
+  }
+
+  function subscribeToOrder(orderId, token) {
+    if (!window.db || typeof window.doc !== 'function' || typeof window.onSnapshot !== 'function') return;
+    try {
+      const orderRef = window.doc(window.db, 'orders', String(orderId));
+      state.orderUnsubscribe = window.onSnapshot(orderRef, snapshot => {
+        if (token !== state.openToken || !snapshot?.exists?.()) return;
+        state.order = { id: snapshot.id, ...snapshot.data() };
+        if (!canRead(state.order, state.role)) setNotice('Esta conta não tem acesso a este pedido.', 'error');
+        renderAll();
+      }, error => {
+        if (token !== state.openToken) return;
+        console.warn('Chat: não foi possível acompanhar o pedido:', error);
+        setNotice('O pedido não pôde ser atualizado agora. As mensagens já carregadas continuam visíveis.', 'error');
+      });
+    } catch (error) {
+      console.warn('Chat: falha ao iniciar acompanhamento do pedido:', error);
+    }
+  }
+
+  function subscribeToMessages(orderId, token) {
+    if (!window.db || typeof window.collection !== 'function' || typeof window.doc !== 'function' || typeof window.query !== 'function' || typeof window.orderBy !== 'function' || typeof window.limit !== 'function' || typeof window.onSnapshot !== 'function') {
+      setNotice('O serviço de mensagens ainda não está disponível. Atualize a página e tente novamente.', 'error');
+      return;
+    }
+    try {
+      const messagesRef = window.collection(window.db, 'orders', String(orderId), 'chatMessages');
+      const messagesQuery = window.query(messagesRef, window.orderBy('createdAt', 'asc'), window.limit(CHAT_MESSAGE_LIMIT));
+      state.messagesUnsubscribe = window.onSnapshot(messagesQuery, snapshot => {
+        if (token !== state.openToken) return;
+        state.messages = (snapshot?.docs || []).map(item => ({ id:item.id, ...item.data() })).sort((a, b) => dateValue(a.createdAt || a.createdAtMs) - dateValue(b.createdAt || b.createdAtMs));
+        renderMessages();
+      }, error => {
+        if (token !== state.openToken) return;
+        console.error('Chat: listener de mensagens falhou:', error);
+        setNotice('Não foi possível sincronizar o chat. Verifique as regras de acesso do Firebase e tente novamente.', 'error');
+        renderMessages();
+      });
+    } catch (error) {
+      console.error('Chat: falha ao montar a conversa:', error);
+      setNotice('Não foi possível abrir este chat agora.', 'error');
+    }
+  }
+
+  async function openOrderChat(orderId, role = 'customer') {
+    ensureMarkup();
+    const safeOrderId = orderKey(orderId);
+    const safeRole = ['customer','motoboy','store'].includes(role) ? role : 'customer';
+    if (!safeOrderId) return false;
+    const token = ++state.openToken;
+    cleanupSubscriptions();
+    state.order = null; state.orderId = safeOrderId; state.role = safeRole; state.messages = []; state.sending = false; state.notice = ''; state.noticeKind = '';
+    setModalOpen(true); setNotice('Abrindo conversa segura…'); renderAll();
+    try {
+      const order = await loadOrder(safeOrderId);
+      if (token !== state.openToken) return false;
+      if (!order || !canRead(order, safeRole)) {
+        state.order = order || null;
+        setNotice('Esta conversa só pode ser acessada pelo cliente do pedido, pelo motoboy vinculado ou pela loja.', 'error');
+        renderAll();
+        return false;
+      }
+      state.order = order;
+      setNotice('');
+      renderAll();
+      subscribeToOrder(safeOrderId, token);
+      subscribeToMessages(safeOrderId, token);
+      window.setTimeout(() => byId('orderChatInput')?.focus(), 80);
+      return true;
+    } catch (error) {
+      if (token !== state.openToken) return false;
+      console.error('Chat: não foi possível abrir o pedido:', error);
+      setNotice('Não foi possível abrir a conversa. Verifique sua conexão e tente novamente.', 'error');
+      renderAll();
+      return false;
+    }
+  }
+
+  function closeOrderChat() {
+    state.openToken += 1;
+    cleanupSubscriptions();
+    setModalOpen(false);
+    state.order = null; state.orderId = ''; state.role = ''; state.messages = []; state.sending = false; state.notice = ''; state.noticeKind = '';
+  }
+
+  async function sendMessage() {
+    const order = state.order;
+    const bodyNode = byId('orderChatInput');
+    const body = text(bodyNode?.value).slice(0, CHAT_MAX_LENGTH);
+    if (!body || state.sending || !order || !canSend(order, state.role)) { updateComposer(); return false; }
+    if (Date.now() - state.lastSentAt < CHAT_SEND_COOLDOWN_MS) return false;
+    if (!window.db || typeof window.collection !== 'function' || typeof window.doc !== 'function' || typeof window.addDoc !== 'function') {
+      setNotice('O serviço de mensagens ainda não está disponível.', 'error'); return false;
+    }
+    const identity = identityFor(state.role, order);
+    if (!identity?.id) { setNotice('Sua sessão não foi identificada. Entre novamente para enviar mensagens.', 'error'); return false; }
+    state.sending = true; state.lastSentAt = Date.now(); setNotice(''); updateComposer();
+    try {
+      const messagesRef = window.collection(window.db, 'orders', String(order.id), 'chatMessages');
+      await window.addDoc(messagesRef, { orderId:String(order.id), body, senderId:identity.id, senderRole:identity.role, senderName:identity.name, createdAt:nowIso(), createdAtMs:Date.now() });
+      if (bodyNode) bodyNode.value = '';
+      state.sending = false; updateComposer();
+      return true;
+    } catch (error) {
+      state.sending = false;
+      console.error('Chat: não foi possível enviar a mensagem:', error);
+      setNotice('A mensagem não foi enviada. Confira a conexão e tente novamente.', 'error');
+      updateComposer();
+      return false;
+    }
+  }
+
+  window.openOrderChat = openOrderChat;
+  window.closeOrderChat = closeOrderChat;
+  window.sendOrderChatMessage = sendMessage;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureMarkup, { once:true }); else ensureMarkup();
 })();
 </script>
