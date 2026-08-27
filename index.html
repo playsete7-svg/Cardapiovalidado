@@ -2889,6 +2889,22 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
   <button>Sucos Naturais</button>
 </div>
         <div id="items" class="items"></div>
+
+        <section id="publicFlyersSection" class="public-card-section public-flyers-section" aria-labelledby="publicFlyersTitle" hidden>
+          <div class="public-card-section-head">
+            <div class="public-card-section-copy"><span class="public-card-section-kicker">Ofertas da loja</span><h2 id="publicFlyersTitle" class="public-card-section-title">Ofertas e promoções</h2><p class="public-card-section-subtitle">Confira os flyers e destaques preparados pela loja.</p></div>
+            <div class="public-card-section-actions"><button type="button" class="public-section-nav" id="publicFlyerPrev" aria-label="Oferta anterior">‹</button><button type="button" class="public-section-nav" id="publicFlyerNext" aria-label="Próxima oferta">›</button></div>
+          </div>
+          <div class="public-flyers-viewport" id="publicFlyersViewport"><div class="public-flyers-track" id="publicFlyersTrack"></div></div>
+          <div class="public-flyers-footer"><div class="public-flyer-dots" id="publicFlyerDots" aria-label="Navegação das ofertas"></div><small>Troca automática a cada 5 segundos</small></div>
+          <div id="publicFlyersEmpty" class="public-flyers-empty" hidden>Nenhuma oferta cadastrada no momento. A loja poderá adicionar novos flyers em <strong>Flyers e ofertas</strong>.</div>
+        </section>
+
+        <section id="publicRecentOrdersSection" class="public-card-section public-recent-orders-section" aria-labelledby="publicRecentOrdersTitle" hidden>
+          <div class="public-card-section-head"><div class="public-card-section-copy"><span class="public-card-section-kicker">Seu histórico</span><h2 id="publicRecentOrdersTitle" class="public-card-section-title">Últimos pedidos</h2><p class="public-card-section-subtitle">Acompanhe rapidamente os pedidos mais recentes desta conta.</p></div></div>
+          <div id="publicRecentOrdersList" class="public-recent-orders-list"></div>
+          <div class="public-recent-orders-footer"><button type="button" id="publicRecentOrdersViewAll" class="public-recent-orders-view-all">Ver todos os pedidos</button></div>
+        </section>
       </main>
         <div class="cart-panel" id="cartPanel">
           <h3>Meu Carrinho</h3>
@@ -2926,6 +2942,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               <button id="tabPayments">Pagamentos</button>
               <button id="tabPDV">PDV (Mesas)</button>
               <button id="tabMotoboys">Motoboy</button>
+              <button id="tabFlyers">Flyers e ofertas</button>
               <button id="tabGarcons">Garçons</button>
               <button id="tabEstoque">Estoque & CMV</button>
               <button id="tabIntegracoes">Integrações & Fiscal</button>
@@ -3282,11 +3299,36 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     <div class="settings-pro-savebar"><div id="storeSettingsFeedback" class="settings-pro-feedback" aria-live="polite"></div><button type="submit" class="settings-pro-button primary">Salvar configurações</button></div>
   </form>
 </div>
+              <div id="flyersPanel" class="admin-panel hidden flyers-admin-panel">
+                <h4>Flyers e ofertas</h4>
+                <p class="flyers-admin-intro">Adicione imagens de ofertas para exibir no carrossel público. Você pode usar uma URL ou enviar um arquivo de imagem.</p>
+                <form id="flyerEditorForm" class="flyer-editor-form">
+                  <input type="hidden" id="flyerId">
+                  <div class="flyer-editor-grid">
+                    <div class="flyer-editor-field"><label for="flyerTitle">Título do flyer</label><input id="flyerTitle" type="text" required maxlength="80" placeholder="Ex.: Combo da semana"></div>
+                    <div class="flyer-editor-field"><label for="flyerLinkUrl">Link opcional</label><input id="flyerLinkUrl" type="url" placeholder="https://..." inputmode="url"></div>
+                    <div class="flyer-editor-field wide"><label for="flyerImageUrl">URL da imagem</label><input id="flyerImageUrl" type="url" placeholder="https://.../meu-flyer.jpg" inputmode="url"><small>Se preferir, envie o arquivo abaixo. A imagem deve ser JPG, PNG ou WEBP, com até 8 MB.</small></div>
+                    <div class="flyer-editor-field wide"><label for="flyerFile">Enviar imagem</label><input id="flyerFile" type="file" accept="image/jpeg,image/png,image/webp"><small>Ao editar, deixe vazio para manter a imagem atual.</small></div>
+                  </div>
+                  <label class="flyer-editor-check"><input id="flyerActive" type="checkbox" checked> Exibir este flyer no carrossel público</label>
+                  <div class="flyer-editor-actions"><button type="button" id="flyerCancelEdit" hidden>Cancelar edição</button><button type="submit" id="flyerSubmitButton" class="primary">Adicionar flyer</button></div>
+                </form>
+                <div id="flyersAdminFeedback" class="flyers-admin-feedback" role="status" aria-live="polite"></div>
+                <div id="flyersAdminList" class="flyer-admin-list"></div>
+              </div>
               <div id="motoboysPanel" class="admin-panel hidden">
     <!-- Novo Dashboard de Motoboys -->
     <div class="motoboy-dashboard-container" id="motoboyDashboard">
       <!-- Cards do dashboard serão injetados aqui pelo JS -->
     </div>
+    <section id="motoboyApplicationsSection" class="motoboy-applications-section" aria-labelledby="motoboyApplicationsTitle">
+      <div class="motoboy-applications-heading">
+        <div><small>Credenciamento recebido</small><h4 id="motoboyApplicationsTitle">Solicitações de entregadores</h4><p>Revise os dados enviados e aceite quem fará parte da equipe oficial de entrega.</p></div>
+        <span id="motoboyApplicationCount" class="motoboy-application-count">0 pendentes</span>
+      </div>
+      <div id="motoboyAdminApplicationFeedback" class="motoboy-admin-feedback" aria-live="polite"></div>
+      <div id="motoboyApplicationsList" class="motoboy-applications-list"></div>
+    </section>
                 <h4>Painel de Motoboys</h4>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                   <div style="font-weight:700;">Motoboys Cadastrados</div>
@@ -3535,6 +3577,85 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
             <button id="registerSubmit" class="btn">Cadastrar</button>
           </div>
         </div>
+        <div class="auth-driver-entry">
+          <button type="button" id="becomeMotoboyLink">Seja um entregador.</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cadastro profissional público do entregador -->
+    <div class="modal" id="motoboyApplicationModal">
+      <div class="card motoboy-application-card" role="dialog" aria-modal="true" aria-labelledby="motoboyApplicationTitle">
+        <div class="brasa-detail-header">
+          <div>
+            <small class="motoboy-application-eyebrow">Credenciamento profissional</small>
+            <h3 id="motoboyApplicationTitle">Seja um entregador</h3>
+            <p>Preencha seus dados e envie os documentos para a loja analisar sua entrada na equipe de entrega.</p>
+          </div>
+          <button type="button" class="pill" id="motoboyApplicationClose" aria-label="Fechar cadastro">&times;</button>
+        </div>
+        <div class="motoboy-application-notice">Seus dados serão usados exclusivamente para análise do credenciamento e contato sobre o acesso à operação.</div>
+        <form id="motoboyApplicationForm" class="motoboy-application-form">
+          <section class="motoboy-application-section">
+            <div class="motoboy-application-section-heading"><span>01</span><div><strong>Dados pessoais</strong><small>Informações para identificação e contato oficial.</small></div></div>
+            <div class="motoboy-application-grid">
+              <div class="form-group motoboy-field-wide"><label for="applicationFullName">Nome completo</label><input id="applicationFullName" name="fullName" type="text" required autocomplete="name" placeholder="Ex.: Lucas Almeida dos Santos"></div>
+              <div class="form-group"><label for="applicationCpf">CPF</label><input id="applicationCpf" name="cpf" type="text" required inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></div>
+              <div class="form-group"><label for="applicationBirthDate">Data de nascimento</label><input id="applicationBirthDate" name="birthDate" type="date" required></div>
+              <div class="form-group"><label for="applicationPhone">WhatsApp / telefone</label><input id="applicationPhone" name="phone" type="tel" required autocomplete="tel" placeholder="(27) 99999-9999"></div>
+              <div class="form-group"><label for="applicationEmail">E-mail</label><input id="applicationEmail" name="email" type="email" required autocomplete="email" placeholder="voce@email.com"></div>
+              <div class="form-group"><label for="applicationCity">Cidade / UF</label><input id="applicationCity" name="city" type="text" required autocomplete="address-level2" placeholder="Vila Velha / ES"></div>
+              <div class="form-group motoboy-field-wide"><label for="applicationAddress">Endereço residencial</label><input id="applicationAddress" name="address" type="text" required autocomplete="street-address" placeholder="Rua, número, bairro e complemento"></div>
+            </div>
+          </section>
+
+          <section class="motoboy-application-section">
+            <div class="motoboy-application-section-heading"><span>02</span><div><strong>Veículo e habilitação</strong><small>Dados conferidos para a operação de entrega.</small></div></div>
+            <div class="motoboy-application-grid motoboy-application-grid-3">
+              <div class="form-group"><label for="applicationVehicleType">Tipo de veículo</label><select id="applicationVehicleType" name="vehicleType" required><option value="">Selecione</option><option value="moto">Motocicleta</option><option value="carro">Carro</option><option value="utilitario">Utilitário</option><option value="bicicleta">Bicicleta</option></select></div>
+              <div class="form-group"><label for="applicationVehicleModel">Marca e modelo</label><input id="applicationVehicleModel" name="vehicleModel" type="text" required placeholder="Ex.: Honda CG 160"></div>
+              <div class="form-group"><label for="applicationVehicleColor">Cor predominante</label><input id="applicationVehicleColor" name="vehicleColor" type="text" required placeholder="Ex.: Preta"></div>
+              <div class="form-group"><label for="applicationVehiclePlate">Placa</label><input id="applicationVehiclePlate" name="vehiclePlate" type="text" maxlength="8" inputmode="text" style="text-transform:uppercase" placeholder="ABC1D23"><small class="motoboy-application-field-help">Obrigatória para veículos motorizados.</small></div>
+              <div class="form-group"><label for="applicationCnhCategory">Categoria da CNH</label><select id="applicationCnhCategory" name="cnhCategory"><option value="">Não se aplica</option><option value="A">A</option><option value="AB">AB</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select></div>
+              <div class="form-group"><label for="applicationCnhNumber">Registro da CNH</label><input id="applicationCnhNumber" name="cnhNumber" type="text" inputmode="numeric" placeholder="Número do registro"><small class="motoboy-application-field-help">Obrigatório para veículos motorizados.</small></div>
+              <div class="form-group"><label for="applicationCnhValidUntil">CNH válida até</label><input id="applicationCnhValidUntil" name="cnhValidUntil" type="date"><small class="motoboy-application-field-help">Obrigatória para veículos motorizados.</small></div>
+            </div>
+          </section>
+
+          <section class="motoboy-application-section">
+            <div class="motoboy-application-section-heading"><span>03</span><div><strong>Documentos essenciais</strong><small>Anexe arquivos nítidos para agilizar a análise da loja.</small></div></div>
+            <div class="motoboy-application-doc-grid">
+              <label class="motoboy-document-field"><span>CNH / habilitação <b>*</b></span><input id="applicationCnhDocument" type="file" accept="image/jpeg,image/png,application/pdf"><small>Obrigatória para moto, carro e utilitário. JPG, PNG ou PDF até 8 MB.</small><em data-file-label="applicationCnhDocument">Nenhum arquivo selecionado</em></label>
+              <label class="motoboy-document-field"><span>CRLV / documento do veículo <b>*</b></span><input id="applicationVehicleDocument" type="file" accept="image/jpeg,image/png,application/pdf"><small>Obrigatório para veículos motorizados. JPG, PNG ou PDF até 8 MB.</small><em data-file-label="applicationVehicleDocument">Nenhum arquivo selecionado</em></label>
+              <label class="motoboy-document-field"><span>Comprovante de residência <b>*</b></span><input id="applicationProofOfAddress" type="file" required accept="image/jpeg,image/png,application/pdf"><small>Documento recente em seu nome. JPG, PNG ou PDF até 8 MB.</small><em data-file-label="applicationProofOfAddress">Nenhum arquivo selecionado</em></label>
+              <label class="motoboy-document-field"><span>Foto de perfil <b>*</b></span><input id="applicationProfilePhoto" type="file" required accept="image/jpeg,image/png,image/webp"><small>Foto frontal e nítida para identificação na entrega.</small><em data-file-label="applicationProfilePhoto">Nenhum arquivo selecionado</em></label>
+            </div>
+          </section>
+
+          <label class="motoboy-application-consent"><input id="applicationConsent" type="checkbox" required><span>Confirmo que as informações são verdadeiras e autorizo a loja a analisar meus dados e documentos para o credenciamento profissional.</span></label>
+          <div id="motoboyApplicationFeedback" class="motoboy-application-feedback" aria-live="polite"></div>
+          <div class="motoboy-application-actions"><button type="button" class="pill" id="motoboyApplicationCancel">Cancelar</button><button type="submit" class="btn" id="motoboyApplicationSubmit">Enviar para análise</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Confirmação visual após o envio da ficha -->
+    <div class="modal" id="motoboyValidationModal">
+      <div class="card motoboy-validation-card" role="dialog" aria-modal="true" aria-labelledby="motoboyValidationTitle">
+        <div class="motoboy-validation-icon" aria-hidden="true">
+          <svg viewBox="0 0 96 96" role="presentation">
+            <circle cx="48" cy="48" r="39" fill="rgba(255,125,74,.10)"></circle>
+            <rect x="27" y="29" width="42" height="29" rx="3" fill="none" stroke="currentColor" stroke-width="4"></rect>
+            <circle cx="38" cy="42" r="6" fill="none" stroke="currentColor" stroke-width="4"></circle>
+            <path d="M31 52c2.8-5.2 11.2-5.2 14 0M52 39h11M52 47h11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+            <circle cx="68" cy="67" r="13" fill="#ff5a1f"></circle>
+            <path d="M68 60v8M68 73v.5" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="4"></path>
+          </svg>
+        </div>
+        <h2 id="motoboyValidationTitle">Estamos validando<br>seus dados</h2>
+        <p>Você pode continuar criando sua conta. Avisaremos quando a validação terminar.</p>
+        <div class="motoboy-validation-status"><span></span><strong>Ficha enviada para análise da loja</strong></div>
+        <button type="button" class="motoboy-validation-continue" id="motoboyValidationContinue">Continuar</button>
       </div>
     </div>
 
@@ -5100,15 +5221,18 @@ import {
     getFirestore, collection, doc, getDoc, setDoc, updateDoc, 
     addDoc, query, orderBy, onSnapshot, deleteDoc, getDocs, where, limit, startAfter, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-storage.js";
 
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 // Documento único para o cardápio e configurações da loja
 const menuDocRef = doc(db, "config", "cardapioData"); 
 // Coleção para pedidos, permitindo queries e tempo real
 const ordersCollectionRef = collection(db, "orders");
-const motoboysCollectionRef = collection(db, "motoboys"); 
+const motoboysCollectionRef = collection(db, "motoboys");
+const motoboyApplicationsCollectionRef = collection(db, "motoboyApplications");
 // Coleção para usuários (opcional, mantendo o local storage para a demo)
 const usersCollectionRef = collection(db, "users");
 
@@ -5129,6 +5253,10 @@ window.where = where;
 window.limit = limit;
 window.startAfter = startAfter;
 window.serverTimestamp = serverTimestamp;
+window.storage = storage;
+window.storageRef = storageRef;
+window.uploadBytes = uploadBytes;
+window.getDownloadURL = getDownloadURL;
 // ===========================================================================================
 
 // Variáveis globais
@@ -5146,6 +5274,8 @@ let orders = [];
 window.orders = orders;
 let motoboys = [];
 window.motoboys = motoboys;
+let motoboyApplications = [];
+window.motoboyApplications = motoboyApplications;
 let users = []; 
 
 const CART_KEY = "cardapio_cart_v1";
@@ -5814,6 +5944,339 @@ window._updateOrderMotoboy = async function(orderId, motoboyId) {
 // A presença deve ser atualizada em tempo real para o painel e o seletor administrativo.
 subscribeMotoboysPresence();
 fetchMotoboys();
+// === CANDIDATURAS PROFISSIONAIS DE MOTOBOY ===
+const MOTOBOY_APPLICATIONS_CACHE_KEY = 'brasa_motoboy_applications_v1';
+let motoboyApplicationsUnsubscribe = null;
+let motoboyApplicationPhotoPreview = '';
+
+function motoboyApplicationEscape(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function motoboyApplicationDigits(value) { return String(value ?? '').replace(/\D/g, ''); }
+function motoboyApplicationNormalizeName(value) { return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+function motoboyApplicationInitials(value) { return String(value || 'E').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'E'; }
+function motoboyApplicationDate(value) { const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Data não informada' : date.toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}); }
+function motoboyApplicationVehicleLabel(value) { return ({moto:'Motocicleta', carro:'Carro', utilitario:'Utilitário', bicicleta:'Bicicleta'}[String(value || '')] || value || 'Não informado'); }
+function motoboyApplicationMotorized(value) { return String(value || '') !== 'bicicleta'; }
+
+function readMotoboyApplicationCache() {
+  try {
+    const value = JSON.parse(localStorage.getItem(MOTOBOY_APPLICATIONS_CACHE_KEY) || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch (_) { return []; }
+}
+function cacheMotoboyApplications(items) {
+  try { localStorage.setItem(MOTOBOY_APPLICATIONS_CACHE_KEY, JSON.stringify(Array.isArray(items) ? items : [])); } catch (_) {}
+}
+function sortMotoboyApplications(items) {
+  return (Array.isArray(items) ? items : []).slice().sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+}
+
+function renderMotoboyApplications() {
+  const list = document.getElementById('motoboyApplicationsList');
+  const count = document.getElementById('motoboyApplicationCount');
+  const pending = sortMotoboyApplications(motoboyApplications).filter(item => String(item.status || 'pending') === 'pending');
+  if (count) {
+    count.textContent = `${pending.length} pendente${pending.length === 1 ? '' : 's'}`;
+    count.classList.toggle('has-pending', pending.length > 0);
+  }
+  if (!list) return;
+  if (!pending.length) {
+    list.innerHTML = '<div class="motoboy-applications-empty">Nenhuma solicitação pendente. As novas fichas aparecerão aqui automaticamente.</div>';
+    return;
+  }
+  list.innerHTML = pending.map(application => {
+    const documents = application.documents && typeof application.documents === 'object' ? application.documents : {};
+    const documentEntries = [
+      ['cnhDocument', 'CNH'],
+      ['vehicleDocument', 'CRLV'],
+      ['proofOfAddress', 'Comprovante'],
+      ['profilePhoto', 'Foto de perfil']
+    ].map(([key, label]) => ({key, label, ...(documents[key] || {})}));
+    const documentHtml = documentEntries.map(document => {
+      const label = motoboyApplicationEscape(`${document.label}: ${document.name || 'arquivo'}`);
+      return document.url
+        ? `<a class="motoboy-application-document" href="${motoboyApplicationEscape(document.url)}" target="_blank" rel="noopener">Abrir ${motoboyApplicationEscape(document.label)}</a>`
+        : `<span class="motoboy-application-document pending">${label} · aguardando upload</span>`;
+    }).join('');
+    const fullAddress = [application.address, application.city].filter(Boolean).join(' · ');
+    return `<details class="motoboy-application-item">
+      <summary><span class="motoboy-application-summary-avatar">${motoboyApplicationEscape(motoboyApplicationInitials(application.fullName))}</span><span class="motoboy-application-summary-copy"><strong>${motoboyApplicationEscape(application.fullName || 'Entregador sem nome')}</strong><small>${motoboyApplicationEscape(application.phone || 'Telefone não informado')} · ${motoboyApplicationEscape(motoboyApplicationVehicleLabel(application.vehicleType))}</small></span><span class="motoboy-application-summary-date">${motoboyApplicationEscape(motoboyApplicationDate(application.createdAt))}</span></summary>
+      <div class="motoboy-application-body">
+        <div class="motoboy-application-detail-grid">
+          <div class="motoboy-application-detail"><span>CPF</span><strong>${motoboyApplicationEscape(application.cpf || 'Não informado')}</strong></div>
+          <div class="motoboy-application-detail"><span>Data de nascimento</span><strong>${motoboyApplicationEscape(application.birthDate || 'Não informado')}</strong></div>
+          <div class="motoboy-application-detail"><span>E-mail</span><strong>${motoboyApplicationEscape(application.email || 'Não informado')}</strong></div>
+          <div class="motoboy-application-detail"><span>Veículo</span><strong>${motoboyApplicationEscape([motoboyApplicationVehicleLabel(application.vehicleType), application.vehicleModel, application.vehicleColor].filter(Boolean).join(' · '))}</strong></div>
+          <div class="motoboy-application-detail"><span>Placa</span><strong>${motoboyApplicationEscape(application.vehiclePlate || 'Não se aplica')}</strong></div>
+          <div class="motoboy-application-detail"><span>CNH</span><strong>${motoboyApplicationEscape([application.cnhCategory, application.cnhNumber].filter(Boolean).join(' · ') || 'Não se aplica')}</strong></div>
+          <div class="motoboy-application-detail wide"><span>Endereço</span><strong>${motoboyApplicationEscape(fullAddress || 'Não informado')}</strong></div>
+        </div>
+        <div class="motoboy-application-documents">${documentHtml}</div>
+        <div class="motoboy-application-actions"><button type="button" class="reject" data-motoboy-application-action="reject" data-motoboy-application-id="${motoboyApplicationEscape(application.id)}">Recusar candidatura</button><button type="button" class="approve" data-motoboy-application-action="approve" data-motoboy-application-id="${motoboyApplicationEscape(application.id)}">Aceitar e adicionar à equipe</button></div>
+      </div>
+    </details>`;
+  }).join('');
+}
+window.renderMotoboyApplications = renderMotoboyApplications;
+
+async function fetchMotoboyApplications() {
+  const cached = readMotoboyApplicationCache();
+  if (!motoboyApplications.length && cached.length) {
+    motoboyApplications = sortMotoboyApplications(cached);
+    window.motoboyApplications = motoboyApplications;
+  }
+  try {
+    const snapshot = await getDocs(motoboyApplicationsCollectionRef);
+    motoboyApplications = sortMotoboyApplications((snapshot.docs || []).map(item => ({id:item.id, ...item.data()})));
+    window.motoboyApplications = motoboyApplications;
+    cacheMotoboyApplications(motoboyApplications);
+  } catch (error) {
+    console.warn('Não foi possível carregar candidaturas de motoboys; usando o último cache disponível:', error);
+  }
+  renderMotoboyApplications();
+  return motoboyApplications;
+}
+window.fetchMotoboyApplications = fetchMotoboyApplications;
+
+function subscribeMotoboyApplications() {
+  if (motoboyApplicationsUnsubscribe || typeof onSnapshot !== 'function') return;
+  try {
+    motoboyApplicationsUnsubscribe = onSnapshot(motoboyApplicationsCollectionRef, snapshot => {
+      motoboyApplications = sortMotoboyApplications((snapshot.docs || []).map(item => ({id:item.id, ...item.data()})));
+      window.motoboyApplications = motoboyApplications;
+      cacheMotoboyApplications(motoboyApplications);
+      renderMotoboyApplications();
+    }, error => {
+      motoboyApplicationsUnsubscribe = null;
+      console.warn('Sincronização de candidaturas indisponível:', error);
+    });
+  } catch (error) {
+    console.warn('Não foi possível iniciar a sincronização de candidaturas:', error);
+  }
+}
+window.subscribeMotoboyApplications = subscribeMotoboyApplications;
+
+function setMotoboyApplicationFeedback(message, kind = '') {
+  const nodes = document.querySelectorAll('#motoboyApplicationModal #motoboyApplicationFeedback, #motoboyAdminApplicationFeedback');
+  nodes.forEach(node => { node.innerHTML = message || ''; node.className = `${node.id === 'motoboyApplicationFeedback' ? 'motoboy-application-feedback' : 'motoboy-admin-feedback'}${kind ? ` ${kind}` : ''}`; });
+}
+function updateMotoboyApplicationVehicleRequirements() {
+  const type = document.getElementById('applicationVehicleType')?.value || '';
+  const motorized = motoboyApplicationMotorized(type);
+  ['applicationVehiclePlate', 'applicationCnhCategory', 'applicationCnhNumber', 'applicationCnhValidUntil', 'applicationCnhDocument', 'applicationVehicleDocument'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.required = Boolean(type && motorized);
+  });
+}
+function updateMotoboyApplicationFileLabel(input) {
+  const target = document.querySelector(`[data-file-label="${input.id}"]`);
+  if (target) target.textContent = input.files?.[0]?.name || 'Nenhum arquivo selecionado';
+}
+function showMotoboyValidationConfirmation() {
+  document.getElementById('motoboyValidationModal')?.classList.add('open');
+  document.getElementById('motoboyValidationContinue')?.focus();
+}
+window.showMotoboyValidationConfirmation = showMotoboyValidationConfirmation;
+function closeMotoboyValidationConfirmation() { document.getElementById('motoboyValidationModal')?.classList.remove('open'); }
+window.closeMotoboyValidationConfirmation = closeMotoboyValidationConfirmation;
+
+function openMotoboyApplicationModal() {
+  const form = document.getElementById('motoboyApplicationForm');
+  if (!form) return;
+  form.reset();
+  motoboyApplicationPhotoPreview = '';
+  document.querySelectorAll('#motoboyApplicationForm [data-file-label]').forEach(node => { node.textContent = 'Nenhum arquivo selecionado'; });
+  const feedback = document.querySelector('#motoboyApplicationModal #motoboyApplicationFeedback');
+  if (feedback) { feedback.textContent = ''; feedback.className = 'motoboy-application-feedback'; }
+  updateMotoboyApplicationVehicleRequirements();
+  document.getElementById('authModal')?.classList.remove('open');
+  document.getElementById('motoboyApplicationModal')?.classList.add('open');
+  document.getElementById('applicationFullName')?.focus();
+}
+window.openMotoboyApplicationModal = openMotoboyApplicationModal;
+function closeMotoboyApplicationModal() { document.getElementById('motoboyApplicationModal')?.classList.remove('open'); }
+window.closeMotoboyApplicationModal = closeMotoboyApplicationModal;
+
+function motoboyApplicationFilePayload(file) {
+  return file ? {name:file.name, type:file.type, size:file.size, lastModified:file.lastModified || 0, uploadStatus:'pending'} : null;
+}
+function motoboyApplicationFilesFromForm() {
+  return {
+    cnhDocument: document.getElementById('applicationCnhDocument')?.files?.[0] || null,
+    vehicleDocument: document.getElementById('applicationVehicleDocument')?.files?.[0] || null,
+    proofOfAddress: document.getElementById('applicationProofOfAddress')?.files?.[0] || null,
+    profilePhoto: document.getElementById('applicationProfilePhoto')?.files?.[0] || null
+  };
+}
+async function uploadMotoboyApplicationFiles(applicationId, files) {
+  const uploaded = {};
+  for (const [key, file] of Object.entries(files)) {
+    if (!file) continue;
+    const base = String(file.name || 'arquivo').replace(/[^a-zA-Z0-9._-]/g, '_').slice(-100);
+    const metadata = {name:file.name, type:file.type, size:file.size, lastModified:file.lastModified || 0, uploadStatus:'pending'};
+    try {
+      const objectRef = storageRef(storage, `motoboyApplications/${applicationId}/${key}-${Date.now()}-${base}`);
+      const snapshot = await uploadBytes(objectRef, file, {contentType:file.type || 'application/octet-stream'});
+      const url = await getDownloadURL(snapshot.ref);
+      uploaded[key] = {...metadata, url, path:snapshot.ref.fullPath, uploadStatus:'uploaded', uploadedAt:Date.now()};
+    } catch (error) {
+      console.warn(`Não foi possível enviar o documento ${key}:`, error);
+      uploaded[key] = {...metadata, uploadStatus:'pending', uploadError:'O arquivo foi recebido, mas aguarda configuração de armazenamento.'};
+    }
+  }
+  return uploaded;
+}
+
+function motoboyApplicationContactUrl(application, approved) {
+  const phone = motoboyApplicationDigits(application.phone);
+  const normalizedPhone = phone.startsWith('55') ? phone : `55${phone}`;
+  const message = `Olá, ${application.fullName || 'entregador'}! Sua candidatura para entregador foi aprovada. Para entrar no painel, use seu telefone ${approved.phone || application.phone} no campo Identificação e seu nome completo (${approved.name || application.fullName}) no campo Senha. Em caso de dúvida, responda esta mensagem à loja.`;
+  if (phone.length >= 10) return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
+  if (application.email) return `mailto:${encodeURIComponent(application.email)}?subject=${encodeURIComponent('Credenciais de entregador aprovadas')}&body=${encodeURIComponent(message)}`;
+  return '';
+}
+function openMotoboyCredentialContact(application, approved) {
+  const url = motoboyApplicationContactUrl(application, approved);
+  if (!url) return false;
+  const opened = window.open(url, '_blank', 'noopener,noreferrer');
+  const message = opened ? 'O canal de contato foi aberto para fornecer as credenciais.' : `Abra o contato para fornecer as credenciais: <a href="${motoboyApplicationEscape(url)}" target="_blank" rel="noopener">abrir canal de contato</a>`;
+  setMotoboyApplicationFeedback(message, 'success');
+  return Boolean(opened);
+}
+
+async function approveMotoboyApplication(applicationId) {
+  if (!isAdmin) { alert('Apenas o administrador pode aprovar candidaturas.'); return; }
+  const application = motoboyApplications.find(item => String(item.id) === String(applicationId));
+  if (!application || String(application.status || 'pending') !== 'pending') return;
+  if (!confirm(`Aceitar ${application.fullName || 'este entregador'} e adicionar à equipe oficial?`)) return;
+  const phone = application.phone || '';
+  const phoneNormalized = motoboyApplicationDigits(phone);
+  const loginNameNormalized = motoboyApplicationNormalizeName(application.fullName);
+  if (!application.fullName || phoneNormalized.length < 8 || !loginNameNormalized) { alert('A ficha não possui nome completo e telefone válidos para gerar o acesso.'); return; }
+  const duplicate = (Array.isArray(window.motoboys) ? window.motoboys : []).find(item => motoboyApplicationDigits(item.phoneNormalized || item.phone) === phoneNormalized && motoboyApplicationNormalizeName(item.loginNameNormalized || item.name) === loginNameNormalized);
+  const approvedAt = new Date().toISOString();
+  const approvedPayload = {
+    name:application.fullName, phone, phoneNormalized, loginNameNormalized, email:application.email || '', cpf:application.cpf || '', birthDate:application.birthDate || '', city:application.city || '', address:application.address || '',
+    vehicleType:application.vehicleType || '', vehicleModel:application.vehicleModel || '', vehicleColor:application.vehicleColor || '', vehiclePlate:String(application.vehiclePlate || '').toUpperCase(), cnhCategory:application.cnhCategory || '', cnhNumber:application.cnhNumber || '', cnhValidUntil:application.cnhValidUntil || '',
+    photo:application.documents?.profilePhoto?.url || '', photoURL:application.documents?.profilePhoto?.url || '', source:'self_registration', applicationId:String(application.id), credentialStatus:'ready', approvedAt, status:'offline', isOnline:false, presence:'offline', active:true, entregasHoje:0, createdAt:Date.now()
+  };
+  try {
+    let motoboyId = duplicate?.id || '';
+    if (duplicate) {
+      await updateDoc(doc(motoboysCollectionRef, String(duplicate.id)), {...approvedPayload, createdAt:duplicate.createdAt || Date.now()});
+    } else {
+      const newMotoboy = await addDoc(motoboysCollectionRef, approvedPayload);
+      motoboyId = newMotoboy.id;
+    }
+    const patch = {
+      status:'approved', motoboyId, approvedAt, approvedBy:currentUser?.id || LOCAL_ADMIN_CREDENTIALS.id, updatedAt:approvedAt,
+      credentialStatus:'ready', credentialsReadyAt:approvedAt, credentialPhone:phone, credentialName:application.fullName,
+      storeNotification:{type:'motoboy_application_approved',title:'Entregador aprovado',message:`${application.fullName} foi adicionado à equipe de entrega.`,createdAt:approvedAt,read:false}
+    };
+    await updateDoc(doc(motoboyApplicationsCollectionRef, String(application.id)), patch);
+    Object.assign(application, patch);
+    motoboyApplications = sortMotoboyApplications(motoboyApplications);
+    window.motoboyApplications = motoboyApplications;
+    cacheMotoboyApplications(motoboyApplications);
+    await fetchMotoboys();
+    renderMotoboyApplications();
+    openMotoboyCredentialContact(application, approvedPayload);
+    alert(`Entregador aprovado e adicionado à equipe. O acesso é telefone + nome completo.`);
+  } catch (error) {
+    console.error('Falha ao aprovar candidatura de motoboy:', error);
+    alert(`Não foi possível aprovar a candidatura${error?.message ? `: ${error.message}` : '.'}`);
+  }
+}
+window.approveMotoboyApplication = approveMotoboyApplication;
+
+async function rejectMotoboyApplication(applicationId) {
+  if (!isAdmin) { alert('Apenas o administrador pode recusar candidaturas.'); return; }
+  const application = motoboyApplications.find(item => String(item.id) === String(applicationId));
+  if (!application || String(application.status || 'pending') !== 'pending') return;
+  const reason = prompt('Motivo da recusa (opcional):', 'Documentação pendente ou necessidade de atualização');
+  if (reason === null) return;
+  const patch = {status:'rejected', rejectedAt:new Date().toISOString(), rejectedBy:currentUser?.id || LOCAL_ADMIN_CREDENTIALS.id, rejectionReason:reason.trim(), updatedAt:new Date().toISOString()};
+  try {
+    await updateDoc(doc(motoboyApplicationsCollectionRef, String(application.id)), patch);
+    Object.assign(application, patch);
+    cacheMotoboyApplications(motoboyApplications);
+    renderMotoboyApplications();
+    setMotoboyApplicationFeedback('Candidatura recusada e retirada da fila de análise.', 'success');
+  } catch (error) {
+    console.error('Falha ao recusar candidatura de motoboy:', error);
+    alert('Não foi possível registrar a recusa da candidatura.');
+  }
+}
+window.rejectMotoboyApplication = rejectMotoboyApplication;
+
+async function submitMotoboyApplication(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  updateMotoboyApplicationVehicleRequirements();
+  if (!form.reportValidity()) return;
+  const files = motoboyApplicationFilesFromForm();
+  const maxBytes = 8 * 1024 * 1024;
+  const invalidFile = Object.values(files).find(file => file && file.size > maxBytes);
+  if (invalidFile) { setMotoboyApplicationFeedback(`O arquivo “${motoboyApplicationEscape(invalidFile.name)}” ultrapassa o limite de 8 MB.`, 'error'); return; }
+  const vehicleType = document.getElementById('applicationVehicleType')?.value || '';
+  if (motoboyApplicationMotorized(vehicleType) && (!files.cnhDocument || !files.vehicleDocument)) { setMotoboyApplicationFeedback('Para veículos motorizados, anexe a CNH e o CRLV para enviar a ficha.', 'error'); return; }
+  const submit = document.getElementById('motoboyApplicationSubmit');
+  if (submit) { submit.disabled = true; submit.textContent = 'Enviando ficha...'; }
+  const createdAt = Date.now();
+  const initialDocuments = Object.fromEntries(Object.entries(files).filter(([, file]) => file).map(([key, file]) => [key, motoboyApplicationFilePayload(file)]));
+  const application = {
+    status:'pending', source:'public_self_registration', storeId:'cardapioData', storeName:DATA?.restaurant?.name || 'Loja', createdAt, updatedAt:new Date(createdAt).toISOString(),
+    fullName:document.getElementById('applicationFullName')?.value.trim() || '', cpf:document.getElementById('applicationCpf')?.value.trim() || '', birthDate:document.getElementById('applicationBirthDate')?.value || '', phone:document.getElementById('applicationPhone')?.value.trim() || '', email:document.getElementById('applicationEmail')?.value.trim().toLowerCase() || '', city:document.getElementById('applicationCity')?.value.trim() || '', address:document.getElementById('applicationAddress')?.value.trim() || '',
+    vehicleType, vehicleModel:document.getElementById('applicationVehicleModel')?.value.trim() || '', vehicleColor:document.getElementById('applicationVehicleColor')?.value.trim() || '', vehiclePlate:(document.getElementById('applicationVehiclePlate')?.value.trim() || '').toUpperCase(), cnhCategory:document.getElementById('applicationCnhCategory')?.value || '', cnhNumber:document.getElementById('applicationCnhNumber')?.value.trim() || '', cnhValidUntil:document.getElementById('applicationCnhValidUntil')?.value || '', documents:initialDocuments, documentUploadStatus:'pending'
+  };
+  try {
+    const reference = await addDoc(motoboyApplicationsCollectionRef, application);
+    application.id = reference.id;
+    const uploadedDocuments = await uploadMotoboyApplicationFiles(reference.id, files);
+    const patch = {documents:uploadedDocuments, documentUploadStatus:Object.values(uploadedDocuments).every(item => item.uploadStatus === 'uploaded') ? 'uploaded' : 'pending', updatedAt:new Date().toISOString()};
+    await updateDoc(doc(motoboyApplicationsCollectionRef, reference.id), patch);
+    Object.assign(application, patch);
+    motoboyApplications = sortMotoboyApplications([application, ...motoboyApplications.filter(item => String(item.id) !== String(application.id))]);
+    window.motoboyApplications = motoboyApplications;
+    cacheMotoboyApplications(motoboyApplications);
+    renderMotoboyApplications();
+    form.reset();
+    document.querySelectorAll('#motoboyApplicationForm [data-file-label]').forEach(node => { node.textContent = 'Nenhum arquivo selecionado'; });
+    closeMotoboyApplicationModal();
+    showMotoboyValidationConfirmation();
+  } catch (error) {
+    console.error('Falha ao enviar candidatura de motoboy:', error);
+    setMotoboyApplicationFeedback(`Não foi possível enviar sua ficha${error?.message ? `: ${motoboyApplicationEscape(error.message)}` : '.'}`, 'error');
+  } finally {
+    if (submit) { submit.disabled = false; submit.textContent = 'Enviar para análise'; }
+  }
+}
+
+function setupMotoboyApplicationFlow() {
+  document.getElementById('becomeMotoboyLink')?.addEventListener('click', openMotoboyApplicationModal);
+  document.getElementById('motoboyApplicationClose')?.addEventListener('click', closeMotoboyApplicationModal);
+  document.getElementById('motoboyApplicationCancel')?.addEventListener('click', closeMotoboyApplicationModal);
+  document.getElementById('motoboyValidationContinue')?.addEventListener('click', closeMotoboyValidationConfirmation);
+  document.getElementById('motoboyValidationModal')?.addEventListener('click', event => { if (event.target.id === 'motoboyValidationModal') closeMotoboyValidationConfirmation(); });
+  document.getElementById('motoboyApplicationModal')?.addEventListener('click', event => { if (event.target.id === 'motoboyApplicationModal') closeMotoboyApplicationModal(); });
+  document.getElementById('applicationVehicleType')?.addEventListener('change', updateMotoboyApplicationVehicleRequirements);
+  document.querySelectorAll('#motoboyApplicationForm input[type="file"]').forEach(input => input.addEventListener('change', () => updateMotoboyApplicationFileLabel(input)));
+  document.getElementById('applicationVehiclePlate')?.addEventListener('input', event => { event.target.value = event.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 8); });
+  document.getElementById('motoboyApplicationForm')?.addEventListener('submit', submitMotoboyApplication);
+  document.getElementById('motoboysPanel')?.addEventListener('click', event => {
+    const button = event.target.closest('[data-motoboy-application-action]');
+    if (!button) return;
+    const id = button.dataset.motoboyApplicationId;
+    if (button.dataset.motoboyApplicationAction === 'approve') approveMotoboyApplication(id);
+    if (button.dataset.motoboyApplicationAction === 'reject') rejectMotoboyApplication(id);
+  });
+}
+window.setupMotoboyApplicationFlow = setupMotoboyApplicationFlow;
+
+fetchMotoboyApplications();
+subscribeMotoboyApplications();
+// === FIM CANDIDATURAS PROFISSIONAIS DE MOTOBOY ===
 // === END MOTOBOYS ===
 
 /**
@@ -7850,15 +8313,13 @@ function renderItems(){
         promotionsSection.setAttribute('aria-label', 'Ofertas em destaque');
         promotionsSection.innerHTML = `
           <div class="menu-promotions-heading">
-            <div><span class="menu-promotions-kicker">OFERTAS DA CASA</span><h3>Promoções em destaque</h3></div>
-            <span class="menu-promotions-count">${promotionalItems.length} ${promotionalItems.length === 1 ? 'oferta' : 'ofertas'}</span>
+            <h3>Promoções em destaque</h3>
           </div>
           <div class="menu-promotions-carousel${promotionsUseCarousel ? ' is-carousel' : ' is-static'}" data-promo-carousel="${promotionsUseCarousel ? 'true' : 'false'}">
             ${promotionsUseCarousel ? '<button type="button" class="menu-promotions-nav" data-promo-nav="-1" aria-label="Promoção anterior">‹</button>' : ''}
             <div class="menu-promotions-grid" tabindex="0" aria-label="${promotionsUseCarousel ? 'Carrossel de promoções' : 'Ofertas em destaque'}"></div>
             ${promotionsUseCarousel ? '<button type="button" class="menu-promotions-nav" data-promo-nav="1" aria-label="Próxima promoção">›</button>' : ''}
-          </div>
-          ${promotionsUseCarousel ? '<div class="menu-promotions-loop-hint">Arraste para os lados · o carrossel passa pelas ofertas sem repetir produtos</div>' : ''}`;
+          </div>`;
         const promoGrid = promotionsSection.querySelector('.menu-promotions-grid');
         const realPromoCards = promotionalItems.map(item => renderCustomerCard(item));
         realPromoCards.forEach(card => promoGrid.appendChild(card));
@@ -12141,6 +12602,7 @@ function initListeners(){
   document.querySelector("#registerCancel").addEventListener("click", closeAuthModal);
   document.querySelector("#loginSubmit").addEventListener("click", doLogin);
   document.querySelector("#registerSubmit").addEventListener("click", doRegister);
+  setupMotoboyApplicationFlow();
   document.querySelector("#logoutBtn").addEventListener("click", () => {
       if(confirm("Deseja realmente sair da conta?")) logoutUser();
   });
@@ -13629,6 +14091,28 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   #salesPanel .side>div[style*="overflow"]{max-width:100%;min-width:0;overflow-x:auto!important;overflow-y:hidden!important}
   #salesPanel .side>div[style*="overflow"]>table{min-width:100%;width:max-content}
   @media(max-width:900px){#salesPanel .brasa-analytics-grid{grid-template-columns:minmax(0,1fr)}}
+  .auth-driver-entry{margin:18px 0 0;text-align:center}
+  .auth-driver-entry button{border:0;background:transparent;color:rgba(237,220,205,.55);font:600 10px/1.2 "IBM Plex Mono",monospace;letter-spacing:.03em;text-decoration:underline;text-decoration-color:rgba(255,125,74,.35);text-underline-offset:3px;cursor:pointer;transition:color .16s ease}
+  .auth-driver-entry button:hover{color:#ffad88}
+  .motoboy-application-card{width:min(760px,calc(100vw - 28px));max-height:90vh;overflow:auto!important;background:linear-gradient(145deg,#241f1a,#151311)!important;border-color:rgba(255,135,83,.3)!important;color:#eadfd4}
+  .motoboy-application-eyebrow,.motoboy-applications-heading small{display:block;color:#ff9a70;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+  .motoboy-application-card .brasa-detail-header p{max-width:540px;line-height:1.45}
+  .motoboy-application-notice{margin:0 0 14px;padding:10px 12px;border:1px solid rgba(120,170,255,.2);border-radius:7px;background:rgba(120,170,255,.07);color:#b9d1ee;font-size:11px;line-height:1.45}
+  .motoboy-application-form{display:flex;flex-direction:column;gap:12px}
+  .motoboy-application-section{padding:14px;border:1px solid rgba(246,232,214,.1);border-radius:8px;background:rgba(8,8,7,.22)}
+  .motoboy-application-section-heading{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+  .motoboy-application-section-heading>span{display:grid;width:24px;height:24px;place-items:center;border:1px solid rgba(255,135,83,.45);border-radius:6px;background:rgba(255,90,31,.1);color:#ffad88;font:700 10px/1 "IBM Plex Mono",monospace}
+  .motoboy-application-section-heading strong{display:block;color:#f5e9df;font-size:13px}.motoboy-application-section-heading small{display:block;margin-top:3px;color:#8f8379;font-size:10px;line-height:1.35}
+  .motoboy-application-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.motoboy-application-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.motoboy-field-wide{grid-column:1/-1}
+  .motoboy-application-card .form-group{margin:0}.motoboy-application-card .form-group label{color:#cfc0b4;font-size:10px}.motoboy-application-card .form-group input,.motoboy-application-card .form-group select{width:100%;box-sizing:border-box;min-height:38px;padding:0 10px;border:1px solid rgba(246,232,214,.15);border-radius:6px;background:#211f1b;color:#eee4d9;font-size:11px}.motoboy-application-card .form-group input:focus,.motoboy-application-card .form-group select:focus{border-color:#ff7d4a;outline:0;box-shadow:0 0 0 2px rgba(255,125,74,.12)}
+  .motoboy-application-field-help{display:block;margin-top:4px;color:#82766d;font-size:9px;line-height:1.25}
+  .motoboy-application-doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.motoboy-document-field{display:flex;min-height:126px;flex-direction:column;justify-content:flex-start;gap:5px;padding:11px;border:1px dashed rgba(246,232,214,.22);border-radius:7px;background:rgba(255,255,255,.025);cursor:pointer}.motoboy-document-field>span{color:#eee3d8;font-size:11px;font-weight:700}.motoboy-document-field>span b{color:#ff9a70}.motoboy-document-field input{width:100%;color:#bcaea3;font-size:10px}.motoboy-document-field small{color:#867a70;font-size:9px;line-height:1.35}.motoboy-document-field em{margin-top:auto;color:#ffad88;font:600 9px/1.3 "IBM Plex Mono",monospace;font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .motoboy-application-consent{display:flex;align-items:flex-start;gap:8px;padding:2px 2px;color:#aa9d91;font-size:10px;line-height:1.45}.motoboy-application-consent input{margin-top:2px;accent-color:#ff5a1f}.motoboy-application-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:2px}.motoboy-application-feedback,.motoboy-admin-feedback{min-height:0;color:#ffad88;font-size:10px;line-height:1.4}.motoboy-application-feedback:empty,.motoboy-admin-feedback:empty{display:none}.motoboy-application-feedback.error,.motoboy-admin-feedback.error{color:#ff9b91}.motoboy-application-feedback.success,.motoboy-admin-feedback.success{color:#9fe0b0}.motoboy-application-feedback a,.motoboy-admin-feedback a{color:#9ccaff;font-weight:700}
+  .motoboy-applications-section{margin:0 0 14px;padding:14px;border:1px solid rgba(255,208,131,.23);border-radius:8px;background:linear-gradient(145deg,rgba(255,208,131,.08),rgba(255,255,255,.02))}.motoboy-applications-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px}.motoboy-applications-heading h4{margin:3px 0 0;color:#fff;font-size:18px}.motoboy-applications-heading p{margin:5px 0 0;color:#9f9287;font-size:10px;line-height:1.4}.motoboy-application-count{display:inline-flex;align-items:center;min-height:24px;padding:0 8px;border:1px solid rgba(255,208,131,.38);border-radius:999px;color:#ffd083;font:700 9px/1 "IBM Plex Mono",monospace;white-space:nowrap}.motoboy-application-count.has-pending{background:rgba(255,208,131,.12);box-shadow:0 0 0 3px rgba(255,208,131,.05)}.motoboy-applications-list{display:grid;gap:8px}.motoboy-application-item{border:1px solid rgba(246,232,214,.12);border-radius:7px;background:rgba(8,8,7,.25);overflow:hidden}.motoboy-application-item[open]{border-color:rgba(255,135,83,.42)}.motoboy-application-item>summary{display:flex;align-items:center;gap:10px;padding:11px 12px;color:#f4e9df;cursor:pointer;list-style:none}.motoboy-application-item>summary::-webkit-details-marker{display:none}.motoboy-application-item>summary::after{content:'+';margin-left:auto;color:#ffad88;font:700 18px/1 "IBM Plex Mono",monospace}.motoboy-application-item[open]>summary::after{content:'−'}.motoboy-application-summary-avatar{display:grid;flex:none;width:34px;height:34px;place-items:center;border:1px solid rgba(255,135,83,.32);border-radius:6px;background:rgba(255,90,31,.12);color:#ffb08a;font:700 16px/1 "Barlow Condensed","Arial Narrow",sans-serif}.motoboy-application-summary-copy{min-width:0}.motoboy-application-summary-copy strong{display:block;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.motoboy-application-summary-copy small{display:block;margin-top:3px;color:#94877c;font-size:9px}.motoboy-application-summary-date{margin-left:auto;color:#8f8379;font:500 9px/1.2 "IBM Plex Mono",monospace;white-space:nowrap}.motoboy-application-body{padding:0 12px 12px;border-top:1px solid rgba(246,232,214,.09)}.motoboy-application-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 0}.motoboy-application-detail{min-width:0;padding:8px;border-radius:5px;background:rgba(255,255,255,.035)}.motoboy-application-detail span{display:block;color:#82766d;font:700 8px/1.2 "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase}.motoboy-application-detail strong{display:block;margin-top:4px;color:#e6d9ce;font-size:10px;line-height:1.35;overflow-wrap:anywhere}.motoboy-application-detail.wide{grid-column:1/-1}.motoboy-application-documents{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid rgba(246,232,214,.08)}.motoboy-application-document{display:inline-flex;align-items:center;gap:5px;min-height:24px;padding:0 8px;border:1px solid rgba(156,202,255,.25);border-radius:999px;color:#b9d1ee;font-size:9px;text-decoration:none}.motoboy-application-document.pending{border-color:rgba(255,208,131,.28);color:#ffd083}.motoboy-application-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}.motoboy-application-actions button{min-height:32px;padding:0 10px;border:1px solid rgba(246,232,214,.16);border-radius:5px;background:#26221e;color:#d8cabe;font:700 9px/1 "IBM Plex Mono",monospace;cursor:pointer}.motoboy-application-actions button.approve{border-color:rgba(143,221,164,.4);background:rgba(74,139,91,.35);color:#b5f1c5}.motoboy-application-actions button.reject{border-color:rgba(255,154,112,.36);background:rgba(145,70,49,.26);color:#ffb4a0}.motoboy-application-actions button:hover{filter:brightness(1.14)}.motoboy-applications-empty{padding:16px;border:1px dashed rgba(246,232,214,.12);border-radius:6px;color:#82766d;font-size:10px;text-align:center}
+  .motoboy-validation-card{width:min(430px,calc(100vw - 30px));padding:34px 30px 28px!important;text-align:center;background:#fbfaf9!important;border:1px solid rgba(255,125,74,.16)!important;color:#242321!important;box-shadow:0 18px 50px rgba(0,0,0,.32)}
+  .motoboy-validation-icon{width:112px;height:112px;margin:0 auto 20px;color:#d47d50}.motoboy-validation-icon svg{display:block;width:100%;height:100%}
+  .motoboy-validation-card h2{margin:0;color:#252321;font:700 clamp(29px,6vw,38px)/1.16 "Manrope",Arial,sans-serif;letter-spacing:-.04em}.motoboy-validation-card p{max-width:330px;margin:18px auto 0;color:#5e5b58;font:400 16px/1.55 "Manrope",Arial,sans-serif}.motoboy-validation-status{display:flex;align-items:center;justify-content:center;gap:7px;margin:22px 0 18px;color:#6d6965;font:600 10px/1.3 "IBM Plex Mono",monospace}.motoboy-validation-status span{width:7px;height:7px;border-radius:50%;background:#ff7d4a;box-shadow:0 0 0 4px rgba(255,125,74,.12)}.motoboy-validation-continue{width:100%;min-height:52px;border:0;border-radius:9px;background:#159bd1;color:#fff;font:700 16px/1 "Manrope",Arial,sans-serif;cursor:pointer;box-shadow:0 7px 16px rgba(21,155,209,.18);transition:filter .16s ease,transform .16s ease}.motoboy-validation-continue:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  @media(max-width:680px){.motoboy-application-grid,.motoboy-application-grid-3,.motoboy-application-doc-grid,.motoboy-application-detail-grid{grid-template-columns:1fr}.motoboy-field-wide,.motoboy-application-detail.wide{grid-column:auto}.motoboy-applications-heading{display:block}.motoboy-application-count{margin-top:10px}.motoboy-application-summary-date{display:none}.motoboy-application-actions{flex-direction:column}.motoboy-application-actions button{width:100%}.motoboy-validation-card{padding:28px 20px 22px!important}.motoboy-validation-card p{font-size:14px}}
 </style>
 <script>
 (() => {
@@ -13918,6 +14402,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   function motoboyStats(motoboy) { motoboy = {...motoboy, status:automaticMotoboyStatus(motoboy)}; const assigned=orders().filter(order=>order.motoboyId===motoboy.id);const delivered=assigned.filter(isDelivered);const active=assigned.filter(order=>!isDelivered(order)&&!isCancelled(order));let total=0,totalMinutes=0,timed=0,onTime=0;delivered.forEach(order=>{total+=orderTotal(order);const created=dateMs(order.createdAt),done=dateMs(order.deliveredAt);if(created&&done&&done>=created){const minutes=(done-created)/60000;totalMinutes+=minutes;timed++;if(minutes<=num(order.preparationTime)||minutes<=45)onTime++;}});const today=new Date();const todayKey=today.toLocaleDateString('pt-BR');return {...motoboy,assigned:assigned.length,delivered:delivered.length,active:active.length,total,avg:delivered.length?total/delivered.length:0,avgMinutes:timed?totalMinutes/timed:0,onTime:timed?Math.round(onTime/timed*100):0,today:delivered.filter(order=>dateMs(order.deliveredAt)&&new Date(dateMs(order.deliveredAt)).toLocaleDateString('pt-BR')===todayKey).length,orders:assigned}; }
   function renderMotoboysProfessional(){
     ensureMotoboyMarkup();
+    window.renderMotoboyApplications?.();
     const list = $id('motoboysList');
     if (!list) return;
     const stats = motoboys().map(motoboyStats);
@@ -16971,7 +17456,133 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 <!-- ===================== TOTEM KIOSK CONTAINER ===================== -->
 <div id="totemKioskOverlay" style="display:none"></div>
 
-</body>
+<script>
+/* ===== Flyers públicos, carrossel automático e últimos pedidos ===== */
+(function(){
+  'use strict';
+  const STORE_ID = 'cardapioData';
+  const STORAGE_KEY = 'cardapio_public_flyers_v1';
+  let flyers = [];
+  let activeIndex = 0;
+  let rotationTimer = 0;
+  let booted = false;
+
+  const byId = id => document.getElementById(id);
+  const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+  const safeImageUrl = value => { const raw=String(value||'').trim(); if(/^data:image\//i.test(raw)) return raw; try { const parsed=new URL(raw,window.location.href); return ['http:','https:'].includes(parsed.protocol) ? parsed.href : ''; } catch { return ''; } };
+  const safeLinkUrl = value => { const raw=String(value||'').trim(); if(!raw) return ''; try { const parsed=new URL(raw,window.location.href); return ['http:','https:'].includes(parsed.protocol) ? parsed.href : ''; } catch { return ''; } };
+  const formatMoney = value => { const formatter = window.__professionalPdvBridge?.formatBRL; if(typeof formatter === 'function') return formatter(Number(value)||0); return (Number(value)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); };
+  const dateValue = value => { const date = new Date(value); return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}); };
+  const timeValue = value => { const date = new Date(value); return Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); };
+  const readLocalFlyers = () => { try { const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); return Array.isArray(parsed) ? parsed : []; } catch { return []; } };
+  const sortFlyers = list => list.slice().sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0) || (Number(a.createdAt)||0)-(Number(b.createdAt)||0));
+  const normalizeFlyer = (raw,index=0) => ({id:String(raw?.id||`local-flyer-${Date.now()}-${index}`),storeId:String(raw?.storeId||STORE_ID),title:String(raw?.title||'Oferta especial'),imageUrl:String(raw?.imageUrl||''),linkUrl:String(raw?.linkUrl||''),active:raw?.active!==false,createdAt:Number(raw?.createdAt)||Date.now(),updatedAt:raw?.updatedAt||new Date().toISOString(),order:Number(raw?.order)||index});
+  const cacheFlyers = () => { try { localStorage.setItem(STORAGE_KEY,JSON.stringify(flyers)); } catch(error) { console.warn('Não foi possível guardar os flyers localmente.',error); } };
+  const currentOrders = () => { try { return window.__professionalPdvBridge?.getOrders?.() || []; } catch { return []; } };
+
+  function renderPublicFlyers(){
+    const section=byId('publicFlyersSection'), track=byId('publicFlyersTrack'), dots=byId('publicFlyerDots'), empty=byId('publicFlyersEmpty');
+    if(!section || !track || !dots || !empty) return;
+    const active=sortFlyers(flyers.filter(item=>item.active!==false && safeImageUrl(item.imageUrl)));
+    if(activeIndex>=active.length) activeIndex=0;
+    track.innerHTML=''; dots.innerHTML='';
+    if(!active.length){ section.hidden=true; track.style.transform='translateX(0)'; track.style.display='none'; dots.style.display='none'; byId('publicFlyersViewport').style.display='none'; empty.hidden=true; byId('publicFlyerPrev').disabled=true; byId('publicFlyerNext').disabled=true; return; }
+    section.hidden=false; empty.hidden=true; track.style.display='flex'; byId('publicFlyersViewport').style.display='block'; byId('publicFlyerPrev').disabled=active.length<2; byId('publicFlyerNext').disabled=active.length<2;
+    active.forEach((flyer,index)=>{
+      const image=safeImageUrl(flyer.imageUrl), link=safeLinkUrl(flyer.linkUrl);
+      const copy=`<div class="public-flyer-slide-copy"><small>Oferta em destaque</small><strong>${escapeHtml(flyer.title)}</strong><span>${link?'Toque para saber mais':'Confira esta oportunidade na loja.'}</span></div>`;
+      const node=document.createElement(link?'a':'div'); node.className='public-flyer-slide'; if(link){node.href=link;node.target='_blank';node.rel='noopener noreferrer';}
+      node.innerHTML=`<img src="${escapeHtml(image)}" alt="${escapeHtml(flyer.title)}" loading="lazy">${copy}`; track.appendChild(node);
+      const dot=document.createElement('button'); dot.type='button'; dot.className=`public-flyer-dot${index===activeIndex?' active':''}`; dot.setAttribute('aria-label',`Ver oferta ${index+1}`); dot.addEventListener('click',()=>{activeIndex=index; updatePublicFlyerPosition(); restartRotation();}); dots.appendChild(dot);
+    });
+    updatePublicFlyerPosition();
+    syncPublicFlyerSize();
+  }
+  function updatePublicFlyerPosition(){ const track=byId('publicFlyersTrack'); if(!track) return; track.style.transform=`translateX(-${activeIndex*100}%)`; byId('publicFlyerDots')?.querySelectorAll('.public-flyer-dot').forEach((dot,index)=>dot.classList.toggle('active',index===activeIndex)); }
+  function movePublicFlyer(delta){ const total=sortFlyers(flyers.filter(item=>item.active!==false && safeImageUrl(item.imageUrl))).length; if(total<2) return; activeIndex=(activeIndex+delta+total)%total; updatePublicFlyerPosition(); restartRotation(); }
+  function restartRotation(){ window.clearInterval(rotationTimer); const total=sortFlyers(flyers.filter(item=>item.active!==false && safeImageUrl(item.imageUrl))).length; if(total>1) rotationTimer=window.setInterval(()=>movePublicFlyer(1),5000); }
+  function syncPublicFlyerSize(){ const card=document.querySelector('#items > .menu-grid .menu-card'); const viewport=byId('publicFlyersViewport'); if(!viewport) return; const height=card?.getBoundingClientRect?.().height||0; const safeHeight=Math.max(250,Math.min(420,Math.round(height||320))); viewport.style.setProperty('--public-flyer-height',`${safeHeight}px`); }
+
+  function orderStatus(order){ const status=String(order?.status||'pending'); return ({pending:'Em análise',in_production:'Em produção',preparing:'Em produção',ready:'Pronto',ready_for_delivery:'Pronto',out_for_delivery:'Em entrega',delivered:'Entregue',cancelled:'Cancelado'})[status]||'Em acompanhamento'; }
+  function renderRecentOrders(){
+    const section=byId('publicRecentOrdersSection'), list=byId('publicRecentOrdersList'), viewAll=byId('publicRecentOrdersViewAll'); if(!section || !list) return;
+    const user=window.currentUser;
+    const isCustomer=Boolean(user && !user.isAdmin && !user.isMotoboy && !user.isGarcom);
+    if(!isCustomer){ section.hidden=true; list.innerHTML=''; if(viewAll) viewAll.textContent='Ver todos os pedidos'; return; }
+    section.hidden=false;
+    const userId=String(user.id||user.uid||'');
+    const recent=currentOrders().filter(order=>userId && String(order?.userId||'')===userId).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)).slice(0,4);
+    if(!recent.length){ list.innerHTML='<div class="public-recent-orders-empty">Você ainda não tem pedidos recentes nesta conta.</div>'; if(viewAll) viewAll.textContent='Ver todos os pedidos'; return; }
+    if(viewAll) viewAll.textContent='Ver todos os pedidos';
+    list.innerHTML=recent.map(order=>{
+      const id=escapeHtml(String(order.id||'').slice(0,7).toUpperCase());
+      const items=(order.items||[]).map(item=>`${Number(item.qty)||1}x ${escapeHtml(item.name||'Item')}`).join(', ') || 'Itens do pedido';
+      const date=`${dateValue(order.createdAt)}${timeValue(order.createdAt)?` · ${timeValue(order.createdAt)}`:''}`;
+      return `<article class="public-recent-order"><div class="public-recent-order-main"><div class="public-recent-order-heading"><strong>Pedido #${id}</strong><span>${escapeHtml(orderStatus(order))}</span></div><div class="public-recent-order-items">${items}</div><small class="public-recent-order-date">${date||'Data não informada'}</small></div><strong class="public-recent-order-total">${escapeHtml(formatMoney(order.total))}</strong></article>`;
+    }).join('');
+  }
+
+  async function loadFlyers(){
+    flyers=sortFlyers(readLocalFlyers().map(normalizeFlyer)); renderPublicFlyers(); renderRecentOrders(); restartRotation();
+    if(!(window.getDocs && window.collection && window.db)) return;
+    try {
+      const snapshot=await window.getDocs(window.collection(window.db,'flyers'));
+      const remote=[]; snapshot.forEach(item=>{const data=item.data()||{}; if(String(data.storeId||STORE_ID)===STORE_ID) remote.push(normalizeFlyer({...data,id:item.id}));});
+      if(remote.length){ flyers=sortFlyers(remote); cacheFlyers(); renderPublicFlyers(); renderFlyersAdmin(); restartRotation(); }
+    } catch(error){ console.warn('Flyers remotos indisponíveis; usando cache local.',error); }
+  }
+
+  function setFlyerFeedback(message,kind=''){ const node=byId('flyersAdminFeedback'); if(!node)return; node.textContent=message||''; node.className=`flyers-admin-feedback${kind?' '+kind:''}`; }
+  function resetFlyerForm(){ byId('flyerEditorForm')?.reset(); byId('flyerId').value=''; byId('flyerActive').checked=true; byId('flyerSubmitButton').textContent='Adicionar flyer'; byId('flyerCancelEdit').hidden=true; }
+  function renderFlyersAdmin(){
+    const list=byId('flyersAdminList'); if(!list)return; const ordered=sortFlyers(flyers); if(!ordered.length){list.innerHTML='<div class="flyer-admin-empty">Nenhum flyer cadastrado. Adicione o primeiro acima.</div>';return;}
+    list.innerHTML=ordered.map(flyer=>{ const image=safeImageUrl(flyer.imageUrl); return `<article class="flyer-admin-row"><div class="flyer-admin-row-thumb">${image?`<img src="${escapeHtml(image)}" alt="">`:''}</div><div class="flyer-admin-row-copy"><strong>${escapeHtml(flyer.title)}</strong><small>${flyer.active!==false?'Visível no carrossel':'Oculto'}${flyer.linkUrl?' · com link':''}</small></div><div class="flyer-admin-row-actions"><button type="button" data-flyer-action="edit" data-flyer-id="${escapeHtml(flyer.id)}">Editar</button><button type="button" class="delete" data-flyer-action="delete" data-flyer-id="${escapeHtml(flyer.id)}">Excluir</button></div></article>`; }).join('');
+  }
+  function startFlyerEdit(id){ const flyer=flyers.find(item=>String(item.id)===String(id)); if(!flyer)return; byId('flyerId').value=flyer.id; byId('flyerTitle').value=flyer.title; byId('flyerImageUrl').value=flyer.imageUrl.startsWith('data:')?'':flyer.imageUrl; byId('flyerLinkUrl').value=flyer.linkUrl||''; byId('flyerActive').checked=flyer.active!==false; byId('flyerSubmitButton').textContent='Salvar alterações'; byId('flyerCancelEdit').hidden=false; byId('flyerTitle').focus(); }
+  async function persistFlyer(event){
+    event.preventDefault();
+    if(!window.currentUser?.isAdmin){ setFlyerFeedback('Apenas a loja pode gerenciar flyers.','error'); return; }
+    const title=byId('flyerTitle').value.trim(), url=byId('flyerImageUrl').value.trim(), file=byId('flyerFile').files?.[0], link=byId('flyerLinkUrl').value.trim(), id=byId('flyerId').value.trim();
+    if(!title){setFlyerFeedback('Informe um título para o flyer.','error');return;}
+    if(link && !safeLinkUrl(link)){setFlyerFeedback('Informe um link válido começando com http:// ou https://.','error');return;}
+    if(file && (!/^image\/(jpeg|png|webp)$/i.test(file.type)||file.size>8*1024*1024)){setFlyerFeedback('Escolha uma imagem JPG, PNG ou WEBP de até 8 MB.','error');return;}
+    const old=flyers.find(item=>String(item.id)===String(id)); if(!file && !url && !old?.imageUrl){setFlyerFeedback('Informe uma URL ou envie uma imagem para o flyer.','error');return;}
+    const submit=byId('flyerSubmitButton'); if(submit){submit.disabled=true;submit.textContent='Salvando...';}
+    try {
+      let imageUrl=url||old?.imageUrl||'';
+      if(file){ const clean=file.name.replace(/[^a-z0-9._-]/gi,'-').toLowerCase(); const storageObject=window.storageRef(window.storage,`flyers/${STORE_ID}/${Date.now()}-${clean}`); const uploaded=await window.uploadBytes(storageObject,file,{contentType:file.type}); imageUrl=await window.getDownloadURL(uploaded.ref); }
+      if(!safeImageUrl(imageUrl)) throw new Error('Imagem inválida. Use uma URL http(s) ou envie um arquivo.');
+      const now=Date.now(); const payload={storeId:STORE_ID,title,imageUrl,linkUrl:safeLinkUrl(link),active:byId('flyerActive').checked,updatedAt:new Date(now).toISOString(),createdAt:old?.createdAt||now,order:old?.order ?? flyers.length};
+      let savedId=id;
+      if(id && !id.startsWith('local-') && window.updateDoc && window.doc && window.db) await window.updateDoc(window.doc(window.db,'flyers',id),payload);
+      else if(!id && window.addDoc && window.collection && window.db){ const created=await window.addDoc(window.collection(window.db,'flyers'),payload); savedId=created.id; }
+      if(!savedId) savedId=`local-flyer-${now}`;
+      const saved=normalizeFlyer({...payload,id:savedId}); flyers=sortFlyers([saved,...flyers.filter(item=>String(item.id)!==String(saved.id))]); cacheFlyers(); renderPublicFlyers(); renderFlyersAdmin(); resetFlyerForm(); setFlyerFeedback(id?'Flyer atualizado.':'Flyer adicionado ao carrossel.','success'); restartRotation();
+    } catch(error){ console.error('Falha ao salvar flyer:',error); setFlyerFeedback(error?.message||'Não foi possível salvar o flyer.','error'); }
+    finally { if(submit){submit.disabled=false;submit.textContent=byId('flyerId').value?'Salvar alterações':'Adicionar flyer';} }
+  }
+  async function deleteFlyer(id){
+    if(!window.currentUser?.isAdmin){setFlyerFeedback('Apenas a loja pode gerenciar flyers.','error');return;}
+    const flyer=flyers.find(item=>String(item.id)===String(id)); if(!flyer)return;
+    if(!window.confirm(`Excluir o flyer “${flyer.title}”?`)) return;
+    try { if(!String(id).startsWith('local-')&&window.deleteDoc&&window.doc&&window.db) await window.deleteDoc(window.doc(window.db,'flyers',id)); flyers=flyers.filter(item=>String(item.id)!==String(id)); cacheFlyers(); renderPublicFlyers(); renderFlyersAdmin(); restartRotation(); setFlyerFeedback('Flyer excluído.','success'); } catch(error){ console.error('Falha ao excluir flyer:',error); setFlyerFeedback('Não foi possível excluir o flyer.','error'); }
+  }
+
+  function setup(){
+    if(booted)return; if(!byId('publicFlyersSection'))return; booted=true;
+    byId('publicFlyerPrev')?.addEventListener('click',()=>movePublicFlyer(-1)); byId('publicFlyerNext')?.addEventListener('click',()=>movePublicFlyer(1));
+    byId('publicRecentOrdersViewAll')?.addEventListener('click',()=>{ if(!window.currentUser){ byId('userBadge')?.click(); return; } window.renderOrdersDrawer?.(); byId('ordersDrawer')?.classList.add('open'); });
+    byId('flyerEditorForm')?.addEventListener('submit',persistFlyer); byId('flyerCancelEdit')?.addEventListener('click',()=>{resetFlyerForm();setFlyerFeedback('','');});
+    byId('flyersAdminList')?.addEventListener('click',event=>{const button=event.target.closest('[data-flyer-action]');if(!button)return; if(button.dataset.flyerAction==='edit')startFlyerEdit(button.dataset.flyerId); if(button.dataset.flyerAction==='delete')deleteFlyer(button.dataset.flyerId);});
+    byId('tabFlyers')?.addEventListener('click',()=>{document.querySelectorAll('.admin-panel').forEach(panel=>panel.classList.add('hidden'));byId('flyersPanel')?.classList.remove('hidden');document.querySelectorAll('.admin-tabs button').forEach(button=>button.classList.remove('active'));byId('tabFlyers')?.classList.add('active');renderFlyersAdmin();});
+    window.addEventListener('resize',()=>window.requestAnimationFrame(syncPublicFlyerSize)); window.addEventListener('storage',()=>{flyers=sortFlyers(readLocalFlyers().map(normalizeFlyer));renderPublicFlyers();renderFlyersAdmin();restartRotation();renderRecentOrders();});
+    loadFlyers(); renderRecentOrders(); window.setInterval(renderRecentOrders,3000);
+  }
+  window.renderPublicFlyers=renderPublicFlyers; window.renderPublicRecentOrders=renderRecentOrders; window.renderFlyersAdmin=renderFlyersAdmin; window.loadPublicFlyers=loadFlyers;
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup,{once:true}); else setup(); window.setTimeout(setup,900);
+})();
+</script>
+</body></body>
 </html>
 
 
@@ -21211,3 +21822,34 @@ updatedAt:changedAt };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureMarkup, { once:true }); else ensureMarkup();
 })();
 </script>
+
+<style id="menu-promotions-layout-adjustments">
+  /* Ajustes finais da vitrine pública: a correção atua na caixa, não nos cards. */
+  .store-header ~ .controls{padding-top:8px;padding-bottom:7px}
+  #cats.menu-category-visual-nav{margin-bottom:2px;padding:2px 2px 9px}
+
+  #items > .menu-promotions-section{width:100%;max-width:none;margin-bottom:12px;padding:10px 14px 12px;box-sizing:border-box}
+  #items .menu-promotions-heading{margin:0 2px 6px}
+  #items .menu-promotions-heading h3{margin:0;color:#fff1e6;font-size:18px;line-height:1.05}
+  #items .menu-promotions-carousel.is-carousel{width:100%;grid-template-columns:32px minmax(0,1fr) 32px;gap:7px;justify-content:stretch}
+  #items .menu-promotions-carousel.is-carousel .menu-promotions-grid{width:100%;max-width:none;margin:0}
+
+  @media(max-width:600px){
+    .store-header ~ .controls{padding-top:6px;padding-bottom:5px}
+    #cats.menu-category-visual-nav{margin-bottom:1px;padding:2px 2px 8px}
+    #items > .menu-promotions-section{margin-bottom:9px;padding:8px 7px 10px}
+    #items .menu-promotions-heading{margin:0 1px 5px}
+    #items .menu-promotions-heading h3{font-size:15px}
+    #items .menu-promotions-carousel.is-carousel{grid-template-columns:26px minmax(0,1fr) 26px;gap:5px}
+  }
+
+  /* Seções públicas: ofertas em flyer e últimos pedidos. */
+  .public-card-section{width:100%;min-width:0;margin:18px 0 0;padding:15px;border:1px solid rgba(255,213,185,.14);border-radius:14px;background:linear-gradient(145deg,rgba(43,35,30,.96),rgba(24,21,19,.98));box-shadow:0 10px 24px rgba(0,0,0,.12)}
+  .public-card-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:11px}.public-card-section-copy{min-width:0}.public-card-section-kicker{display:block;margin-bottom:5px;color:#ff9b72;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.public-card-section-title{margin:0;color:#fff1e7;font:800 22px/.96 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.01em;text-transform:uppercase}.public-card-section-subtitle{max-width:600px;margin:6px 0 0;color:#a99a8e;font-size:10px;line-height:1.45}.public-card-section-actions{display:flex;align-items:center;gap:6px;flex:none}.public-section-nav{display:grid;width:34px;height:34px;place-items:center;border:1px solid rgba(255,172,119,.35);border-radius:9px;background:rgba(255,90,31,.11);color:#ffd1b9;font:400 23px/1 Arial,sans-serif;cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .16s ease}.public-section-nav:hover{border-color:#ff9c70;background:rgba(255,90,31,.24);transform:translateY(-1px)}.public-section-nav:focus-visible{outline:2px solid #ffc19e;outline-offset:2px}
+  .public-flyers-viewport{position:relative;overflow:hidden;width:100%;min-height:var(--public-flyer-height,320px);border:1px solid rgba(255,213,185,.16);border-radius:11px;background:#171412}.public-flyers-track{display:flex;width:100%;min-height:var(--public-flyer-height,320px);transition:transform .42s cubic-bezier(.22,.61,.36,1);will-change:transform}.public-flyer-slide{position:relative;display:block;flex:0 0 100%;height:var(--public-flyer-height,320px);overflow:hidden;background:radial-gradient(circle at 20% 20%,rgba(255,143,97,.45),transparent 34%),linear-gradient(135deg,#52301f,#171412 68%);color:#fff;text-decoration:none}.public-flyer-slide img{display:block;width:100%;height:100%;object-fit:cover}.public-flyer-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,11,9,.74),rgba(14,11,9,.13) 60%,rgba(14,11,9,.08))}.public-flyer-slide-copy{position:absolute;left:clamp(16px,4vw,34px);bottom:clamp(17px,4vw,32px);z-index:1;max-width:min(58%,420px);text-shadow:0 2px 10px rgba(0,0,0,.42)}.public-flyer-slide-copy small{display:block;margin-bottom:7px;color:#ffc3a5;font:700 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.public-flyer-slide-copy strong{display:block;color:#fff8f2;font:800 clamp(24px,4vw,40px)/.94 "Barlow Condensed","Arial Narrow",sans-serif;text-transform:uppercase}.public-flyer-slide-copy span{display:block;margin-top:7px;color:#f8e7dc;font-size:11px;line-height:1.35}.public-flyers-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.public-flyer-dots{display:flex;align-items:center;gap:5px}.public-flyer-dot{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#63554c;cursor:pointer}.public-flyer-dot.active{width:21px;border-radius:999px;background:#ff7d4a}.public-flyers-footer small{color:#8f8076;font:8px/1.2 "IBM Plex Mono",monospace;letter-spacing:.04em}.public-flyers-empty,.public-recent-orders-empty{padding:24px 16px;border:1px dashed rgba(255,213,185,.16);border-radius:10px;color:#9e8d80;font-size:11px;line-height:1.45;text-align:center}.public-flyers-empty[hidden]{display:none!important}
+  #publicFlyersSection[hidden],#publicRecentOrdersSection[hidden]{display:none!important}
+  .public-recent-orders-section{margin-bottom:24px}.public-recent-orders-list{display:grid;gap:8px}.public-recent-order{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 12px;border:1px solid rgba(255,213,185,.13);border-radius:10px;background:rgba(255,255,255,.035)}.public-recent-order-main{min-width:0}.public-recent-order-heading{display:flex;align-items:center;gap:8px;min-width:0}.public-recent-order-heading strong{overflow:hidden;color:#fff0e6;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.public-recent-order-heading span{flex:none;padding:4px 7px;border-radius:999px;background:rgba(255,125,74,.13);color:#ffae8c;font:700 8px/1 "IBM Plex Mono",monospace;text-transform:uppercase}.public-recent-order-items{overflow:hidden;margin-top:5px;color:#bba99d;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.public-recent-order-date{display:block;margin-top:4px;color:#85776e;font:8px/1.2 "IBM Plex Mono",monospace}.public-recent-order-total{color:#ffb08d;font:800 17px/1 "Barlow Condensed","Arial Narrow",sans-serif;white-space:nowrap}.public-recent-orders-footer{display:flex;justify-content:flex-end;margin-top:9px}.public-recent-orders-view-all{min-height:31px;padding:0 11px;border:1px solid rgba(255,143,97,.37);border-radius:7px;background:rgba(255,90,31,.09);color:#ffb18d;font:700 9px "IBM Plex Mono",monospace;cursor:pointer}.public-recent-orders-view-all:hover{border-color:#ff9c70;background:rgba(255,90,31,.18)}
+  .flyers-admin-panel{max-width:760px}.flyers-admin-intro{margin:0 0 14px;color:#9d9085;font-size:11px;line-height:1.5}.flyer-editor-form{display:grid;gap:10px;margin-bottom:16px;padding:14px;border:1px solid rgba(246,232,214,.11);border-radius:9px;background:rgba(255,255,255,.025)}.flyer-editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.flyer-editor-field{min-width:0}.flyer-editor-field.wide{grid-column:1/-1}.flyer-editor-field label{display:block;margin-bottom:5px;color:#cfc1b4;font:600 9px/1.2 "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase}.flyer-editor-field input[type=text],.flyer-editor-field input[type=url],.flyer-editor-field input[type=file]{width:100%;min-height:36px;border:1px solid rgba(246,232,214,.14);border-radius:5px;padding:0 9px;background:#1b1916;color:#eee4d9;font-size:10px}.flyer-editor-field input[type=file]{padding:8px}.flyer-editor-field small{display:block;margin-top:5px;color:#857970;font-size:9px;line-height:1.35}.flyer-editor-check{display:flex;align-items:center;gap:7px;color:#d9ccc0;font-size:10px}.flyer-editor-actions{display:flex;justify-content:flex-end;gap:8px}.flyer-editor-actions button{min-height:34px;padding:0 11px;border:1px solid rgba(246,232,214,.16);border-radius:5px;background:#28231f;color:#eadfd4;font:700 9px "IBM Plex Mono",monospace;cursor:pointer}.flyer-editor-actions button.primary{border:0;background:#ff5a1f;color:#260c03}.flyers-admin-feedback{min-height:18px;margin:-5px 0 9px;color:#9d9084;font-size:10px}.flyers-admin-feedback.success{color:#8fdda4}.flyers-admin-feedback.error{color:#ff9a70}.flyer-admin-list{display:grid;gap:8px}.flyer-admin-row{display:grid;grid-template-columns:94px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:1px solid rgba(246,232,214,.11);border-radius:8px;background:rgba(255,255,255,.025)}.flyer-admin-row-thumb{width:94px;height:60px;overflow:hidden;border-radius:5px;background:#33241d}.flyer-admin-row-thumb img{display:block;width:100%;height:100%;object-fit:cover}.flyer-admin-row-copy{min-width:0}.flyer-admin-row-copy strong{display:block;overflow:hidden;color:#f4e6db;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.flyer-admin-row-copy small{display:block;margin-top:4px;color:#94857b;font-size:9px}.flyer-admin-row-actions{display:flex;gap:5px}.flyer-admin-row-actions button{min-height:29px;padding:0 8px;border:1px solid rgba(246,232,214,.15);border-radius:5px;background:#29231f;color:#eadfd4;font:700 8px "IBM Plex Mono",monospace;cursor:pointer}.flyer-admin-row-actions button.delete{border-color:rgba(235,104,86,.35);color:#ff9d8b}.flyer-admin-empty{padding:18px;border:1px dashed rgba(246,232,214,.13);border-radius:7px;color:#8f8177;font-size:10px;text-align:center}
+  @media(max-width:680px){.public-card-section{padding:12px;margin-top:14px}.public-card-section-head{display:block}.public-card-section-actions{justify-content:flex-end;margin-top:10px}.public-flyer-slide-copy{max-width:75%}.public-flyer-slide-copy strong{font-size:29px}.public-flyer-slide-copy span{font-size:10px}.flyer-editor-grid{grid-template-columns:1fr}.flyer-editor-field.wide{grid-column:auto}.flyer-admin-row{grid-template-columns:72px minmax(0,1fr)}.flyer-admin-row-thumb{width:72px;height:48px}.flyer-admin-row-actions{grid-column:1/-1;justify-content:flex-end}.public-recent-order{gap:8px}.public-recent-order-total{font-size:15px}}
+  @media(prefers-reduced-motion:reduce){.public-flyers-track{transition:none}.public-section-nav,.public-recent-orders-view-all{transition:none}}
+</style>
