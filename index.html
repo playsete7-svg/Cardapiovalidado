@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Bridge: config compartilhado + bridges loja→central motoboy -->
+<script src="supremo-bridge-config.js"></script>
+<script src="bridge-store-to-motoboy.js"></script>
+<script src="bridge-store-motoboy-listener.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script>
 let salesChartInstance = null; // Variável global para a instância do Chart.js
@@ -5104,6 +5108,17 @@ import {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// === BRIDGE: Config compartilhado + bridges da loja ===
+// Bridge 2: Criar corrida na central de motoboys
+// Bridge 3: Escutar status das corridas
+// (carregados via <script> no <head> — verifique se supremo-bridge-config.js,
+//  bridge-store-to-motoboy.js e bridge-store-motoboy-listener.js estão no mesmo diretório)
+// Iniciar listener de corridas após o Firebase estar pronto:
+if (window.initMotoboyRideListener) {
+  setTimeout(() => { try { window.initMotoboyRideListener(); } catch(e) { console.warn('[Bridge3] Listener nao iniciado:', e); } }, 2000);
+}
+// === FIM BRIDGE ===
 // Documento único para o cardápio e configurações da loja
 const menuDocRef = doc(db, "config", "cardapioData"); 
 // Coleção para pedidos, permitindo queries e tempo real
@@ -6221,7 +6236,19 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
     }
     // === FIM INTEGRAÇÃO ===
 
-    if (newStatus !== 'pending') {
+    // === BRIDGE 2: Solicitar motoboy do marketplace quando pedido fica pronto ===
+    if (newStatus === 'ready_for_delivery') {
+      const dispatchMode = String(currentOrder.dispatchMode || 'marketplace');
+      const hasLocalMotoboy = Boolean(currentOrder.motoboyId);
+      if ((dispatchMode === 'marketplace' || dispatchMode === 'hybrid') && !hasLocalMotoboy) {
+        if (window.requestMarketplaceCourier) {
+          try { await window.requestMarketplaceCourier(currentOrder); } catch(e) { console.warn('[Bridge2] Falha ao solicitar motoboy da central:', e); }
+        }
+      }
+    }
+    // === FIM BRIDGE 2 ===
+
+    if (newStatus === 'cancelled') {
       let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
       pendingOrders = pendingOrders.filter(id => id !== orderId);
       localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
