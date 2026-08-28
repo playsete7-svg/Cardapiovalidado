@@ -12,6 +12,7 @@
 <script src="supremo-bridge-config.js"></script>
 <script src="bridge-store-to-motoboy.js"></script>
 <script src="bridge-store-motoboy-listener.js"></script>
+<script src="bridge-store-to-all.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script>
 let salesChartInstance = null; // Variável global para a instância do Chart.js
@@ -9821,6 +9822,8 @@ window.handleStatusUpdate = function(orderId, newStatus) {
       orders[orderIndex].status = newStatus;
       // 3. Re-renderiza o quadro Kanban para mover o card
       renderAdminOrders();
+      // 4. Replica para Gestor Geral e Central de Clientes
+      if(window.syncOrderStatusToGestorAndCRM)syncOrderStatusToGestorAndCRM(orderId,newStatus,orders[orderIndex]);
     })
     .catch(error => {
       console.error("Erro ao atualizar status:", error);
@@ -18513,7 +18516,40 @@ updatedAt:changedAt };
       statusUpdate.__deliveryModuleWrapped = true;
       window.handleStatusUpdate = statusUpdate;
     }
-  }
+
+    // === BRIDGE 2 CORRIGIDA: interceptar quando pedido fica pronto ===
+    // O wrapper acima faz updateDoc direto sem passar por updateOrderStatus,
+    // entao a Bridge 2 original nunca dispara. Interceptamos o onSnapshot
+    // da loja para detectar ready_for_delivery e criar a corrida na central.
+    if (!window.__bridge2OrderWatcher && window.db && window.initMotoboyRideListener) {
+      window.__bridge2OrderWatcher = true;
+      const _origOnSnapshot = window.onSnapshot;
+      if (typeof _origOnSnapshot === 'function') {
+        // Nao podemos interceptar onSnapshot facilmente, entao usamos polling leve
+        // Verifica a cada 5s se ha pedidos ready_for_delivery sem rideId
+        setInterval(async () => {
+          try {
+            if (!window.db || !window.collection || !window.getDocs) return;
+            const { query, where } = await import('https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js');
+            const q = query(window.collection(window.db, 'orders'), where('status', '==', 'ready_for_delivery'));
+            const snap = await window.getDocs(q);
+            for (const docSnap of snap.docs) {
+              const order = { id: docSnap.id, ...docSnap.data() };
+              const dispatchMode = String(order.dispatchMode || 'marketplace');
+              const hasRideId = Boolean(order.logistics?.rideId || order.deliveryOffer?.rideId);
+              const hasLocalMotoboy = Boolean(order.motoboyId);
+              if ((dispatchMode === 'marketplace' || dispatchMode === 'hybrid') && !hasRideId && !hasLocalMotoboy) {
+                if (window.requestMarketplaceCourier) {
+                  console.log('[Bridge2] Pedido pronto sem corrida, criando:', order.id);
+                  await window.requestMarketplaceCourier(order);
+                }
+              }
+            }
+          } catch (e) { /* silencioso */ }
+        }, 5000);
+      }
+    }
+    // === FIM BRIDGE 2 CORRIGIDA ===
 
   function setupCustomerTrackerExtension() {
     const tracker = byId('customerOrderTracker');

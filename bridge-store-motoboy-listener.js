@@ -1,26 +1,14 @@
 /**
- * BRIDGE 3: Loja ← Central de Motoboys (Listener de Status)
- * ===========================================================
- * Problema: Quando o motoboy aceita a corrida, chega na loja,
- *   sai para entrega, ou finaliza, o status do pedido na loja
- *   nao atualiza. A loja nao escuta a colecao rides da central.
+ * BRIDGE 3: Loja ← Central de Motoboys (Listener de Status) — VERSAO REST
+ * ========================================================================
+ * Versao anterior usava initializeApp secundario com SDK v12, mas a loja
+ * usa SDK v9.1.0. Versoes diferentes do SDK no mesmo app causam conflito.
+ * Esta versao usa REST polling (fetch) — sem SDK, sem conflito.
  *
- * Solucao: A loja inicializa um app Firebase secundario conectado
- *   a central-de-motoboy e escuta onSnapshot da colecao rides,
- *   filtrando apenas as corridas desta loja (storeId = STORE_ID).
- *   Quando o status muda, atualiza o pedido local.
- *
- * INTEGRACAO:
- *   No Lojas.html, apos a inicializacao do Firebase principal,
- *   adicionar: `initMotoboyRideListener();`
- *
- *   E importar antes do script principal:
- *   <script src="supremo-bridge-config.js"></script>
- *   <script src="bridge-store-to-motoboy.js"></script>
- *   <script src="bridge-store-motoboy-listener.js"></script>
+ * A cada 5s, busca rides da central de motoboy onde storeId = esta loja.
+ * Quando o status muda, atualiza o pedido na loja via updateDoc do SDK da loja.
  */
 
-// Mapa de status da central → status do pedido na loja
 const RIDE_STATUS_MAP = {
   "ready_for_dispatch": { orderStatus: "ready_for_delivery", logisticsStatus: "ride_created", label: "Aguardando motoboy" },
   "offered":            { orderStatus: "ready_for_delivery", logisticsStatus: "ride_offered",  label: "Oferecendo ao motoboy" },
@@ -33,92 +21,86 @@ const RIDE_STATUS_MAP = {
   "exception":          { orderStatus: "exception",           logisticsStatus: "exception",     label: "Exceção logística" },
 };
 
-// Controla se o listener ja foi iniciado
-let motoboyRideUnsubscribe = null;
-let motoboyBridgeApp = null;
-let motoboyBridgeDb = null;
+let ridePollingActive = false;
+let rideLastSeen = {};
 
 /**
- * Inicializa o listener de corridas da central de motoboys.
- * Usa um app Firebase secundario para nao conflitar com o app principal da loja.
+ * Inicia o polling de corridas da central de motoboys via REST API.
+ * Nao depende do Firebase SDK — usa fetch direto.
  */
-async function initMotoboyRideListener() {
-  if (motoboyRideUnsubscribe) {
-    console.log("[Bridge3] Listener ja ativo");
-    return;
-  }
+function initMotoboyRideListener() {
+  if (ridePollingActive) return;
+  ridePollingActive = true;
+  console.log("[Bridge3] Listener REST de corridas ativado para loja:", (window.STORE_IDENTITY || {}).storeId);
 
-  try {
-    // Importar Firebase dinamicamente (usa v12 como os outros modulos)
-    const { initializeApp, getFirestore, collection, query, where, onSnapshot } = await import(
-      "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js"
-    ).then(app => ({
-      initializeApp: app.initializeApp,
-      ...await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js")
-    }));
+  setInterval(async () => {
+    try {
+      const cfg = window.SUPREMO_BRIDGE_CONFIG?.motoboy;
+      if (!cfg || !cfg.apiKey || !cfg.projectId) return;
 
-    // Criar app secundario para a central de motoboys
-    motoboyBridgeApp = initializeApp(SUPREMO_BRIDGE_CONFIG.motoboy, "motoboy-bridge");
-    motoboyBridgeDb = getFirestore(motoboyBridgeApp);
+      // Buscar todas as rides da central via REST
+      const storeId = (window.STORE_IDENTITY || {}).storeId;
+      const url = `https://firestore.googleapis.com/v1/projects/${cfg.projectId}/databases/(default)/documents:runQuery?key=${cfg.apiKey}`;
+      const queryBody = {
+        structuredQuery: {
+          from: [{ collectionId: "rides" }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: "storeId" },
+              op: "EQUAL",
+              value: { stringValue: storeId }
+            }
+          },
+          limit: 50
+        }
+      };
 
-    // Escutar apenas corridas desta loja
-    const ridesRef = query(
-      collection(motoboyBridgeDb, "rides"),
-      where("storeId", "==", STORE_IDENTITY.storeId)
-    );
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(queryBody)
+      });
 
-    motoboyRideUnsubscribe = onSnapshot(
-      ridesRef,
-      (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added" || change.type === "modified") {
-            handleRideUpdate(change.doc.data(), change.type);
-          }
-        });
-      },
-      (error) => {
-        console.warn("[Bridge3] Erro no listener de corridas:", error);
-        // Tentar reconectar apos 10s
-        setTimeout(() => {
-          if (motoboyRideUnsubscribe) {
-            motoboyRideUnsubscribe();
-            motoboyRideUnsubscribe = null;
-            initMotoboyRideListener();
-          }
-        }, 10000);
+      if (!response.ok) return;
+      const results = await response.json();
+
+      for (const row of results) {
+        if (!row.document) continue;
+        const docFields = row.document.fields || {};
+        const ride = window.supremoFirestoreVal({ mapValue: { fields: docFields } });
+        ride.id = String(row.document.name || "").split("/").pop();
+
+        const rideStatus = String(ride.status || "");
+        const orderId = String(ride.orderId || "");
+        if (!orderId || !rideStatus) continue;
+
+        const updateKey = `${ride.id}:${rideStatus}:${ride.updatedAt || ride.timeline?.slice(-1)?.[0]?.at}`;
+        if (rideLastSeen[ride.id] === updateKey) continue;
+        rideLastSeen[ride.id] = updateKey;
+
+        handleRideUpdate(ride);
       }
-    );
-
-    console.log("[Bridge3] Listener de corridas ativado para loja:", STORE_IDENTITY.storeId);
-  } catch (error) {
-    console.error("[Bridge3] Falha ao iniciar listener:", error);
-    // Fallback: polling via REST a cada 15s
-    startRidePolling();
-  }
+    } catch (e) {
+      // Silencioso — vai tentar de novo no proximo ciclo
+    }
+  }, 5000);
 }
 
 /**
  * Processa atualizacao de status de uma corrida e atualiza o pedido na loja.
  */
-async function handleRideUpdate(ride, changeType) {
+async function handleRideUpdate(ride) {
   const orderId = String(ride.orderId || "");
   const rideStatus = String(ride.status || "");
   const mapping = RIDE_STATUS_MAP[rideStatus];
 
-  if (!mapping || !orderId) {
-    console.log("[Bridge3] Status sem mapeamento:", rideStatus, "para pedido", orderId);
-    return;
-  }
+  if (!mapping || !orderId) return;
 
-  console.log(`[Bridge3] Corrida ${ride.id} → ${rideStatus} (${mapping.label}) para pedido ${orderId}`);
+  console.log(`[Bridge3] Corrida ${ride.id} -> ${rideStatus} (${mapping.label}) para pedido ${orderId}`);
 
-  // Atualizar o pedido no Firestore da loja
+  // Atualizar o pedido no Firestore da loja usando o SDK da loja (v9.1.0)
   try {
-    if (typeof window !== "undefined" && window.db) {
-      const { doc, updateDoc, serverTimestamp } = await import(
-        "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js"
-      );
-
+    if (typeof window !== "undefined" && window.db && window.doc && window.updateDoc) {
       const update = {
         "logistics.status": mapping.logisticsStatus,
         "logistics.rideId": ride.id || null,
@@ -127,108 +109,67 @@ async function handleRideUpdate(ride, changeType) {
         "deliveryOffer.status": rideStatus,
         "deliveryOffer.courierId": ride.selectedCourierId || null,
         "deliveryOffer.courierName": ride.selectedCourierName || null,
-        updatedAt: new Date(),
+        updatedAt: new Date().toISOString(),
       };
 
-      // So mudar o status principal do pedido em transicoes importantes
+      // So mudar o status principal em transicoes importantes
       if (["in_transit", "delivered", "cancelled", "cancellation_requested", "exception"].includes(rideStatus)) {
         update.status = mapping.orderStatus;
-
-        // Adicionar ao historico
-        update.statusHistory = [...(await getOrderHistory(orderId)), {
-          at: Date.now(),
-          status: mapping.orderStatus,
-          message: mapping.label + (ride.selectedCourierName ? ` — Motoboy: ${ride.selectedCourierName}` : ""),
-        }];
-
-        // Marcar deliveredAt se entregue
         if (rideStatus === "delivered") {
-          update.deliveredAt = new Date();
+          update.deliveredAt = new Date().toISOString();
+        }
+
+        // Adicionar notificacao ao cliente
+        if (rideStatus === "in_transit" && ride.selectedCourierName) {
+          update.customerNotification = {
+            type: "out_for_delivery",
+            title: "Pedido saiu para entrega",
+            message: `O motoboy ${ride.selectedCourierName} já saiu para entregar o seu pedido.`,
+            createdAt: new Date().toISOString(),
+            read: false
+          };
+        }
+        if (rideStatus === "delivered") {
+          update.customerNotification = {
+            type: "order_delivered",
+            title: "Pedido entregue",
+            message: "Seu pedido foi entregue. Obrigado!",
+            createdAt: new Date().toISOString(),
+            read: false
+          };
         }
       }
 
-      await updateDoc(doc(window.db, "orders", orderId), update);
+      await window.updateDoc(window.doc(window.db, "orders", orderId), update);
     }
   } catch (error) {
     console.warn("[Bridge3] Nao foi possivel atualizar pedido local:", error);
   }
 
-  // Notificar a UI (se a loja tiver um sistema de notificacao)
+  // Notificar a UI
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent("supremo:ride-update", {
       detail: { orderId, rideId: ride.id, status: rideStatus, label: mapping.label, courier: ride.selectedCourierName }
     }));
   }
 
-  // Publicar evento no gestor (apenas em transicoes importantes)
-  if (["accepted", "in_transit", "delivered", "cancelled"].includes(rideStatus)) {
-    await supremoPublishEvent(
-      "delivery",
-      `ride_${rideStatus}`,
-      rideStatus === "delivered" ? "info" : rideStatus === "cancelled" ? "warning" : "info",
-      `Corrida ${ride.id} ${mapping.label} — Pedido ${orderId}`,
-      ride.id,
-      { orderId, storeId: STORE_IDENTITY.storeId, courierId: ride.selectedCourierId }
-    );
-  }
-}
-
-/**
- * Le o historico atual do pedido (helper).
- */
-async function getOrderHistory(orderId) {
-  try {
-    const { doc, getDoc } = await import(
-      "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js"
-    );
-    const snap = await getDoc(doc(window.db, "orders", String(orderId)));
-    if (snap.exists()) {
-      return snap.data().statusHistory || [];
-    }
-  } catch (e) {
-    console.warn("[Bridge3] Erro ao ler historico:", e);
-  }
-  return [];
-}
-
-/**
- * Fallback: polling de corridas via REST a cada 15s
- * (usado se o SDK secundario falhar)
- */
-function startRidePolling() {
-  console.log("[Bridge3] Iniciando polling de corridas (fallback)");
-  let lastUpdate = {};
-
-  setInterval(async () => {
+  // Publicar evento no gestor
+  if (["accepted", "in_transit", "delivered", "cancelled"].includes(rideStatus) && window.supremoPublishEvent) {
     try {
-      const rides = await supremoRestReadCollection(
-        MOTOBOY_CFG.projectId,
-        MOTOBOY_CFG.apiKey,
-        "rides"
+      await window.supremoPublishEvent(
+        "delivery", `ride_${rideStatus}`,
+        rideStatus === "cancelled" ? "warning" : "info",
+        `Corrida ${ride.id} ${mapping.label} — Pedido ${orderId}`,
+        ride.id,
+        { orderId, storeId: (window.STORE_IDENTITY || {}).storeId, courierId: ride.selectedCourierId }
       );
-
-      for (const ride of rides) {
-        if (ride.storeId !== STORE_IDENTITY.storeId) continue;
-        const updateKey = `${ride.id}:${ride.status}:${ride.updatedAt}`;
-        if (lastUpdate[ride.id] === updateKey) continue;
-        lastUpdate[ride.id] = updateKey;
-        handleRideUpdate(ride, "modified");
-      }
-    } catch (e) {
-      console.warn("[Bridge3] Polling falhou:", e);
-    }
-  }, 15000);
+    } catch (e) { /* silencioso */ }
+  }
 }
 
-/**
- * Para o listener (se necessario).
- */
 function stopMotoboyRideListener() {
-  if (motoboyRideUnsubscribe) {
-    motoboyRideUnsubscribe();
-    motoboyRideUnsubscribe = null;
-    console.log("[Bridge3] Listener parado");
-  }
+  ridePollingActive = false;
+  console.log("[Bridge3] Listener parado");
 }
 
 if (typeof window !== "undefined") {

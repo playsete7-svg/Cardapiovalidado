@@ -108,22 +108,26 @@ async function requestMarketplaceCourier(order) {
     );
 
     // Atualizar o pedido na loja com o rideId
-    if (typeof window !== "undefined" && window.db) {
+    // USAR window.doc/window.updateDoc (SDK v9 da loja) — NAO importar v12
+    if (typeof window !== "undefined" && window.db && window.doc && window.updateDoc) {
       try {
-        const { doc, updateDoc, serverTimestamp } = await import(
-          "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js"
-        );
-        await updateDoc(doc(window.db, "orders", String(order.id)), {
+        await window.updateDoc(window.doc(window.db, "orders", String(order.id)), {
           "logistics.rideId": rideId,
           "logistics.status": "ride_created",
           "deliveryOffer.status": "marketplace_requested",
           "deliveryOffer.rideId": rideId,
           "deliveryOffer.requestedAt": now,
-          updatedAt: new Date(),
+          updatedAt: now,
         });
+        console.log("[Bridge2] Pedido local atualizado com rideId:", rideId);
       } catch (e) {
         console.warn("[Bridge2] Nao foi possivel atualizar pedido local:", e);
       }
+    }
+
+    // Replicar status do pedido para Gestor e CRM
+    if (window.syncOrderStatusToGestorAndCRM) {
+      try { await window.syncOrderStatusToGestorAndCRM(order.id, "ready_for_delivery", order); } catch (e) {}
     }
 
     // Publicar evento no gestor
