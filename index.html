@@ -6541,6 +6541,22 @@ async function doRegister(){
     };
     users.push(user);
     saveUsers();
+
+    // Espelha o cadastro no Firebase para que o CRM de Clientes e o marketing place recebam o perfil.
+    // O hash da senha permanece apenas no armazenamento local da loja.
+    try {
+        if (typeof setDoc === 'function' && typeof doc === 'function' && typeof db !== 'undefined') {
+            const { passwordHash, password, ...cloudUser } = user;
+            await setDoc(doc(db, 'users', user.id), {
+                ...cloudUser,
+                source: 'loja',
+                syncedAt: typeof serverTimestamp === 'function' ? serverTimestamp() : new Date().toISOString()
+            }, { merge: true });
+        }
+    } catch (firebaseError) {
+        console.warn('Cadastro local concluído, mas não foi possível sincronizar o cliente com o Firebase:', firebaseError);
+    }
+
     const sessionUser = saveLocalSession(user);
     applyLocalSession(sessionUser);
     document.querySelector('#regPass').value = '';
