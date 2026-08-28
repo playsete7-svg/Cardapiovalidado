@@ -3516,7 +3516,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
             <button id="loginCancel" class="pill">Cancelar</button>
             <button id="loginSubmit" class="btn">Entrar</button>
           </div>
-          <button type="button" id="storeCourierInvite" class="store-courier-invite">Seja um entregador</button>
+          <button type="button" id="storeCourierInvite" class="store-courier-invite">Seja entregador parceiro · faça parte do ecossistema Supremo</button>
         </div>
 
         <div id="registerForm" class="hidden">
@@ -18017,6 +18017,20 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
         motoboyLocationHistory: Array.isArray(order?.motoboyLocationHistory) && order.motoboyLocationHistory.length ? order.motoboyLocationHistory : [next],
         motoboyLastSeenAt: next.updatedAt,
         locationSharing: 'active',
+        updatedAt: next.updatedAt
+      });
+      // A posição do entregador precisa existir também no registro compartilhado
+      // de `motoboys`; o mapa administrativo não depende de uma corrida específica.
+      await window.updateDoc(window.doc(window.db, 'motoboys', state.session.motoboyId), {
+        location: next,
+        motoboyLocation: next,
+        lastLatitude: next.latitude,
+        lastLongitude: next.longitude,
+        lastLocationAt: next.updatedAt,
+        lastSeenAt: next.updatedAt,
+        isOnline: true,
+        presence: 'online',
+        status: 'entrega',
         updatedAt: next.updatedAt
       });
       const label = byId('motoLastLocation'); if (label) label.textContent = new Date(next.updatedAt).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
