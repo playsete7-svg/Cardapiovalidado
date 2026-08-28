@@ -22,6 +22,7 @@ const RIDE_STATUS_MAP = {
 };
 
 let ridePollingActive = false;
+let ridePollingTimer = null;
 let rideLastSeen = {};
 
 /**
@@ -32,58 +33,36 @@ function initMotoboyRideListener() {
   if (ridePollingActive) return;
   ridePollingActive = true;
   console.log("[Bridge3] Listener REST de corridas ativado para loja:", (window.STORE_IDENTITY || {}).storeId);
-
-  setInterval(async () => {
+  const poll = async () => {
+    if (!ridePollingActive) return;
     try {
       const cfg = window.SUPREMO_BRIDGE_CONFIG?.motoboy;
-      if (!cfg || !cfg.apiKey || !cfg.projectId) return;
-
-      // Buscar todas as rides da central via REST
-      const storeId = (window.STORE_IDENTITY || {}).storeId;
+      const storeId = String((window.STORE_IDENTITY || {}).storeId || "").trim();
+      if (!cfg?.apiKey || !cfg?.projectId || !storeId) return;
       const url = `https://firestore.googleapis.com/v1/projects/${cfg.projectId}/databases/(default)/documents:runQuery?key=${cfg.apiKey}`;
-      const queryBody = {
-        structuredQuery: {
-          from: [{ collectionId: "rides" }],
-          where: {
-            fieldFilter: {
-              field: { fieldPath: "storeId" },
-              op: "EQUAL",
-              value: { stringValue: storeId }
-            }
-          },
-          limit: 50
-        }
-      };
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(queryBody)
-      });
-
-      if (!response.ok) return;
+      const queryBody = { structuredQuery: { from: [{ collectionId: "rides" }], where: { fieldFilter: { field: { fieldPath: "storeId" }, op: "EQUAL", value: { stringValue: storeId } } }, limit: 50 } };
+      const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(queryBody) });
+      if (!response.ok) throw new Error(`Central de motoboys ${response.status}`);
       const results = await response.json();
-
       for (const row of results) {
         if (!row.document) continue;
-        const docFields = row.document.fields || {};
-        const ride = window.supremoFirestoreVal({ mapValue: { fields: docFields } });
+        const ride = window.supremoFirestoreVal({ mapValue: { fields: row.document.fields || {} } });
         ride.id = String(row.document.name || "").split("/").pop();
-
         const rideStatus = String(ride.status || "");
         const orderId = String(ride.orderId || "");
         if (!orderId || !rideStatus) continue;
-
-        const updateKey = `${ride.id}:${rideStatus}:${ride.updatedAt || ride.timeline?.slice(-1)?.[0]?.at}`;
+        const updateKey = `${ride.id}:${rideStatus}:${ride.updatedAt || ride.timeline?.slice(-1)?.[0]?.at || ""}`;
         if (rideLastSeen[ride.id] === updateKey) continue;
         rideLastSeen[ride.id] = updateKey;
-
         handleRideUpdate(ride);
       }
-    } catch (e) {
-      // Silencioso — vai tentar de novo no proximo ciclo
+    } catch (error) {
+      console.warn("[Bridge3] Falha temporária ao consultar rides:", error?.message || error);
+    } finally {
+      if (ridePollingActive) ridePollingTimer = setTimeout(poll, 5000);
     }
-  }, 5000);
+  };
+  poll();
 }
 
 /**
@@ -93,82 +72,54 @@ async function handleRideUpdate(ride) {
   const orderId = String(ride.orderId || "");
   const rideStatus = String(ride.status || "");
   const mapping = RIDE_STATUS_MAP[rideStatus];
-
   if (!mapping || !orderId) return;
 
   console.log(`[Bridge3] Corrida ${ride.id} -> ${rideStatus} (${mapping.label}) para pedido ${orderId}`);
+  const courierId = ride.selectedCourierId || ride.offerCourierId || null;
+  const courierName = ride.selectedCourierName || ride.offerCourierName || null;
+  const update = {
+    "logistics.status": mapping.logisticsStatus,
+    "logistics.rideId": ride.id || null,
+    "logistics.courierId": courierId,
+    "logistics.courierName": courierName,
+    "deliveryOffer.status": rideStatus,
+    "deliveryOffer.courierId": courierId,
+    "deliveryOffer.courierName": courierName,
+    updatedAt: new Date().toISOString(),
+  };
+  if (["in_transit", "delivered", "cancelled", "cancellation_requested", "exception"].includes(rideStatus)) {
+    update.status = mapping.orderStatus;
+    if (rideStatus === "delivered") update.deliveredAt = new Date().toISOString();
+    if (rideStatus === "in_transit" && courierName) update.customerNotification = { type: "out_for_delivery", title: "Pedido saiu para entrega", message: `O motoboy ${courierName} já saiu para entregar o seu pedido.`, createdAt: new Date().toISOString(), read: false };
+    if (rideStatus === "delivered") update.customerNotification = { type: "order_delivered", title: "Pedido entregue", message: "Seu pedido foi entregue. Obrigado!", createdAt: new Date().toISOString(), read: false };
+  }
 
-  // Atualizar o pedido no Firestore da loja usando o SDK da loja (v9.1.0)
   try {
     if (typeof window !== "undefined" && window.db && window.doc && window.updateDoc) {
-      const update = {
-        "logistics.status": mapping.logisticsStatus,
-        "logistics.rideId": ride.id || null,
-        "logistics.courierId": ride.selectedCourierId || null,
-        "logistics.courierName": ride.selectedCourierName || null,
-        "deliveryOffer.status": rideStatus,
-        "deliveryOffer.courierId": ride.selectedCourierId || null,
-        "deliveryOffer.courierName": ride.selectedCourierName || null,
-        updatedAt: new Date().toISOString(),
-      };
-
-      // So mudar o status principal em transicoes importantes
-      if (["in_transit", "delivered", "cancelled", "cancellation_requested", "exception"].includes(rideStatus)) {
-        update.status = mapping.orderStatus;
-        if (rideStatus === "delivered") {
-          update.deliveredAt = new Date().toISOString();
-        }
-
-        // Adicionar notificacao ao cliente
-        if (rideStatus === "in_transit" && ride.selectedCourierName) {
-          update.customerNotification = {
-            type: "out_for_delivery",
-            title: "Pedido saiu para entrega",
-            message: `O motoboy ${ride.selectedCourierName} já saiu para entregar o seu pedido.`,
-            createdAt: new Date().toISOString(),
-            read: false
-          };
-        }
-        if (rideStatus === "delivered") {
-          update.customerNotification = {
-            type: "order_delivered",
-            title: "Pedido entregue",
-            message: "Seu pedido foi entregue. Obrigado!",
-            createdAt: new Date().toISOString(),
-            read: false
-          };
-        }
-      }
-
       await window.updateDoc(window.doc(window.db, "orders", orderId), update);
+    } else if (window.supremoRestMergeWrite && window.firebaseConfig?.projectId && window.firebaseConfig?.apiKey) {
+      await window.supremoRestMergeWrite(window.firebaseConfig.projectId, window.firebaseConfig.apiKey, "orders", orderId, update);
+    }
+    if (window.syncOrderStatusToGestorAndCRM) {
+      try { await window.syncOrderStatusToGestorAndCRM(orderId, mapping.orderStatus, { id: orderId, storeId: (window.STORE_IDENTITY || {}).storeId, logistics: update }); } catch (_) {}
     }
   } catch (error) {
     console.warn("[Bridge3] Nao foi possivel atualizar pedido local:", error);
   }
 
-  // Notificar a UI
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("supremo:ride-update", {
-      detail: { orderId, rideId: ride.id, status: rideStatus, label: mapping.label, courier: ride.selectedCourierName }
-    }));
+    window.dispatchEvent(new CustomEvent("supremo:ride-update", { detail: { orderId, rideId: ride.id, status: rideStatus, label: mapping.label, courier: courierName } }));
   }
-
-  // Publicar evento no gestor
   if (["accepted", "in_transit", "delivered", "cancelled"].includes(rideStatus) && window.supremoPublishEvent) {
     try {
-      await window.supremoPublishEvent(
-        "delivery", `ride_${rideStatus}`,
-        rideStatus === "cancelled" ? "warning" : "info",
-        `Corrida ${ride.id} ${mapping.label} — Pedido ${orderId}`,
-        ride.id,
-        { orderId, storeId: (window.STORE_IDENTITY || {}).storeId, courierId: ride.selectedCourierId }
-      );
-    } catch (e) { /* silencioso */ }
+      await window.supremoPublishEvent("delivery", `ride_${rideStatus}`, rideStatus === "cancelled" ? "warning" : "info", `Corrida ${ride.id} ${mapping.label} — Pedido ${orderId}`, ride.id, { orderId, storeId: (window.STORE_IDENTITY || {}).storeId, courierId });
+    } catch (_) {}
   }
 }
 
 function stopMotoboyRideListener() {
   ridePollingActive = false;
+  if (ridePollingTimer) { clearTimeout(ridePollingTimer); ridePollingTimer = null; }
   console.log("[Bridge3] Listener parado");
 }
 

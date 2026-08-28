@@ -1684,7 +1684,7 @@ window.printOrder = function(orderId) {
           .item-line { margin-left: 5px; }
           .footer-line { display: flex; justify-content: space-between; }
           .item-addon { margin-left: 10px; }
-        </style>
+        .store-courier-invite{display:block;width:100%;margin:14px 0 0;padding:8px 0;border:0;background:transparent;color:#a89488;font-size:11px;text-align:center;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.store-courier-invite:hover{color:#ff9d72}.partner-motoboy-list{display:grid;gap:8px;margin-top:14px}.partner-motoboy-option{display:flex;align-items:center;gap:10px;width:100%;padding:11px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.03);color:inherit;text-align:left;cursor:pointer}.partner-motoboy-option:hover{border-color:#ff9d72;background:rgba(255,157,114,.08)}.partner-motoboy-option>span:nth-child(2){flex:1}.partner-motoboy-option b,.partner-motoboy-option small{display:block}.partner-motoboy-option small{margin-top:3px;color:#9f9287;font-size:10px}.partner-motoboy-option>strong{color:#ff9d72;font-size:11px}.partner-avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:10px;background:rgba(255,157,114,.15);color:#ff9d72;font-weight:800}.partner-motoboy-search{border-color:#ff9d72!important;color:#a55230!important;background:#fff8f3!important;font-size:10px!important}.partner-application-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.partner-application-grid .wide{grid-column:1/-1}.partner-application-consent{display:flex;align-items:flex-start;gap:8px;margin-top:12px;color:#9f9287;font-size:10px}.partner-application-consent input{width:16px;margin-top:1px}.partner-application-form .form-group{margin-bottom:11px}.partner-application-form textarea{min-height:82px;resize:vertical}</style>
       
 
 
@@ -3516,6 +3516,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
             <button id="loginCancel" class="pill">Cancelar</button>
             <button id="loginSubmit" class="btn">Entrar</button>
           </div>
+          <button type="button" id="storeCourierInvite" class="store-courier-invite">Seja entregador parceiro · faça parte do ecossistema Supremo</button>
         </div>
 
         <div id="registerForm" class="hidden">
@@ -3640,6 +3641,36 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     </div>
 
     
+    <div class="modal" id="partnerApplicationModal">
+      <div class="card" role="dialog" aria-modal="true" aria-labelledby="partnerApplicationTitle" style="max-width:620px">
+        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3 id="partnerApplicationTitle">Cadastro de motoboy parceiro</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">Uma ficha mais completa ajuda a Central a aprovar sua conta com segurança.</p></div><button type="button" class="pill" id="partnerApplicationClose" aria-label="Fechar">&times;</button></div>
+        <form id="partnerApplicationForm" class="partner-application-form">
+          <div class="partner-application-grid">
+            <div class="form-group wide"><label for="partnerAppName">Nome completo</label><input id="partnerAppName" required maxlength="120" autocomplete="name" placeholder="Como aparecerá para lojas e clientes"></div>
+            <div class="form-group"><label for="partnerAppPhone">WhatsApp</label><input id="partnerAppPhone" required inputmode="tel" autocomplete="tel" placeholder="(27) 99999-9999"></div>
+            <div class="form-group"><label for="partnerAppEmail">E-mail</label><input id="partnerAppEmail" required type="email" autocomplete="email" placeholder="voce@email.com"></div>
+            <div class="form-group"><label for="partnerAppCpf">CPF</label><input id="partnerAppCpf" required inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></div>
+            <div class="form-group"><label for="partnerAppCity">Cidade / região</label><input id="partnerAppCity" required maxlength="80" placeholder="Onde você atende?"></div>
+            <div class="form-group"><label for="partnerAppVehicle">Veículo</label><select id="partnerAppVehicle"><option>Moto</option><option>Bicicleta</option><option>Carro</option></select></div>
+            <div class="form-group"><label for="partnerAppModel">Modelo</label><input id="partnerAppModel" maxlength="80" placeholder="Ex.: Honda CG 160"></div>
+            <div class="form-group"><label for="partnerAppPlate">Placa</label><input id="partnerAppPlate" maxlength="8" autocapitalize="characters" placeholder="ABC1D23"></div>
+            <div class="form-group"><label for="partnerAppAvailability">Disponibilidade</label><select id="partnerAppAvailability"><option>Manhã e tarde</option><option>Tarde e noite</option><option>Integral</option><option>Fins de semana</option></select></div>
+            <div class="form-group wide"><label for="partnerAppExperience">Experiência e observações</label><textarea id="partnerAppExperience" maxlength="800" placeholder="Conte brevemente sua experiência com entregas e a região que conhece."></textarea></div>
+          </div>
+          <label class="partner-application-consent"><input id="partnerAppConsent" type="checkbox" required><span>Autorizo o uso destes dados para análise cadastral, contato operacional e criação da conta após aprovação.</span></label>
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button type="button" class="pill" id="partnerApplicationCancel">Cancelar</button><button type="submit" class="btn">Enviar ficha</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="partnerMotoboyModal">
+      <div class="card" role="dialog" aria-modal="true" style="max-width:520px">
+        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3>Buscar motoboys parceiros</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">Mostramos somente entregadores aprovados e disponíveis na Central.</p></div><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()" aria-label="Fechar">&times;</button></div>
+        <div id="partnerMotoboyList" class="partner-motoboy-list"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:15px"><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()">Cancelar</button></div>
+      </div>
+    </div>
+
     <!-- Modal Cadastro Motoboy -->
     <div class="modal" id="motoboyModal">
       <div class="card motoboy-form-card" role="dialog" aria-modal="true" aria-labelledby="motoboyModalTitle" style="max-width:620px">
@@ -5109,6 +5140,11 @@ import {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+window.db = db;
+window.doc = doc;
+window.updateDoc = updateDoc;
+window.firebaseConfig = firebaseConfig;
+window.configureStoreIdentity?.({ storeId: `store-${firebaseConfig.projectId}` });
 
 // === BRIDGE: Config compartilhado + bridges da loja ===
 // Bridge 2: Criar corrida na central de motoboys
@@ -10090,11 +10126,12 @@ function renderAdminOrders(){
     const operationalControls = internalOrder
       ? `<span class="internal-order-badge" style="display:inline-flex;align-items:center;padding:5px 8px;border:1px solid rgba(217,154,104,.38);border-radius:5px;color:#9a603f;background:rgba(217,154,104,.1);font-size:11px;">${escapeOrderText(order.source === 'garcom' ? '🍽️ Pedido do salão' : '▣ Pedido do PDV')}</span>`
       : (normalizedStatus === 'ready_for_delivery' ? `
-            <div class="motoboy-select-wrapper" style="display: inline-block; margin-right: 5px;">
-              <select class="pill motoboy-select" aria-label="Selecionar motoboy" onclick="event.stopPropagation()" onchange="event.stopPropagation(); window._updateOrderMotoboy && window._updateOrderMotoboy('${order.id}', this.value)" style="padding: 5px 8px; border: 1px solid #03a9f4; border-radius: 5px; cursor: pointer; background: #fff; color: #03a9f4;">
-                <option value="">Motoboy: — Selecionar —</option>
-                ${(motoboys||[]).filter(isMotoboySelectable).map(m => `<option value="${m.id}" ${order.motoboyId === m.id ? 'selected' : ''}>${m.name} · ${automaticMotoboyStatus(m) === 'entrega' ? 'Em entrega' : 'Disponível'}</option>`).join('') || '<option value="" disabled>Nenhum motoboy conectado</option>'}
+            <div class="motoboy-select-wrapper" style="display: inline-flex; flex-wrap:wrap; gap:5px; margin-right: 5px;">
+              <select class="pill motoboy-select" aria-label="Selecionar motoboy da loja" onclick="event.stopPropagation()" onchange="event.stopPropagation(); window._updateOrderMotoboy && window._updateOrderMotoboy('${order.id}', this.value)" style="padding: 5px 8px; border: 1px solid #03a9f4; border-radius: 5px; cursor: pointer; background: #fff; color: #03a9f4;">
+                <option value="">Motoboy da loja: — Selecionar —</option>
+                ${(motoboys||[]).filter(isMotoboySelectable).map(m => `<option value="${m.id}" ${order.motoboyId === m.id ? 'selected' : ''}>${m.name} · ${automaticMotoboyStatus(m) === 'entrega' ? 'Em entrega' : 'Disponível'}</option>`).join('') || '<option value="" disabled>Nenhum motoboy da loja conectado</option>'}
               </select>
+              <button type="button" class="pill partner-motoboy-search" onclick="event.stopPropagation(); window.openPartnerMotoboyPicker && window.openPartnerMotoboyPicker('${order.id}')">Buscar parceiros disponíveis</button>
             </div>` : order.motoboyName ? `<span class="order-motoboy-assigned" style="display:inline-flex;align-items:center;padding:5px 8px;border:1px solid rgba(90,160,120,.35);border-radius:5px;color:#3f8059;background:rgba(90,160,120,.08);font-size:11px;">🏍️ ${escapeOrderText(order.motoboyName)} em entrega</span>` : '');
     const storeChatControl = !internalOrder && order.userId ? `<button type='button' class='order-chat-admin-btn' data-order-chat-open='1' data-order-chat-id='${escapeOrderText(order.id)}' data-order-chat-role='store' onclick='event.stopPropagation()'>💬 Chat do pedido</button>` : '';
     const timelineControl = internalOrder ? '' : `<button type='button' class='history-order-btn' style='background:#9c27b0;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); showOrderTimeline("${order.id}")'>📜 Histórico</button>`;
@@ -12230,6 +12267,11 @@ function initListeners(){
   });
   document.querySelector("#tabLogin").addEventListener("click", showLoginForm);
   document.querySelector("#tabRegister").addEventListener("click", showRegisterForm);
+  const openPartnerApplication = () => { document.querySelector("#authModal")?.classList.remove("open"); document.querySelector("#partnerApplicationModal")?.classList.add("open"); document.querySelector("#partnerAppName")?.focus(); };
+  document.querySelector("#storeCourierInvite")?.addEventListener("click", openPartnerApplication);
+  document.querySelector("#partnerApplicationClose")?.addEventListener("click", () => document.querySelector("#partnerApplicationModal")?.classList.remove("open"));
+  document.querySelector("#partnerApplicationCancel")?.addEventListener("click", () => document.querySelector("#partnerApplicationModal")?.classList.remove("open"));
+  document.querySelector("#partnerApplicationForm")?.addEventListener("submit", async event => { event.preventDefault(); const form = event.currentTarget; const name = document.querySelector("#partnerAppName")?.value.trim() || ""; const phone = document.querySelector("#partnerAppPhone")?.value.trim() || ""; const phoneNormalized = phone.replace(/\D/g, ""); const cpf = (document.querySelector("#partnerAppCpf")?.value || "").replace(/\D/g, ""); const city = document.querySelector("#partnerAppCity")?.value.trim() || ""; if(!name || name.split(/\s+/).length < 2 || phoneNormalized.length < 8 || cpf.length !== 11 || !city || !document.querySelector("#partnerAppConsent")?.checked){ alert("Preencha nome completo, WhatsApp, CPF, cidade e aceite o termo."); return; } const applicationId = `store_app_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; const application = { id:applicationId, name, phone, phoneNormalized, email:(document.querySelector("#partnerAppEmail")?.value || "").trim().toLowerCase(), cpf, city, vehicleType:document.querySelector("#partnerAppVehicle")?.value || "Moto", vehicleModel:document.querySelector("#partnerAppModel")?.value.trim() || "", vehiclePlate:(document.querySelector("#partnerAppPlate")?.value || "").trim().toUpperCase(), availability:document.querySelector("#partnerAppAvailability")?.value || "", experience:(document.querySelector("#partnerAppExperience")?.value || "").trim(), status:"under_review", source:"store_partner_application", storeId:(window.STORE_IDENTITY || {}).storeId || "", storeName:(window.STORE_IDENTITY || {}).storeName || "", createdAt:new Date().toISOString(), updatedAt:new Date().toISOString() }; try { if(!window.supremoRestWrite || !window.SUPREMO_BRIDGE_CONFIG?.motoboy){ throw new Error("Ponte da Central indisponível"); } await window.supremoRestWrite(window.SUPREMO_BRIDGE_CONFIG.motoboy.projectId, window.SUPREMO_BRIDGE_CONFIG.motoboy.apiKey, "courierApplications", applicationId, application); form.reset(); document.querySelector("#partnerApplicationModal")?.classList.remove("open"); alert("Ficha enviada para análise. Após a aprovação, a Central enviará a URL de acesso pelo WhatsApp."); } catch(error) { console.error("Falha ao enviar candidatura de parceiro:", error); alert("Não foi possível enviar a ficha agora. Tente novamente."); } });
   document.querySelector("#loginCancel").addEventListener("click", closeAuthModal);
   document.querySelector("#registerCancel").addEventListener("click", closeAuthModal);
   document.querySelector("#loginSubmit").addEventListener("click", doLogin);
@@ -18568,6 +18610,7 @@ updatedAt:changedAt };
       }
     }
     // === FIM BRIDGE 2 CORRIGIDA ===
+  }
 
   function setupCustomerTrackerExtension() {
     const tracker = byId('customerOrderTracker');

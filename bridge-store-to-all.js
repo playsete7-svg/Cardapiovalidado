@@ -10,6 +10,7 @@
 
 const GESTOR_CFG = SUPREMO_BRIDGE_CONFIG.gestor;
 const CRM_CFG = SUPREMO_BRIDGE_CONFIG.customers;
+const MARKETPLACE_CFG = SUPREMO_BRIDGE_CONFIG.marketplace;
 
 /**
  * Replica atualizacao de status de pedido para Gestor e CRM.
@@ -31,22 +32,22 @@ async function syncOrderStatusToGestorAndCRM(orderId, newStatus, orderData) {
     },
   };
 
-  // Se tiver dados completos, enviar mais informacao
+  // Acrescenta apenas os campos realmente fornecidos; uma atualização logística
+  // parcial nunca pode apagar o snapshot do cliente ou os itens já sincronizados.
   if (orderData) {
-    patch.storeId = orderData.storeId || "";
-    patch.customerSnapshot = orderData.customerSnapshot || {};
-    patch.total = orderData.total || 0;
-    patch.items = orderData.items || [];
-    patch.dispatchMode = orderData.dispatchMode || "marketplace";
+    ["storeId", "customerId", "userId", "userName", "userPhone", "userEmail", "customerSnapshot", "addressSnapshot", "total", "items", "dispatchMode", "logistics", "deliveryOffer"].forEach(key => {
+      if (orderData[key] !== undefined && orderData[key] !== null) patch[key] = orderData[key];
+    });
   }
 
   const targets = [
     { name: "Gestor", cfg: GESTOR_CFG, collection: "orders" },
     { name: "CRM", cfg: CRM_CFG, collection: "orders" },
+    { name: "Marketplace", cfg: MARKETPLACE_CFG, collection: "orders" },
   ];
 
   const results = await Promise.allSettled(
-    targets.map(t => supremoRestWrite(t.cfg.projectId, t.cfg.apiKey, t.collection, orderId, patch))
+    targets.map(t => (window.supremoRestMergeWrite || supremoRestWrite)(t.cfg.projectId, t.cfg.apiKey, t.collection, orderId, patch))
   );
 
   results.forEach((r, i) => {
@@ -87,12 +88,16 @@ async function syncMotoboyToCentral(motoboy) {
     name: motoboy.name || "",
     email: motoboy.email || "",
     phone: motoboy.phone || "",
+    phoneNormalized: motoboy.phoneNormalized || String(motoboy.phone || "").replace(/\D/g, ""),
+    loginNameNormalized: motoboy.loginNameNormalized || String(motoboy.name || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase(),
     vehicleType: motoboy.vehicleType || motoboy.vehicleModel || "Moto",
     vehicleModel: motoboy.vehicleModel || "",
     vehicleColor: motoboy.vehicleColor || "",
     vehiclePlate: motoboy.vehiclePlate || "",
     photo: motoboy.photo || null,
     accountStatus: motoboy.accountStatus || "active",
+    approvalSource: "store",
+    approvedAt: motoboy.approvedAt || new Date().toISOString(),
     status: motoboy.status || "offline",
     isOnline: motoboy.isOnline || false,
     presence: motoboy.presence || "offline",
@@ -107,7 +112,7 @@ async function syncMotoboyToCentral(motoboy) {
   };
 
   try {
-    await supremoRestWrite(cfg.projectId, cfg.apiKey, "motoboys", motoboy.id, payload);
+    await (window.supremoRestMergeWrite || supremoRestWrite)(cfg.projectId, cfg.apiKey, "motoboys", motoboy.id, payload);
     console.log("[Bridge-Motoboy] Motoboy replicado para central:", motoboy.id, motoboy.name);
     return { ok: true };
   } catch (e) {

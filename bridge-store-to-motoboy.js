@@ -31,11 +31,32 @@ const MOTOBOY_CFG = SUPREMO_BRIDGE_CONFIG.motoboy;
 const STORE_IDENTITY = {
   storeId: "store-luk123-b1986",
   storeName: "Hamburgueria do Bairro",
-  storeAddress: "", // Preencher com o endereco da loja
-  storeLat: null,   // Preencher com a latitude
-  storeLng: null,   // Preencher com a longitude
-  storePhone: "",   // WhatsApp da loja
+  storeAddress: "",
+  storeLat: null,
+  storeLng: null,
+  storePhone: "",
 };
+
+function configureStoreIdentity(patch = {}) {
+  Object.assign(STORE_IDENTITY, patch || {});
+  STORE_IDENTITY.storeId = String(STORE_IDENTITY.storeId || "").trim();
+  STORE_IDENTITY.storeName = String(STORE_IDENTITY.storeName || "Loja parceira").trim();
+  if (typeof window !== "undefined") window.STORE_IDENTITY = STORE_IDENTITY;
+  return STORE_IDENTITY;
+}
+
+function currentStoreIdentity(order = {}) {
+  const runtime = (typeof window !== "undefined" && window.SUPREMO_STORE_IDENTITY) || {};
+  return configureStoreIdentity({
+    ...runtime,
+    storeId: runtime.storeId || STORE_IDENTITY.storeId || order.storeId,
+    storeName: runtime.storeName || STORE_IDENTITY.storeName || order.storeSnapshot?.name,
+    storeAddress: runtime.storeAddress || STORE_IDENTITY.storeAddress,
+    storeLat: runtime.storeLat ?? STORE_IDENTITY.storeLat,
+    storeLng: runtime.storeLng ?? STORE_IDENTITY.storeLng,
+    storePhone: runtime.storePhone || STORE_IDENTITY.storePhone || order.storeSnapshot?.whatsapp,
+  });
+}
 
 /**
  * Cria uma corrida no Firebase da Central de Motoboys
@@ -45,8 +66,26 @@ const STORE_IDENTITY = {
  * @returns {Promise<{ok: boolean, rideId?: string, error?: string}>}
  */
 async function requestMarketplaceCourier(order) {
+  if (!order?.id) return { ok: false, error: "Pedido sem identificador" };
+  const identity = currentStoreIdentity(order);
   const rideId = `ride_${order.id}`;
   const now = new Date().toISOString();
+  if (window.supremoRestReadDocument) {
+    try {
+      const existing = await window.supremoRestReadDocument(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, "rides", rideId);
+      if (existing && !["cancelled", "delivered"].includes(String(existing.status || ""))) {
+        if (window.db && window.doc && window.updateDoc) {
+          await window.updateDoc(window.doc(window.db, "orders", String(order.id)), {
+            "logistics.rideId": rideId,
+            "logistics.status": `ride_${existing.status || "created"}`,
+            "deliveryOffer.rideId": rideId,
+            updatedAt: now,
+          });
+        }
+        return { ok: true, rideId, reused: true };
+      }
+    } catch (error) { console.warn("[Bridge2] Verificação da corrida existente falhou:", error?.message || error); }
+  }
 
   // Dados minimos que a central precisa para despachar
   // NAO enviamos itens, valores comerciais, nem dados de pagamento
@@ -55,16 +94,16 @@ async function requestMarketplaceCourier(order) {
     id: rideId,
     orderId: String(order.id),
     orderPublicCode: order.publicCode || "",
-    storeId: STORE_IDENTITY.storeId,
-    storeName: STORE_IDENTITY.storeName,
-    storePhone: STORE_IDENTITY.storePhone || "",
+    storeId: identity.storeId,
+    storeName: identity.storeName,
+    storePhone: identity.storePhone || "",
     status: "ready_for_dispatch",
     // Endereco de coleta (loja)
     pickup: {
-      address: STORE_IDENTITY.storeAddress || "",
-      lat: STORE_IDENTITY.storeLat || null,
-      lng: STORE_IDENTITY.storeLng || null,
-      storeName: STORE_IDENTITY.storeName,
+      address: identity.storeAddress || "",
+      lat: identity.storeLat || null,
+      lng: identity.storeLng || null,
+      storeName: identity.storeName,
     },
     // Endereco de entrega (cliente)
     delivery: {
@@ -94,7 +133,7 @@ async function requestMarketplaceCourier(order) {
     timeline: [{
       at: now,
       status: "ready_for_dispatch",
-      message: `Corrida criada por ${STORE_IDENTITY.storeName} para pedido ${order.publicCode || order.id}`,
+      message: `Corrida criada por ${identity.storeName} para pedido ${order.publicCode || order.id}`,
     }],
   };
 
@@ -137,7 +176,7 @@ async function requestMarketplaceCourier(order) {
       "info",
       `Corrida ${rideId} criada para entrega do pedido ${order.publicCode || order.id}`,
       rideId,
-      { storeId: STORE_IDENTITY.storeId, orderId: order.id }
+      { storeId: identity.storeId, orderId: order.id }
     );
 
     console.log("[Bridge2] Corrida criada na central:", rideId);
@@ -151,7 +190,7 @@ async function requestMarketplaceCourier(order) {
       "error",
       `Falha ao criar corrida para pedido ${order.id}: ${error.message}`,
       order.id,
-      { storeId: STORE_IDENTITY.storeId, error: error.message }
+      { storeId: identity.storeId, error: error.message }
     );
 
     return { ok: false, error: error.message };
@@ -184,8 +223,73 @@ async function cancelMarketplaceRide(rideId, reason) {
   }
 }
 
+
+async function fetchPartnerMotoboys() {
+  const cfg = SUPREMO_BRIDGE_CONFIG.motoboy;
+  if (!cfg?.projectId || !cfg?.apiKey || !window.supremoRestReadCollection) return [];
+  try {
+    const rows = await window.supremoRestReadCollection(cfg.projectId, cfg.apiKey, 'motoboys');
+    const now = Date.now();
+    return rows.filter(item => {
+      const status = String(item.status || item.presence || '').toLowerCase();
+      const seen = item.lastSeenAt ? Date.parse(item.lastSeenAt) : now;
+      return item.active !== false && item.accountStatus !== 'suspended' && item.isOnline === true && ['disponivel','available','online'].includes(status) && (!Number.isFinite(seen) || now - seen < 20 * 60 * 1000);
+    }).map(item => ({ ...item, partner: true }));
+  } catch (error) {
+    console.warn('[Bridge2] Não foi possível consultar motoboys parceiros:', error?.message || error);
+    return [];
+  }
+}
+
+function closePartnerMotoboyPicker() {
+  const modal = document.getElementById('partnerMotoboyModal');
+  if (modal) modal.classList.remove('open');
+}
+
+async function openPartnerMotoboyPicker(orderId) {
+  const order = (Array.isArray(window.orders) ? window.orders : []).find(item => String(item.id) === String(orderId));
+  const modal = document.getElementById('partnerMotoboyModal');
+  const list = document.getElementById('partnerMotoboyList');
+  if (!order || !modal || !list) return;
+  list.innerHTML = '<div class="empty-list">Buscando motoboys parceiros disponíveis…</div>';
+  modal.classList.add('open');
+  const partners = await fetchPartnerMotoboys();
+  if (!partners.length) {
+    list.innerHTML = '<div class="empty-list"><b>Nenhum parceiro disponível agora</b>Os motoboys parceiros precisam estar aprovados e online na Central.</div>';
+    return;
+  }
+  list.innerHTML = partners.map(item => `<button type="button" class="partner-motoboy-option" data-partner-id="${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '')}"><span class="partner-avatar">${String(item.name || 'M').slice(0, 1).toUpperCase()}</span><span><b>${String(item.name || 'Motoboy parceiro').replace(/[&<>"']/g, '')}</b><small>${String(item.vehicleType || item.vehicleModel || 'Veículo não informado').replace(/[&<>"']/g, '')} · Disponível</small></span><strong>Oferecer</strong></button>`).join('');
+  list.querySelectorAll('[data-partner-id]').forEach(button => button.addEventListener('click', async () => {
+    const partner = partners.find(item => String(item.id) === String(button.dataset.partnerId));
+    if (partner) await offerPartnerCourier(order, partner);
+  }));
+}
+
+async function offerPartnerCourier(order, partner) {
+  const modal = document.getElementById('partnerMotoboyModal');
+  const rideId = `ride_${order.id}`;
+  try {
+    const created = await requestMarketplaceCourier({ ...order, dispatchMode: order.dispatchMode || 'hybrid' });
+    if (!created.ok) throw new Error(created.error || 'Corrida não criada');
+    const now = new Date().toISOString();
+    const offer = { status: 'offered', motoboyId: String(partner.id), offeredAt: now, source: 'store_partner_selection' };
+    await (window.supremoRestMergeWrite || supremoRestWrite)(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', created.rideId || rideId, { status: 'offered', offerCourierId: String(partner.id), offerCourierName: partner.name || '', currentOfferId: `offer_${Date.now()}`, offerExpiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(), deliveryOffer: offer, storeSelectionMode: 'partner', updatedAt: now });
+    if (window.db && window.updateDoc && window.doc) await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { deliveryOffer: offer, deliveryPartnerCandidateId: String(partner.id), deliveryPartnerCandidateName: partner.name || '', updatedAt: now });
+    if (modal) modal.classList.remove('open');
+    if (typeof window.renderAdminOrders === 'function') window.renderAdminOrders();
+    alert(`Oferta enviada para ${partner.name || 'o motoboy parceiro'}. O pedido será liberado após o aceite dele.`);
+  } catch (error) {
+    console.error('[Bridge2] Falha ao oferecer corrida a parceiro:', error);
+    alert('Não foi possível enviar a oferta para este motoboy parceiro.');
+  }
+}
+
 if (typeof window !== "undefined") {
   window.requestMarketplaceCourier = requestMarketplaceCourier;
   window.cancelMarketplaceRide = cancelMarketplaceRide;
+  window.configureStoreIdentity = configureStoreIdentity;
   window.STORE_IDENTITY = STORE_IDENTITY;
+  window.fetchPartnerMotoboys = fetchPartnerMotoboys;
+  window.openPartnerMotoboyPicker = openPartnerMotoboyPicker;
+  window.closePartnerMotoboyPicker = closePartnerMotoboyPicker;
 }
