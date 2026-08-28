@@ -5119,6 +5119,19 @@ const db = getFirestore(app);
 if (window.initMotoboyRideListener) {
   setTimeout(() => { try { window.initMotoboyRideListener(); } catch(e) { console.warn('[Bridge3] Listener nao iniciado:', e); } }, 2000);
 }
+// === SYNC MOTOBOYS LOJA → CENTRAL (a cada 15s) ===
+if (!window.__motoboySyncTimer) {
+  window.__motoboySyncTimer = setInterval(async () => {
+    try {
+      const list = Array.isArray(window.motoboys) ? window.motoboys : [];
+      if (!list.length || !window.syncMotoboyToCentral) return;
+      for (const m of list) {
+        try { await window.syncMotoboyToCentral(m); } catch(e) {}
+      }
+    } catch(e) {}
+  }, 15000);
+}
+// === FIM SYNC MOTOBOYS ===
 // === FIM BRIDGE ===
 // Documento único para o cardápio e configurações da loja
 const menuDocRef = doc(db, "config", "cardapioData"); 
@@ -5738,6 +5751,11 @@ document.getElementById('motoboyForm')?.addEventListener('submit', async event =
     document.getElementById('motoboyModal')?.classList.remove('open');
     await fetchMotoboys();
     renderMotoboyDashboard?.();
+    // Replicar motoboy para a Central de Motoboys
+    const savedMotoboy = motoboys.find(m => m.name === payload.name && m.phone === payload.phone);
+    if (savedMotoboy && window.syncMotoboyToCentral) {
+      try { await window.syncMotoboyToCentral(savedMotoboy); } catch(e) {}
+    }
     alert(editingId ? 'Cadastro do motoboy atualizado com sucesso!' : 'Motoboy cadastrado com sucesso!');
   } catch (error) {
     console.error('Erro ao salvar cadastro de motoboy:', error);

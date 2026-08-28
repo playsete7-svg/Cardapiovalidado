@@ -74,6 +74,49 @@ async function syncOrderStatusToGestorAndCRM(orderId, newStatus, orderData) {
   return { ok: results.some(r => r.status === "fulfilled") };
 }
 
+/**
+ * Replica um motoboy da loja para a Central de Motoboys.
+ * Chamada quando a loja cria/edita um motoboy.
+ */
+async function syncMotoboyToCentral(motoboy) {
+  const cfg = SUPREMO_BRIDGE_CONFIG.motoboy;
+  if (!cfg?.apiKey || !cfg?.projectId || !motoboy?.id) return { ok: false };
+
+  const payload = {
+    id: motoboy.id,
+    name: motoboy.name || "",
+    email: motoboy.email || "",
+    phone: motoboy.phone || "",
+    vehicleType: motoboy.vehicleType || motoboy.vehicleModel || "Moto",
+    vehicleModel: motoboy.vehicleModel || "",
+    vehicleColor: motoboy.vehicleColor || "",
+    vehiclePlate: motoboy.vehiclePlate || "",
+    photo: motoboy.photo || null,
+    accountStatus: motoboy.accountStatus || "active",
+    status: motoboy.status || "offline",
+    isOnline: motoboy.isOnline || false,
+    presence: motoboy.presence || "offline",
+    activeOrderId: motoboy.activeOrderId || "",
+    infractionPoints: motoboy.infractionPoints || 0,
+    source: "store",
+    storeId: (window.STORE_IDENTITY || {}).storeId || "",
+    storeName: (window.STORE_IDENTITY || {}).storeName || "",
+    lastSeenAt: motoboy.lastSeenAt || null,
+    motoboyLocation: motoboy.motoboyLocation || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  try {
+    await supremoRestWrite(cfg.projectId, cfg.apiKey, "motoboys", motoboy.id, payload);
+    console.log("[Bridge-Motoboy] Motoboy replicado para central:", motoboy.id, motoboy.name);
+    return { ok: true };
+  } catch (e) {
+    console.warn("[Bridge-Motoboy] Falha ao replicar motoboy:", e.message);
+    return { ok: false, error: e.message };
+  }
+}
+
 if (typeof window !== "undefined") {
   window.syncOrderStatusToGestorAndCRM = syncOrderStatusToGestorAndCRM;
+  window.syncMotoboyToCentral = syncMotoboyToCentral;
 }
