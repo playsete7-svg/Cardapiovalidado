@@ -10174,7 +10174,7 @@ function renderAdminOrders(){
         <hr style="border: 0; border-top: 1px dashed #ccc; margin: 5px 0;">
         <div class='order-btns' style='display:flex; gap: 5px; flex-wrap: wrap; position: relative;'>
           <!-- Botão 'Atualizar Status' -->
-          <button type='button' class='status-update-btn' style='background:#ff9800;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer; position: relative;' onclick='event.stopPropagation(); openStatusSelector(this, "${order.id}")'>Atualizar status</button>
+          <button type='button' class='status-update-btn' aria-label='Atualizar status do pedido' title='Atualizar status do pedido' onclick='event.stopPropagation(); openStatusSelector(this, "${order.id}")'>Atualizar status</button>
           ${operationalControls}
           <button type='button' class='print-order-btn' style='background:#4caf50;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); printOrder("${order.id}")'>🖨️ Imprimir</button>
           ${storeChatControl}
@@ -17290,6 +17290,25 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   @media(max-width:850px){.moto-layout{grid-template-columns:1fr}.moto-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.moto-header{align-items:flex-start;flex-direction:column}.moto-identity{text-align:left}}
   @media(max-width:520px){.moto-shell{width:min(100% - 18px,1180px);padding-top:10px}.moto-stats{gap:7px}.moto-stat{min-height:70px;padding:10px}.moto-stat strong{font-size:22px}.moto-meta-item strong{font-size:10px}}
 </style>
+<style id="moto-ui-polish">
+  /* Ajuste visual da conta do entregador: ações compactas, acessíveis e preservando os data-action existentes. */
+  .moto-order-actions{align-items:stretch;gap:8px;margin-top:15px}
+  .moto-order-actions .moto-button{min-height:44px;min-width:44px;padding:0 14px;border-radius:10px;font-size:11px;letter-spacing:.01em;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;box-shadow:0 3px 0 rgba(0,0,0,.22);touch-action:manipulation}
+  .moto-order-actions .moto-button:hover:not(:disabled),.moto-order-actions .moto-button:focus-visible{filter:none;transform:translateY(-1px);box-shadow:0 5px 12px rgba(0,0,0,.24)}
+  .moto-order-actions .moto-button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+  .moto-order-actions .moto-icon-action,.moto-order-actions .external-route{width:46px;flex:0 0 46px;padding:0;gap:0}
+  .moto-action-icon{display:inline-grid;place-items:center;line-height:1;font-size:18px;font-family:Arial,sans-serif;font-weight:800}
+  .moto-order-actions .external-route{font-size:0}
+  .moto-order-actions .external-route .moto-action-icon{font-size:18px}
+  .moto-code-form{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:9px;padding:11px;border-radius:10px}
+  .moto-code-form label{font-size:11px;line-height:1.35}
+  .moto-code-input{width:132px;min-height:44px;border-radius:10px;font-size:19px;letter-spacing:.22em}
+  .moto-code-form .moto-icon-action{width:46px;flex:0 0 46px;padding:0}
+  .moto-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+  .moto-history-card{padding:12px}
+  .moto-history-card .moto-history{margin-top:0}
+  @media(max-width:520px){.moto-order-actions .moto-button{min-height:46px}.moto-order-actions .moto-icon-action,.moto-order-actions .external-route,.moto-code-form .moto-icon-action{width:48px;flex-basis:48px}.moto-code-form{grid-template-columns:minmax(0,1fr) 118px 48px}.moto-code-input{width:auto}}
+</style>
 <section id="motoboyApp" hidden aria-label="Área exclusiva do entregador">
   <div class="moto-shell">
     <header class="moto-header">
@@ -17311,9 +17330,9 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
         <div id="motoOrdersList" class="moto-order-list"></div>
       </main>
       <aside class="moto-side-stack">
-        <section class="moto-side-card"><h3>Como funciona</h3><p><strong>1.</strong> A loja seleciona você e libera a oferta de entrega.<br><strong>2.</strong> Você aceita e autoriza a localização.<br><strong>3.</strong> Retira, segue a rota e mantém o cliente informado.<br><strong>4.</strong> Na entrega, o cliente informa os quatro últimos dígitos do telefone cadastrado.</p></section>
-        <section class="moto-side-card"><h3>Privacidade e segurança</h3><p>A posição só é compartilhada depois da sua ação explícita. O sistema armazena a última posição e uma trilha limitada da entrega ativa para desenhar o mapa, não um histórico ilimitado da sua rotina. O compartilhamento pode falhar sem HTTPS ou sem permissão do navegador.</p></section>
-        <section class="moto-side-card"><h3>Histórico recente</h3><div id="motoHistory" class="moto-history"></div></section>
+        <section class="moto-side-card moto-history-card" aria-label="Histórico recente">
+          <div id="motoHistory" class="moto-history"></div>
+        </section>
       </aside>
     </div>
   </div>
@@ -18392,7 +18411,7 @@ updatedAt:changedAt };
     return destination ? `https://www.waze.com/ul?ll=${encodeURIComponent(`${destination.latitude},${destination.longitude}`)}&navigate=yes` : `https://www.waze.com/ul?q=${encodeURIComponent(target)}&navigate=yes`;
   }
   function externalRouteMarkup(order) {
-    return `<a class="moto-button external-route google" href="${esc(mapsUrl(order))}" target="_blank" rel="noopener" aria-label="Abrir destino no Google Maps">Google Maps</a><a class="moto-button external-route waze" href="${esc(wazeUrl(order))}" target="_blank" rel="noopener" aria-label="Abrir destino no Waze">Waze</a>`;
+    return `<a class="moto-button external-route google" href="${esc(mapsUrl(order))}" target="_blank" rel="noopener" aria-label="Abrir destino no Google Maps" title="Abrir destino no Google Maps"><span class="moto-action-icon" aria-hidden="true">⌖</span></a><a class="moto-button external-route waze" href="${esc(wazeUrl(order))}" target="_blank" rel="noopener" aria-label="Abrir destino no Waze" title="Abrir destino no Waze"><span class="moto-action-icon" aria-hidden="true">➤</span></a>`;
   }
   function renderOrderCard(order, queue = deliveryQueueSnapshot()) {
     const status = normalizedStatus(order.status);
@@ -18420,7 +18439,7 @@ updatedAt:changedAt };
       ${isActive ? `<div class="moto-live ${isCancellationRequested ? 'pending' : location ? '' : 'warning'}">${isCancellationRequested ? 'Solicitação de cancelamento enviada. Aguarde a avaliação da loja; a entrega ainda não foi encerrada.' : location ? esc(locationText) : 'A entrega está ativa, mas a localização não foi compartilhada. O cliente continuará recebendo os status da operação.'}</div>` : ''}
       ${liveMapMarkup}
       ${isOffer ? (isQueueNext ? `<div class="moto-queue-next"><strong>Próximo percurso</strong><span>Este é o destino mais próximo da sua posição atual.</span></div><div class="moto-order-actions"><button type="button" class="moto-button primary" data-action="accept-location" data-order-id="${esc(order.id)}">Aceitar e compartilhar localização</button><button type="button" class="moto-button good" data-action="accept-manual" data-order-id="${esc(order.id)}">Aceitar sem compartilhar localização</button><button type="button" class="moto-button" data-action="decline" data-order-id="${esc(order.id)}">Recusar oferta</button>${externalRouteMarkup(order)}</div>${manual}` : `<div class="moto-queue-locked"><strong>${hasQueueDestination ? 'Aguardando sequência' : 'Destino ainda não localizado'}</strong><span>${hasQueueDestination ? `Finalize os pedidos anteriores para liberar este percurso. Posição ${esc(queueInfo.position || '—')} · ${esc(queueDistanceLabel(queueInfo.distanceKm))}.` : 'A loja precisa confirmar um endereço ou coordenada válida antes de liberar este percurso.'}</span></div>`) : ''}
-      ${isActive ? `<div class="moto-order-actions">${externalRouteMarkup(order)}<button type="button" class="moto-button moto-chat-button" data-action="chat" data-order-id="${esc(order.id)}">💬 Chat com cliente e loja</button><button type="button" class="moto-button" data-action="report-issue" data-order-id="${esc(order.id)}">Avisar loja</button>${isCancellationRequested ? '<button type="button" class="moto-button pending" disabled>Cancelamento em análise</button>' : `<button type="button" class="moto-button danger" data-action="request-cancel" data-order-id="${esc(order.id)}">Cancelar pedido</button>`}</div>${isCancellationRequested ? '' : (isQueueCurrent ? `<form class="moto-code-form" data-action="finish-form" data-order-id="${esc(order.id)}"><label for="delivery-code-${esc(order.id)}">Código de 4 dígitos do cliente</label><input id="delivery-code-${esc(order.id)}" class="moto-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" placeholder="0000" required><button type="submit" class="moto-button primary">Confirmar entrega</button></form>` : '<div class="moto-queue-locked"><span>Este pedido aguarda a conclusão do percurso atual.</span></div>')}` : ''}
+      ${isActive ? `<div class="moto-order-actions">${externalRouteMarkup(order)}<button type="button" class="moto-button moto-icon-action moto-chat-button" data-action="chat" data-order-id="${esc(order.id)}" aria-label="Abrir chat do pedido" title="Abrir chat do pedido"><span class="moto-action-icon" aria-hidden="true">✉</span></button><button type="button" class="moto-button moto-icon-action" data-action="report-issue" data-order-id="${esc(order.id)}" aria-label="Avisar a loja sobre uma ocorrência" title="Avisar a loja sobre uma ocorrência"><span class="moto-action-icon" aria-hidden="true">!</span></button>${isCancellationRequested ? '<button type="button" class="moto-button pending" disabled>Cancelamento em análise</button>' : `<button type="button" class="moto-button moto-icon-action danger" data-action="request-cancel" data-order-id="${esc(order.id)}" aria-label="Solicitar cancelamento do pedido" title="Solicitar cancelamento do pedido"><span class="moto-action-icon" aria-hidden="true">×</span></button>`}</div>${isCancellationRequested ? '' : (isQueueCurrent ? `<form class="moto-code-form" data-action="finish-form" data-order-id="${esc(order.id)}"><label class="moto-visually-hidden" for="delivery-code-${esc(order.id)}">Código de 4 dígitos do cliente</label><input id="delivery-code-${esc(order.id)}" class="moto-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" placeholder="0000" aria-label="Código de 4 dígitos do cliente" required><button type="submit" class="moto-button moto-icon-action primary" aria-label="Confirmar entrega" title="Confirmar entrega"><span class="moto-action-icon" aria-hidden="true">✓</span></button></form>` : '<div class="moto-queue-locked"><span>Este pedido aguarda a conclusão do percurso atual.</span></div>')}` : ''}
     </article>`;
   }
 
