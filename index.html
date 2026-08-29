@@ -10,9 +10,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Bridge: config compartilhado + bridges loja→central motoboy -->
 <script src="supremo-bridge-config.js"></script>
-<script src="bridge-store-to-motoboy.js"></script>
-<script src="bridge-store-motoboy-listener.js"></script>
-<script src="bridge-store-to-all.js"></script>
+<script src="bridge-store-to-motoboy.js?v=20260829"></script>
+<script src="bridge-store-motoboy-listener.js?v=20260829"></script>
+<script src="bridge-store-to-all.js?v=20260829"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script>
 let salesChartInstance = null; // Variável global para a instância do Chart.js
@@ -1688,6 +1688,15 @@ window.printOrder = function(orderId) {
       
 
 
+<style id="partner-application-fixes-v2">
+  #partnerApplicationModal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:22px 14px}
+  #partnerApplicationModal>.card{width:min(620px,100%);max-height:calc(100dvh - 44px);overflow-y:auto;overscroll-behavior:contain}
+  #partnerApplicationForm{padding-bottom:4px}
+  #storeCourierInvite{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border:0;border-top:1px solid rgba(255,255,255,.1);margin-top:12px;padding:10px 4px;background:transparent;color:#c8b9ae;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:none;transition:color .18s,background .18s}
+  #storeCourierInvite:hover{color:#ffad86;background:rgba(255,255,255,.03)}
+  #partnerApplicationForm button[type="submit"]{min-width:150px}
+  @media(max-width:520px){#partnerApplicationModal{padding:10px 8px}#partnerApplicationModal>.card{max-height:calc(100dvh - 20px);border-radius:14px}#partnerApplicationModal .partner-application-grid{grid-template-columns:1fr}#partnerApplicationModal .partner-application-grid .wide{grid-column:auto}}
+</style>
 </head>
       <body>
 ===============================================
@@ -3516,7 +3525,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
             <button id="loginCancel" class="pill">Cancelar</button>
             <button id="loginSubmit" class="btn">Entrar</button>
           </div>
-          <button type="button" id="storeCourierInvite" class="store-courier-invite">Seja entregador parceiro · faça parte do ecossistema Supremo</button>
+          <button type="button" id="storeCourierInvite" class="store-courier-invite">Seja um entregador</button>
         </div>
 
         <div id="registerForm" class="hidden">
@@ -6523,6 +6532,10 @@ function showAuthError(message){
     alert(message);
 }
 
+function readMarketplaceLocalAccounts(){try{const value=JSON.parse(localStorage.getItem('supremo_mp_users_v2')||'[]');return Array.isArray(value)?value:[]}catch{return[]}}
+async function importMarketplaceAccount(identifier,password){const normalized=String(identifier||'').trim().toLowerCase(),phone=String(identifier||'').replace(/\D/g,''),passwordHash=await hashLocalPassword(password),candidate=readMarketplaceLocalAccounts().find(item=>(String(item.email||'').toLowerCase()===normalized||String(item.phone||'').replace(/\D/g,'')===phone)&&item.passwordHash===passwordHash);if(!candidate)return null;const imported=sanitizeLocalUser({...candidate,id:String(candidate.uid||candidate.id||localUserId(candidate.email||normalized)),uid:String(candidate.uid||candidate.id||localUserId(candidate.email||normalized)),isAdmin:false,source:'supremo-marketplace'});if(!imported)return null;const index=users.findIndex(item=>String(item.uid||item.id)===String(imported.uid||imported.id)||normalizedLocalEmail(item)===normalizedLocalEmail(imported));if(index>=0)users[index]={...users[index],...imported};else users.push(imported);saveUsers();return imported}
+function mirrorStoreAccountToMarketplace(user){if(!user||user.isAdmin)return;try{const list=JSON.parse(localStorage.getItem('supremo_mp_users_v2')||'[]'),key=String(user.uid||user.id||user.email),index=list.findIndex(item=>String(item.uid||item.id)===key||String(item.email||'').toLowerCase()===String(user.email||'').toLowerCase()),copy={...user,id:String(user.id||key),uid:String(user.uid||user.id||key),displayName:user.name,passwordHash:user.passwordHash,addresses:user.addresses||[],savedAddresses:user.savedAddresses||[],savedAddressRecords:user.savedAddressRecords||[],source:'loja'};if(index>=0)list[index]={...list[index],...copy};else list.push(copy);localStorage.setItem('supremo_mp_users_v2',JSON.stringify(list))}catch(error){console.warn('Conta local não espelhada no marketplace:',error)}}
+
 async function doLogin(){
     const identifier = document.querySelector('#loginUser').value.trim();
     const pass = document.querySelector('#loginPass').value;
@@ -6563,7 +6576,8 @@ async function doLogin(){
     }
 
     const normalizedIdentifier = identifier.toLowerCase();
-    const user = (users || []).find(candidate => normalizedLocalEmail(candidate) === normalizedIdentifier);
+    let user = (users || []).find(candidate => normalizedLocalEmail(candidate) === normalizedIdentifier);
+    if(!user) user = await importMarketplaceAccount(identifier, pass);
     if(!user){
         showAuthError('Usuário não encontrado. Faça seu cadastro primeiro.');
         return;
@@ -6587,6 +6601,7 @@ async function doLogin(){
         saveUsers();
     }
 
+    mirrorStoreAccountToMarketplace(user);
     const sessionUser = saveLocalSession(user);
     applyLocalSession(sessionUser);
     document.querySelector('#loginPass').value = '';
@@ -6623,6 +6638,7 @@ async function doRegister(){
     };
     users.push(user);
     saveUsers();
+    mirrorStoreAccountToMarketplace(user);
 
     // Espelha o cadastro no Firebase para que o CRM de Clientes e o marketing place recebam o perfil.
     // O hash da senha permanece apenas no armazenamento local da loja.
@@ -6639,6 +6655,7 @@ async function doRegister(){
         console.warn('Cadastro local concluído, mas não foi possível sincronizar o cliente com o Firebase:', firebaseError);
     }
 
+    mirrorStoreAccountToMarketplace(user);
     const sessionUser = saveLocalSession(user);
     applyLocalSession(sessionUser);
     document.querySelector('#regPass').value = '';
@@ -12271,7 +12288,28 @@ function initListeners(){
   document.querySelector("#storeCourierInvite")?.addEventListener("click", openPartnerApplication);
   document.querySelector("#partnerApplicationClose")?.addEventListener("click", () => document.querySelector("#partnerApplicationModal")?.classList.remove("open"));
   document.querySelector("#partnerApplicationCancel")?.addEventListener("click", () => document.querySelector("#partnerApplicationModal")?.classList.remove("open"));
-  document.querySelector("#partnerApplicationForm")?.addEventListener("submit", async event => { event.preventDefault(); const form = event.currentTarget; const name = document.querySelector("#partnerAppName")?.value.trim() || ""; const phone = document.querySelector("#partnerAppPhone")?.value.trim() || ""; const phoneNormalized = phone.replace(/\D/g, ""); const cpf = (document.querySelector("#partnerAppCpf")?.value || "").replace(/\D/g, ""); const city = document.querySelector("#partnerAppCity")?.value.trim() || ""; if(!name || name.split(/\s+/).length < 2 || phoneNormalized.length < 8 || cpf.length !== 11 || !city || !document.querySelector("#partnerAppConsent")?.checked){ alert("Preencha nome completo, WhatsApp, CPF, cidade e aceite o termo."); return; } const applicationId = `store_app_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; const application = { id:applicationId, name, phone, phoneNormalized, email:(document.querySelector("#partnerAppEmail")?.value || "").trim().toLowerCase(), cpf, city, vehicleType:document.querySelector("#partnerAppVehicle")?.value || "Moto", vehicleModel:document.querySelector("#partnerAppModel")?.value.trim() || "", vehiclePlate:(document.querySelector("#partnerAppPlate")?.value || "").trim().toUpperCase(), availability:document.querySelector("#partnerAppAvailability")?.value || "", experience:(document.querySelector("#partnerAppExperience")?.value || "").trim(), status:"under_review", source:"store_partner_application", storeId:(window.STORE_IDENTITY || {}).storeId || "", storeName:(window.STORE_IDENTITY || {}).storeName || "", createdAt:new Date().toISOString(), updatedAt:new Date().toISOString() }; try { if(!window.supremoRestWrite || !window.SUPREMO_BRIDGE_CONFIG?.motoboy){ throw new Error("Ponte da Central indisponível"); } await window.supremoRestWrite(window.SUPREMO_BRIDGE_CONFIG.motoboy.projectId, window.SUPREMO_BRIDGE_CONFIG.motoboy.apiKey, "courierApplications", applicationId, application); form.reset(); document.querySelector("#partnerApplicationModal")?.classList.remove("open"); alert("Ficha enviada para análise. Após a aprovação, a Central enviará a URL de acesso pelo WhatsApp."); } catch(error) { console.error("Falha ao enviar candidatura de parceiro:", error); alert("Não foi possível enviar a ficha agora. Tente novamente."); } });
+  document.querySelector("#partnerApplicationForm")?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const value = id => form.querySelector(`#${id}`)?.value.trim() || '';
+    const name = value('partnerAppName'), phone = value('partnerAppPhone'), phoneNormalized = phone.replace(/\D/g, ''), email = value('partnerAppEmail').toLowerCase(), cpf = (form.querySelector('#partnerAppCpf')?.value || '').replace(/\D/g, ''), city = value('partnerAppCity');
+    if(!name || name.split(/\s+/).length < 2 || phoneNormalized.length < 8 || !/^\S+@\S+\.\S+$/.test(email) || cpf.length !== 11 || !city || !form.querySelector('#partnerAppConsent')?.checked){ alert('Preencha nome completo, WhatsApp, e-mail, CPF, cidade e aceite o termo.'); return; }
+    const submit = form.querySelector('button[type="submit"]'), originalLabel = submit?.textContent || 'Enviar ficha';
+    if(submit){submit.disabled=true;submit.textContent='Enviando…';}
+    const applicationId = `store_app_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+    const application = {id:applicationId,name,phone,phoneNormalized,email,cpf,city,vehicleType:form.querySelector('#partnerAppVehicle')?.value || 'Moto',vehicleModel:value('partnerAppModel'),vehiclePlate:(form.querySelector('#partnerAppPlate')?.value || '').trim().toUpperCase(),availability:form.querySelector('#partnerAppAvailability')?.value || '',experience:value('partnerAppExperience'),status:'under_review',requestType:'courier',source:'store_partner_application',storeId:(window.STORE_IDENTITY || {}).storeId || '',storeName:(window.STORE_IDENTITY || {}).storeName || '',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+    try {
+      const local = JSON.parse(localStorage.getItem('cardapio_courier_applications_v1') || '[]');
+      local.push(application); localStorage.setItem('cardapio_courier_applications_v1', JSON.stringify(local.slice(-100)));
+      if(!window.supremoRestWrite || !window.SUPREMO_BRIDGE_CONFIG?.motoboy) throw new Error('Ponte da Central indisponível');
+      await window.supremoRestWrite(window.SUPREMO_BRIDGE_CONFIG.motoboy.projectId, window.SUPREMO_BRIDGE_CONFIG.motoboy.apiKey, 'courierApplications', applicationId, application);
+      if(window.supremoPublishEvent) try{await window.supremoPublishEvent('delivery','courier_application_created','info',`Nova candidatura de entregador recebida da ${application.storeName || 'loja parceira'}`,applicationId,{storeId:application.storeId,source:application.source})}catch(_){ }
+      form.reset(); document.querySelector('#partnerApplicationModal')?.classList.remove('open'); alert('Ficha enviada para análise. A Central registrou sua solicitação e retornará pelo WhatsApp informado.');
+    } catch(error) {
+      console.error('Falha ao enviar candidatura de parceiro:', error);
+      alert('A ficha foi salva neste dispositivo, mas a Central não confirmou o envio. Verifique a conexão e tente novamente.');
+    } finally { if(submit){submit.disabled=false;submit.textContent=originalLabel;} }
+  });
   document.querySelector("#loginCancel").addEventListener("click", closeAuthModal);
   document.querySelector("#registerCancel").addEventListener("click", closeAuthModal);
   document.querySelector("#loginSubmit").addEventListener("click", doLogin);

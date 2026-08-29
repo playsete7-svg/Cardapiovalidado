@@ -85,6 +85,12 @@ async function handleRideUpdate(ride) {
     "deliveryOffer.status": rideStatus,
     "deliveryOffer.courierId": courierId,
     "deliveryOffer.courierName": courierName,
+    "motoboyLocation": ride.motoboyLocation || null,
+    "locationSharing": ride.locationSharing || (ride.motoboyLocation ? 'active' : 'unavailable'),
+    "deliveryAcceptedAt": ride.deliveryAcceptedAt || null,
+    "deliveryCompletedAt": ride.deliveryCompletedAt || null,
+    "deliveredAt": ride.deliveredAt || null,
+    "logistics.timeline": Array.isArray(ride.timeline) ? ride.timeline : [],
     updatedAt: new Date().toISOString(),
   };
   if (["in_transit", "delivered", "cancelled", "cancellation_requested", "exception"].includes(rideStatus)) {
