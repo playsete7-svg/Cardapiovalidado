@@ -257,11 +257,6 @@ async function fetchPartnerMotoboys() {
   }
 }
 
-function closePartnerMotoboyPicker() {
-  const modal = document.getElementById('partnerMotoboyModal');
-  if (modal) modal.classList.remove('open');
-}
-
 const activePartnerSearches = new Map();
 function partnerPickerState(list, title, detail='') { if (!list) return; list.innerHTML = `<div class="partner-search-state" role="status"><span class="partner-search-spinner" aria-hidden="true"></span><strong>${title}</strong><small>${detail}</small></div>`; }
 function partnerPickerConnected(list, name) { if (!list) return; list.innerHTML = `<div class="partner-connected-state" role="status"><span class="partner-connected-mark">✓</span><strong>Motoboy conectado</strong><small>${name || 'O parceiro'} aceitou a corrida e já está vinculado ao pedido.</small></div>`; }
