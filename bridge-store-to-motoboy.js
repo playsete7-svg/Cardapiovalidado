@@ -51,9 +51,9 @@ function currentStoreIdentity(order = {}) {
     ...runtime,
     storeId: runtime.storeId || STORE_IDENTITY.storeId || order.storeId,
     storeName: runtime.storeName || STORE_IDENTITY.storeName || order.storeSnapshot?.name,
-    storeAddress: runtime.storeAddress || STORE_IDENTITY.storeAddress,
-    storeLat: runtime.storeLat ?? STORE_IDENTITY.storeLat,
-    storeLng: runtime.storeLng ?? STORE_IDENTITY.storeLng,
+    storeAddress: runtime.storeAddress || STORE_IDENTITY.storeAddress || order.storeAddress || order.storeSnapshot?.address,
+    storeLat: runtime.storeLat ?? STORE_IDENTITY.storeLat ?? order.storeLatitude ?? order.storeSnapshot?.latitude ?? order.storeSnapshot?.lat,
+    storeLng: runtime.storeLng ?? STORE_IDENTITY.storeLng ?? order.storeLongitude ?? order.storeSnapshot?.longitude ?? order.storeSnapshot?.lng,
     storePhone: runtime.storePhone || STORE_IDENTITY.storePhone || order.storeSnapshot?.whatsapp,
   });
 }
@@ -65,6 +65,21 @@ function currentStoreIdentity(order = {}) {
  * @param {Object} order - O pedido pronto para entrega
  * @returns {Promise<{ok: boolean, rideId?: string, error?: string}>}
  */
+function routePoint(value) {
+  const source = value?.coords || value || {};
+  const latitude = Number(source.latitude ?? source.lat ?? source.lastLatitude);
+  const longitude = Number(source.longitude ?? source.lng ?? source.lon ?? source.lastLongitude);
+  return Number.isFinite(latitude) && Number.isFinite(longitude) ? { latitude, longitude } : null;
+}
+function haversineKm(a, b) {
+  const first = routePoint(a), second = routePoint(b);
+  if (!first || !second) return null;
+  const radians = Math.PI / 180;
+  const dLat = (second.latitude - first.latitude) * radians;
+  const dLng = (second.longitude - first.longitude) * radians;
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(first.latitude * radians) * Math.cos(second.latitude * radians) * Math.sin(dLng / 2) ** 2;
+  return Number((6371 * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0, 1 - x)))).toFixed(2));
+}
 async function requestMarketplaceCourier(order) {
   if (!order?.id) return { ok: false, error: "Pedido sem identificador" };
   const identity = currentStoreIdentity(order);
@@ -107,18 +122,19 @@ async function requestMarketplaceCourier(order) {
     },
     // Endereco de entrega (cliente)
     delivery: {
-      address: order.addressSnapshot?.street || order.addressSnapshot?.address || "",
-      complement: order.addressSnapshot?.complement || "",
+      address: order.addressSnapshot?.street || order.addressSnapshot?.address || order.deliveryAddressBase || order.address || order.deliveryAreaName || "",
+      complement: order.addressSnapshot?.complement || order.deliveryHouseNumber || "",
       reference: order.addressSnapshot?.reference || "",
-      lat: order.addressSnapshot?.lat || null,
-      lng: order.addressSnapshot?.lng || null,
-      customerName: order.customerSnapshot?.name || "",
-      customerPhone: order.customerSnapshot?.phone || "",
+      lat: order.addressSnapshot?.lat ?? order.deliveryLatitude ?? order.deliveryLocation?.latitude ?? null,
+      lng: order.addressSnapshot?.lng ?? order.deliveryLongitude ?? order.deliveryLocation?.longitude ?? null,
+      customerName: order.customerSnapshot?.name || order.userName || "",
+      customerPhone: order.customerSnapshot?.phone || order.userPhone || "",
     },
-    // Metadados logisticos (nao comerciais)
+    // A Central calcula a rota e a remuneração. A loja não envia taxa, preço ou valor por km.
     logistics: {
       dispatchMode: order.dispatchMode || "marketplace",
-      estimatedDistance: null,  // Pode ser calculado pela central
+      pricingAuthority: 'motoboy_central',
+      estimatedDistance: null,
       estimatedDuration: null,
     },
     // Atribuicao do motoboy (preenchido pela central)
@@ -251,14 +267,14 @@ async function openPartnerMotoboyPicker(orderId) {
   const modal = document.getElementById('partnerMotoboyModal');
   const list = document.getElementById('partnerMotoboyList');
   if (!order || !modal || !list) return;
-  list.innerHTML = '<div class="empty-list">Buscando motoboys parceiros disponíveis…</div>';
+  list.innerHTML = '<div class="empty-list">Encaminhando para a Central de logística…</div>';
   modal.classList.add('open');
-  const partners = await fetchPartnerMotoboys();
+  const partners = [{ id: 'central-auto', name: 'Central de logística', vehicleType: 'Seleção automática' }];
   if (!partners.length) {
     list.innerHTML = '<div class="empty-list"><b>Nenhum parceiro disponível agora</b>Os motoboys parceiros precisam estar aprovados e online na Central.</div>';
     return;
   }
-  list.innerHTML = partners.map(item => `<button type="button" class="partner-motoboy-option" data-partner-id="${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '')}"><span class="partner-avatar">${String(item.name || 'M').slice(0, 1).toUpperCase()}</span><span><b>${String(item.name || 'Motoboy parceiro').replace(/[&<>"']/g, '')}</b><small>${String(item.vehicleType || item.vehicleModel || 'Veículo não informado').replace(/[&<>"']/g, '')} · Disponível</small></span><strong>Oferecer</strong></button>`).join('');
+  list.innerHTML = partners.map(item => `<button type="button" class="partner-motoboy-option" data-partner-id="${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '')}"><span class="partner-avatar">${String(item.name || 'M').slice(0, 1).toUpperCase()}</span><span><b>${String(item.name || 'Motoboy parceiro').replace(/[&<>"']/g, '')}</b><small>${String(item.vehicleType || item.vehicleModel || 'Veículo não informado').replace(/[&<>"']/g, '')} · Disponível</small></span><strong>Solicitar</strong></button>`).join('');
   list.querySelectorAll('[data-partner-id]').forEach(button => button.addEventListener('click', async () => {
     const partner = partners.find(item => String(item.id) === String(button.dataset.partnerId));
     if (partner) await offerPartnerCourier(order, partner);
@@ -272,12 +288,11 @@ async function offerPartnerCourier(order, partner) {
     const created = await requestMarketplaceCourier({ ...order, dispatchMode: order.dispatchMode || 'hybrid' });
     if (!created.ok) throw new Error(created.error || 'Corrida não criada');
     const now = new Date().toISOString();
-    const offer = { status: 'offered', motoboyId: String(partner.id), offeredAt: now, source: 'store_partner_selection' };
-    await (window.supremoRestMergeWrite || supremoRestWrite)(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', created.rideId || rideId, { status: 'offered', offerCourierId: String(partner.id), offerCourierName: partner.name || '', currentOfferId: `offer_${Date.now()}`, offerExpiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(), deliveryOffer: offer, storeSelectionMode: 'partner', updatedAt: now });
-    if (window.db && window.updateDoc && window.doc) await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { deliveryOffer: offer, deliveryPartnerCandidateId: String(partner.id), deliveryPartnerCandidateName: partner.name || '', updatedAt: now });
+    await (window.supremoRestMergeWrite || supremoRestWrite)(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', created.rideId || rideId, { storeSelectionRequested: true, storeSelectionCandidateId: String(partner.id), storeSelectionCandidateName: partner.name || '', storeSelectionMode: 'advisory', pricingAuthority: 'motoboy_central', updatedAt: now });
+    if (window.db && window.updateDoc && window.doc) await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { deliveryPartnerCandidateId: String(partner.id), deliveryPartnerCandidateName: partner.name || '', deliveryDispatchStatus: 'central_pricing_pending', updatedAt: now });
     if (modal) modal.classList.remove('open');
     if (typeof window.renderAdminOrders === 'function') window.renderAdminOrders();
-    alert(`Oferta enviada para ${partner.name || 'o motoboy parceiro'}. O pedido será liberado após o aceite dele.`);
+    alert(`Solicitação encaminhada à Central. O valor será calculado pela política central e a oferta será enviada ao motoboy disponível.`);
   } catch (error) {
     console.error('[Bridge2] Falha ao oferecer corrida a parceiro:', error);
     alert('Não foi possível enviar a oferta para este motoboy parceiro.');

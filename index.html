@@ -3674,7 +3674,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 
     <div class="modal" id="partnerMotoboyModal">
       <div class="card" role="dialog" aria-modal="true" style="max-width:520px">
-        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3>Buscar motoboys parceiros</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">Mostramos somente entregadores aprovados e disponíveis na Central.</p></div><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()" aria-label="Fechar">&times;</button></div>
+        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3>Solicitar parceiro à Central</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">A Central seleciona automaticamente o parceiro disponível mais próximo e define a remuneração pela política de logística.</p></div><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()" aria-label="Fechar">&times;</button></div>
         <div id="partnerMotoboyList" class="partner-motoboy-list"></div>
         <div style="display:flex;justify-content:flex-end;margin-top:15px"><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()">Cancelar</button></div>
       </div>
@@ -6785,6 +6785,22 @@ async function finalizeOrder(e) {
     deliveryAreaName: deliveryAreaName,
     deliveryFee: deliveryFee,
     deliveryDistanceKm: deliveryDistanceKm || null,
+    customerDeliveryPricing: {
+      automatic: Boolean(DATA.restaurant.useRadiusDelivery),
+      mode: DATA.restaurant.useRadiusDelivery ? 'automatic' : 'manual',
+      baseFee: Number(DATA.restaurant.deliveryBaseFee || 0),
+      feePerKm: Number(DATA.restaurant.deliveryFeePerKm || 0),
+      storeToCustomerKm: deliveryDistanceKm || null,
+      customerToStoreKm: deliveryDistanceKm || null,
+      storeLatitude: Number(DATA.restaurant.restaurantLat) || null,
+      storeLongitude: Number(DATA.restaurant.restaurantLng) || null,
+      calculatedAt: new Date().toISOString()
+    },
+    storeId: window.STORE_IDENTITY?.storeId || 'store-luk123-b1986',
+    storeName: window.STORE_IDENTITY?.storeName || DATA.restaurant.name || '',
+    storeAddress: window.STORE_IDENTITY?.storeAddress || DATA.restaurant.address || '',
+    storeLatitude: Number(window.STORE_IDENTITY?.storeLat ?? DATA.restaurant.restaurantLat) || null,
+    storeLongitude: Number(window.STORE_IDENTITY?.storeLng ?? DATA.restaurant.restaurantLng) || null,
     preparationTime: preparationTime,
     estimatedReadyTime: estimatedReadyTime.toISOString(),
     items: ((cart || [])).map(item => ({
@@ -10148,7 +10164,7 @@ function renderAdminOrders(){
                 <option value="">Motoboy da loja: — Selecionar —</option>
                 ${(motoboys||[]).filter(isMotoboySelectable).map(m => `<option value="${m.id}" ${order.motoboyId === m.id ? 'selected' : ''}>${m.name} · ${automaticMotoboyStatus(m) === 'entrega' ? 'Em entrega' : 'Disponível'}</option>`).join('') || '<option value="" disabled>Nenhum motoboy da loja conectado</option>'}
               </select>
-              <button type="button" class="pill partner-motoboy-search" onclick="event.stopPropagation(); window.openPartnerMotoboyPicker && window.openPartnerMotoboyPicker('${order.id}')">Buscar parceiros disponíveis</button>
+              <button type="button" class="pill partner-motoboy-search" onclick="event.stopPropagation(); window.openPartnerMotoboyPicker && window.openPartnerMotoboyPicker('${order.id}')">Solicitar parceiro à Central</button>
             </div>` : order.motoboyName ? `<span class="order-motoboy-assigned" style="display:inline-flex;align-items:center;padding:5px 8px;border:1px solid rgba(90,160,120,.35);border-radius:5px;color:#3f8059;background:rgba(90,160,120,.08);font-size:11px;">🏍️ ${escapeOrderText(order.motoboyName)} em entrega</span>` : '');
     const storeChatControl = !internalOrder && order.userId ? `<button type='button' class='order-chat-admin-btn' data-order-chat-open='1' data-order-chat-id='${escapeOrderText(order.id)}' data-order-chat-role='store' onclick='event.stopPropagation()'>💬 Chat do pedido</button>` : '';
     const timelineControl = internalOrder ? '' : `<button type='button' class='history-order-btn' style='background:#9c27b0;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); showOrderTimeline("${order.id}")'>📜 Histórico</button>`;
