@@ -1697,6 +1697,25 @@ window.printOrder = function(orderId) {
   #partnerApplicationForm button[type="submit"]{min-width:150px}
   @media(max-width:520px){#partnerApplicationModal{padding:10px 8px}#partnerApplicationModal>.card{max-height:calc(100dvh - 20px);border-radius:14px}#partnerApplicationModal .partner-application-grid{grid-template-columns:1fr}#partnerApplicationModal .partner-application-grid .wide{grid-column:auto}}
 </style>
+<style id="round2-store-pdv-uniform">
+  /* Rodada 2: PDV usa a mesma caixa compacta e regular do cardápio. */
+  .totem-products-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; align-items: start; }
+  .totem-product-card { height: 318px; min-height: 318px; }
+  .totem-product-card .totem-card-img-wrap { height: 172px; min-height: 172px; aspect-ratio: auto; }
+  .totem-product-card .totem-card-body { height: 146px; min-height: 146px; flex: 0 0 146px; padding: 10px 12px 12px; gap: 5px; overflow: hidden; }
+  .totem-product-card h4 { min-height: 22px; font-size: 16px; line-height: 1.2; }
+  .totem-product-card p { min-height: 36px; max-height: 36px; font-size: 12px; line-height: 1.35; }
+  .totem-product-card .totem-price-row { margin-top: auto; }
+  @media (max-width: 600px) {
+    .totem-products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .totem-product-card { height: 276px; min-height: 276px; }
+    .totem-product-card .totem-card-img-wrap { height: 142px; min-height: 142px; }
+    .totem-product-card .totem-card-body { height: 134px; min-height: 134px; flex-basis: 134px; padding: 8px 9px 10px; }
+    .totem-product-card h4 { font-size: 14px; }
+    .totem-product-card .totem-price { font-size: 17px; }
+    .totem-product-card .totem-add-btn { padding: 8px 10px; font-size: 12px; }
+  }
+</style>
 </head>
       <body>
 ===============================================
@@ -3674,7 +3693,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 
     <div class="modal" id="partnerMotoboyModal">
       <div class="card" role="dialog" aria-modal="true" style="max-width:520px">
-        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3>Solicitar parceiro à Central</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">A Central seleciona automaticamente o parceiro disponível mais próximo e define a remuneração pela política de logística.</p></div><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()" aria-label="Fechar">&times;</button></div>
+        <div class="brasa-detail-header"><div><small style="color:#ff9d72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase">Rede Supremo</small><h3>Buscar motoboy</h3><p style="margin:5px 0 0;color:#9f9287;font-size:11px">A Central está localizando um parceiro disponível. O pedido só será conectado depois que o motoboy aceitar a corrida.</p></div><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()" aria-label="Fechar">&times;</button></div>
         <div id="partnerMotoboyList" class="partner-motoboy-list"></div>
         <div style="display:flex;justify-content:flex-end;margin-top:15px"><button type="button" class="pill" onclick="window.closePartnerMotoboyPicker?.()">Cancelar</button></div>
       </div>
@@ -10164,7 +10183,7 @@ function renderAdminOrders(){
                 <option value="">Motoboy da loja: — Selecionar —</option>
                 ${(motoboys||[]).filter(isMotoboySelectable).map(m => `<option value="${m.id}" ${order.motoboyId === m.id ? 'selected' : ''}>${m.name} · ${automaticMotoboyStatus(m) === 'entrega' ? 'Em entrega' : 'Disponível'}</option>`).join('') || '<option value="" disabled>Nenhum motoboy da loja conectado</option>'}
               </select>
-              <button type="button" class="pill partner-motoboy-search" onclick="event.stopPropagation(); window.openPartnerMotoboyPicker && window.openPartnerMotoboyPicker('${order.id}')">Solicitar parceiro à Central</button>
+              <button type="button" class="pill partner-motoboy-search" onclick="event.stopPropagation(); window.openPartnerMotoboyPicker && window.openPartnerMotoboyPicker('${order.id}')">Buscar motoboy</button>
             </div>` : order.motoboyName ? `<span class="order-motoboy-assigned" style="display:inline-flex;align-items:center;padding:5px 8px;border:1px solid rgba(90,160,120,.35);border-radius:5px;color:#3f8059;background:rgba(90,160,120,.08);font-size:11px;">🏍️ ${escapeOrderText(order.motoboyName)} em entrega</span>` : '');
     const storeChatControl = !internalOrder && order.userId ? `<button type='button' class='order-chat-admin-btn' data-order-chat-open='1' data-order-chat-id='${escapeOrderText(order.id)}' data-order-chat-role='store' onclick='event.stopPropagation()'>💬 Chat do pedido</button>` : '';
     const timelineControl = internalOrder ? '' : `<button type='button' class='history-order-btn' style='background:#9c27b0;color:#fff; padding: 5px 8px; border: none; border-radius: 5px; cursor: pointer;' onclick='event.stopPropagation(); showOrderTimeline("${order.id}")'>📜 Histórico</button>`;
@@ -16521,11 +16540,11 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 
     let html = `
       <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:14px">
-        <h5 style="margin:0 0 10px">📔 Controle de Fiado (Conta de Clientes)</h5>
-        <p style="font-size:12px;color:#888;margin:0 0 14px">Clientes com fiado ativado: todos os pedidos ficam pendurados na conta. O botão "Ativar Fiado" está no card de cada cliente na aba Controle de Clientes.</p>
+        <h5 style="margin:0 0 10px">📔 Controle de Contas Penduradas</h5>
+        <p style="font-size:12px;color:#888;margin:0 0 14px">Clientes com conta pendurada: todos os pedidos ficam pendurados na conta. O botão "Pendurar conta" está no card de cada cliente na aba Controle de Clientes.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px">
           <div style="background:#f9f9f9;border-radius:8px;padding:12px;text-align:center">
-            <span style="display:block;font-size:11px;color:#888">Clientes no fiado</span>
+            <span style="display:block;font-size:11px;color:#888">Clientes com conta pendurada</span>
             <strong style="font-size:20px">${totalClientes}</strong>
           </div>
           <div style="background:#f9f9f9;border-radius:8px;padding:12px;text-align:center">
@@ -16536,7 +16555,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     `;
 
     if (clientesFiado.length === 0) {
-      html += '<p style="color:#999;font-size:13px;padding:14px;background:#f9f9f9;border-radius:8px">Nenhum cliente com fiado ativado. Vá na aba "Controle de Clientes" e clique em "Ativar Fiado" no card do cliente desejado.</p>';
+      html += '<p style="color:#999;font-size:13px;padding:14px;background:#f9f9f9;border-radius:8px">Nenhum cliente com conta pendurada. Vá na aba "Controle de Clientes" e clique em "Pendurar conta" no card do cliente desejado.</p>';
     } else {
       html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#f5f5f5"><th style="padding:8px;text-align:left">Cliente</th><th>Saldo devedor</th><th>Limite</th><th>Último lançamento</th><th>Ações</th></tr></thead><tbody>';
       clientesFiado.forEach(([id, c]) => {
@@ -16569,7 +16588,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     const bg = document.createElement('div');
     bg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999';
     bg.innerHTML = `<div style="background:#fff;border-radius:12px;padding:20px;max-width:500px;max-height:80vh;overflow-y:auto;width:90%">
-      <h5 style="margin:0 0 6px">Extrato de Fiado — ${c.name}</h5>
+      <h5 style="margin:0 0 6px">Extrato da conta pendurada — ${c.name}</h5>
       <div style="font-size:13px;margin-bottom:14px;color:#666">Saldo atual: <strong style="color:#dc3545;font-size:16px">${fmtBRL(c.saldo || 0)}</strong></div>
       ${(!c.lancamentos || c.lancamentos.length === 0) ? '<p style="color:#999">Sem lançamentos.</p>' : `
         <table style="width:100%;font-size:12px;border-collapse:collapse">
@@ -16646,7 +16665,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   }
 
   function desativar(userId) {
-    if (!confirm('Desativar fiado para este cliente? Ele voltará a ser um cliente comum (pagamento imediato).')) return;
+    if (!confirm('Retirar a conta pendurada para este cliente? Ele voltará a ser um cliente comum (pagamento imediato).')) return;
     load();
     if (data.clientes[userId]) {
       data.clientes[userId].enabled = false;
@@ -16654,7 +16673,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     }
     if (document.getElementById('fiadoPanelRoot')) renderFiadoPanelIntoRoot();
     if (typeof window.renderCustomers === 'function') window.renderCustomers();
-    alert('Fiado desativado. O cliente voltou ao modo de pagamento normal.');
+    alert('Conta pendurada retirada. O cliente voltou ao modo de pagamento normal.');
   }
 
   function renderFiadoPanelIntoRoot() {
@@ -16667,17 +16686,17 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     const ativo = isFiado(userId);
     const saldo = getSaldo(userId);
     if (ativo) {
-      return `<button onclick="window.FiadoModule.toggleButton('${userId}', '${(userName || '').replace(/'/g, "\\'")}')" style="background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;margin-left:5px;font-weight:600" title="Cliente no fiado — clique para desativar">Fiado ON ${saldo > 0 ? '(' + fmtBRL(saldo) + ')' : ''}</button>`;
+      return `<button onclick="window.FiadoModule.toggleButton('${userId}', '${(userName || '').replace(/'/g, "\\'")}')" style="background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;margin-left:5px;font-weight:600" title="Conta pendurada — clique para retirar">Conta pendurada ${saldo > 0 ? '(' + fmtBRL(saldo) + ')' : ''}</button>`;
     }
-    return `<button onclick="window.FiadoModule.toggleButton('${userId}', '${(userName || '').replace(/'/g, "\\'")}')" style="background:#6c757d;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;margin-left:5px" title="Ativar fiado para este cliente">Ativar Fiado</button>`;
+    return `<button onclick="window.FiadoModule.toggleButton('${userId}', '${(userName || '').replace(/'/g, "\\'")}')" style="background:#6c757d;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;margin-left:5px" title="Pendurar conta para este cliente">Pendurar conta</button>`;
   }
 
   function toggleButton(userId, userName) {
     const novoEstado = toggleFiado(userId, userName);
     if (novoEstado) {
-      alert('Fiado ativado para ' + (userName || 'este cliente') + '. Todos os pedidos a partir de agora ficarão pendurados na conta.');
+      alert('Conta pendurada para ' + (userName || 'este cliente') + '. Todos os pedidos a partir de agora ficarão pendurados na conta.');
     } else {
-      alert('Fiado desativado. O cliente voltou ao modo de pagamento normal.');
+      alert('Conta pendurada retirada. O cliente voltou ao modo de pagamento normal.');
     }
     if (typeof window.renderCustomers === 'function') window.renderCustomers();
   }
@@ -17160,7 +17179,16 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 <!-- ===================== TOTEM KIOSK CONTAINER ===================== -->
 <div id="totemKioskOverlay" style="display:none"></div>
 
-</body>
+</body><style id="round2-store-partner-search">
+  /* Rodada 2: busca de parceiro permanece no modal até o aceite real da Central. */
+  .partner-search-state,.partner-connected-state { display:grid; justify-items:center; gap:7px; padding:22px 14px; border:1px solid rgba(255,157,114,.22); border-radius:12px; background:rgba(255,157,114,.06); text-align:center; }
+  .partner-search-state strong,.partner-connected-state strong { color:#ffb08e; font-size:14px; }
+  .partner-search-state small,.partner-connected-state small { max-width:330px; color:#9f9287; font-size:10px; line-height:1.45; }
+  .partner-search-spinner { width:26px; height:26px; border:3px solid rgba(255,157,114,.22); border-top-color:#ff9d72; border-radius:50%; animation:partner-search-spin .8s linear infinite; }
+  .partner-connected-mark { display:grid; width:28px; height:28px; place-items:center; border-radius:50%; background:#47ad70; color:#fff; font-weight:900; }
+  @keyframes partner-search-spin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .partner-search-spinner { animation:none; } }
+</style>
 </html>
 
 
@@ -18541,15 +18569,31 @@ updatedAt:changedAt };
     }
   }
 
-  function currentMotoboyCredentials() {
+  async function currentMotoboyCredentials() {
     const identifier = byId('loginUser')?.value.trim() || '';
     const name = byId('loginPass')?.value.trim() || '';
     const phoneKey = normalizePhone(identifier);
     if (phoneKey.length < 8 || identifier.includes('@')) return null;
-    return findMotoboyByCredentials(phoneKey, name);
+    let found = findMotoboyByCredentials(phoneKey, name);
+    if (found) return found;
+    try {
+      const cfg = window.SUPREMO_BRIDGE_CONFIG?.motoboy;
+      if (cfg?.projectId && cfg?.apiKey && window.supremoRestReadCollection) {
+        const remote = await window.supremoRestReadCollection(cfg.projectId, cfg.apiKey, 'motoboys');
+        found = remote.find(item => item.active !== false && item.accountStatus !== 'suspended' && normalizePhone(item.phoneNormalized || item.phone) === phoneKey && normalizeName(item.loginNameNormalized || item.name) === normalizeName(name));
+        if (found) {
+          window.motoboys = [...allMotoboys().filter(item => String(item.id) !== String(found.id)), found];
+          try {
+            if (window.db && window.doc && window.setDoc) { const {id, ...mirror} = found; await window.setDoc(window.doc(window.db, 'motoboys', String(id)), mirror, {merge:true}); }
+          } catch (mirrorError) { console.warn('Espelho local do motoboy indisponível:', mirrorError?.message || mirrorError); }
+        }
+      }
+    } catch (error) { console.warn('Consulta da Central para login indisponível:', error?.message || error); }
+    return found || null;
   }
 
-  async function tryMotoboyLogin(motoboy = currentMotoboyCredentials()) {
+  async function tryMotoboyLogin(motoboy = null) {
+    if (!motoboy) motoboy = await currentMotoboyCredentials();
     if (!motoboy) return false;
     const session = exposeMotoboySession(motoboy);
     const knownOrders = Array.isArray(window.orders) ? window.orders.filter(order => String(order.motoboyId || '') === session.motoboyId) : [];
@@ -18573,19 +18617,23 @@ updatedAt:changedAt };
     const button = byId('loginSubmit');
     if (!button || button.dataset.motoboyCapture === '1') return;
     button.dataset.motoboyCapture = '1';
-    const intercept = event => {
-      const motoboy = currentMotoboyCredentials();
-      if (!motoboy) return;
+    const intercept = async event => {
+      const identifier = byId('loginUser')?.value.trim() || '';
+      if (identifier.includes('@') || normalizePhone(identifier).length < 8) return;
       event.preventDefault(); event.stopImmediatePropagation();
-      tryMotoboyLogin(motoboy);
+      const motoboy = await currentMotoboyCredentials();
+      if (!motoboy) return;
+      await tryMotoboyLogin(motoboy);
     };
     button.addEventListener('click', intercept, true);
-    byId('loginPass')?.addEventListener('keydown', event => {
+    byId('loginPass')?.addEventListener('keydown', async event => {
       if (event.key !== 'Enter') return;
-      const motoboy = currentMotoboyCredentials();
-      if (!motoboy) return;
+      const identifier = byId('loginUser')?.value.trim() || '';
+      if (identifier.includes('@') || normalizePhone(identifier).length < 8) return;
       event.preventDefault(); event.stopImmediatePropagation();
-      tryMotoboyLogin(motoboy);
+      const motoboy = await currentMotoboyCredentials();
+      if (!motoboy) return;
+      await tryMotoboyLogin(motoboy);
     }, true);
 
   }

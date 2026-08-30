@@ -262,43 +262,71 @@ function closePartnerMotoboyPicker() {
   if (modal) modal.classList.remove('open');
 }
 
+const activePartnerSearches = new Map();
+function partnerPickerState(list, title, detail='') { if (!list) return; list.innerHTML = `<div class="partner-search-state" role="status"><span class="partner-search-spinner" aria-hidden="true"></span><strong>${title}</strong><small>${detail}</small></div>`; }
+function partnerPickerConnected(list, name) { if (!list) return; list.innerHTML = `<div class="partner-connected-state" role="status"><span class="partner-connected-mark">✓</span><strong>Motoboy conectado</strong><small>${name || 'O parceiro'} aceitou a corrida e já está vinculado ao pedido.</small></div>`; }
+async function waitForPartnerRide(order, rideId, modal, list) {
+  let attempts = 0;
+  const timer = setInterval(async () => {
+    try {
+      const ride = window.supremoRestReadDocument ? await window.supremoRestReadDocument(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', rideId) : null;
+      if (!ride) return;
+      const status = String(ride.status || '').toLowerCase();
+      const courierId = String(ride.selectedCourierId || '').trim();
+      const courierName = ride.selectedCourierName || ride.offerCourierName || '';
+      if (status === 'accepted' || courierId) {
+        clearInterval(timer); activePartnerSearches.delete(String(order.id));
+        if (window.db && window.updateDoc && window.doc) {
+          await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { status:'out_for_delivery', motoboyId:courierId, motoboyName:courierName, deliveryDispatchStatus:'accepted', deliveryPartnerConnectedAt:new Date().toISOString(), deliveryOffer:{status:'accepted',rideId,motoboyId:courierId,motoboyName:courierName,acceptedAt:ride.deliveryAcceptedAt || new Date().toISOString()}, updatedAt:new Date().toISOString() });
+        }
+        partnerPickerConnected(list, courierName);
+        if (typeof window.renderAdminOrders === 'function') window.renderAdminOrders();
+        setTimeout(() => { if (modal) modal.classList.remove('open'); }, 1400);
+        return;
+      }
+      if (['cancelled','delivered'].includes(status)) { clearInterval(timer); activePartnerSearches.delete(String(order.id)); partnerPickerState(list, 'Busca encerrada', 'O pedido foi encerrado antes do aceite do motoboy.'); return; }
+      if (status === 'ready_for_dispatch' && ride.declinedAt) partnerPickerState(list, 'Buscando outro motoboy', 'O parceiro recusou a corrida. A Central continuará procurando disponibilidade.');
+    } catch (error) { console.warn('[Bridge2] Consulta do aceite indisponível:', error?.message || error); }
+    attempts += 1;
+    if (attempts >= 180) { clearInterval(timer); activePartnerSearches.delete(String(order.id)); partnerPickerState(list, 'Ainda procurando', 'A busca continua na Central. Feche este painel ou aguarde uma nova atualização.'); }
+  }, 4000);
+  return timer;
+}
+function closePartnerMotoboyPicker() {
+  const modal = document.getElementById('partnerMotoboyModal');
+  if (modal) modal.classList.remove('open');
+}
 async function openPartnerMotoboyPicker(orderId) {
   const order = (Array.isArray(window.orders) ? window.orders : []).find(item => String(item.id) === String(orderId));
   const modal = document.getElementById('partnerMotoboyModal');
   const list = document.getElementById('partnerMotoboyList');
   if (!order || !modal || !list) return;
-  list.innerHTML = '<div class="empty-list">Encaminhando para a Central de logística…</div>';
   modal.classList.add('open');
-  const partners = [{ id: 'central-auto', name: 'Central de logística', vehicleType: 'Seleção automática' }];
-  if (!partners.length) {
-    list.innerHTML = '<div class="empty-list"><b>Nenhum parceiro disponível agora</b>Os motoboys parceiros precisam estar aprovados e online na Central.</div>';
-    return;
-  }
-  list.innerHTML = partners.map(item => `<button type="button" class="partner-motoboy-option" data-partner-id="${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '')}"><span class="partner-avatar">${String(item.name || 'M').slice(0, 1).toUpperCase()}</span><span><b>${String(item.name || 'Motoboy parceiro').replace(/[&<>"']/g, '')}</b><small>${String(item.vehicleType || item.vehicleModel || 'Veículo não informado').replace(/[&<>"']/g, '')} · Disponível</small></span><strong>Solicitar</strong></button>`).join('');
-  list.querySelectorAll('[data-partner-id]').forEach(button => button.addEventListener('click', async () => {
-    const partner = partners.find(item => String(item.id) === String(button.dataset.partnerId));
-    if (partner) await offerPartnerCourier(order, partner);
-  }));
+  const key = String(order.id);
+  if (activePartnerSearches.has(key)) { partnerPickerState(list, 'Buscando motoboy', 'A oferta já está em análise pela Central.'); return; }
+  partnerPickerState(list, 'Buscando motoboy', 'A Central está localizando um parceiro disponível e calculando a corrida.');
+  activePartnerSearches.set(key, true);
+  await offerPartnerCourier(order);
 }
-
-async function offerPartnerCourier(order, partner) {
+async function offerPartnerCourier(order) {
   const modal = document.getElementById('partnerMotoboyModal');
+  const list = document.getElementById('partnerMotoboyList');
   const rideId = `ride_${order.id}`;
   try {
     const created = await requestMarketplaceCourier({ ...order, dispatchMode: order.dispatchMode || 'hybrid' });
     if (!created.ok) throw new Error(created.error || 'Corrida não criada');
     const now = new Date().toISOString();
-    await (window.supremoRestMergeWrite || supremoRestWrite)(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', created.rideId || rideId, { storeSelectionRequested: true, storeSelectionCandidateId: String(partner.id), storeSelectionCandidateName: partner.name || '', storeSelectionMode: 'advisory', pricingAuthority: 'motoboy_central', updatedAt: now });
-    if (window.db && window.updateDoc && window.doc) await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { deliveryPartnerCandidateId: String(partner.id), deliveryPartnerCandidateName: partner.name || '', deliveryDispatchStatus: 'central_pricing_pending', updatedAt: now });
-    if (modal) modal.classList.remove('open');
-    if (typeof window.renderAdminOrders === 'function') window.renderAdminOrders();
-    alert(`Solicitação encaminhada à Central. O valor será calculado pela política central e a oferta será enviada ao motoboy disponível.`);
+    const centralRideId = created.rideId || rideId;
+    await (window.supremoRestMergeWrite || supremoRestWrite)(MOTOBOY_CFG.projectId, MOTOBOY_CFG.apiKey, 'rides', centralRideId, { storeSelectionRequested: true, storeSelectionMode: 'automatic', pricingAuthority: 'motoboy_central', storeSearchStartedAt: now, updatedAt: now });
+    if (window.db && window.updateDoc && window.doc) await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), { deliveryPartnerCandidateId: null, deliveryPartnerCandidateName: null, deliveryDispatchStatus: 'searching_motoboy', 'deliveryOffer.status': 'searching_motoboy', 'deliveryOffer.rideId': centralRideId, 'deliveryOffer.searchStartedAt': now, updatedAt: now });
+    partnerPickerState(list, 'Buscando motoboy', 'A oferta foi enviada à Central. O pedido será conectado somente após o aceite.');
+    await waitForPartnerRide(order, centralRideId, modal, list);
   } catch (error) {
-    console.error('[Bridge2] Falha ao oferecer corrida a parceiro:', error);
-    alert('Não foi possível enviar a oferta para este motoboy parceiro.');
+    activePartnerSearches.delete(String(order.id));
+    console.error('[Bridge2] Falha ao buscar parceiro:', error);
+    partnerPickerState(list, 'Não foi possível iniciar a busca', 'Tente novamente quando o pedido estiver pronto para entrega.');
   }
 }
-
 if (typeof window !== "undefined") {
   window.requestMarketplaceCourier = requestMarketplaceCourier;
   window.cancelMarketplaceRide = cancelMarketplaceRide;
