@@ -2924,7 +2924,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
         <div id="items" class="items"></div>
       </main>
         <div class="cart-panel" id="cartPanel">
-          <h3>Meu Carrinho</h3>
+          <h3>Meu Carrinho <button type="button" id="cartClose" class="cart-close" aria-label="Fechar carrinho">×</button></h3>
           <div id="cartList"></div>
           <div class="cart-summary">
             <div class="summary-row">
@@ -3458,7 +3458,11 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 
     <div class="modal" id="addonManagementModal">
       <div class="card" role="dialog" aria-modal="true" style="max-width:800px">
+        <div class="addon-product-hero">
+          <img class="addon-product-image" id="addonProductImage" src="" alt="">
+        </div>
         <h3 id="addonManagementTitle">Gerenciar Adicionais para <span id="addonItemName" style="color:var(--primary);"></span></h3>
+        <p class="addon-product-description" id="addonProductDescription"></p>
         
         <div id="addonGroupsList"></div>
         
@@ -3496,7 +3500,11 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 
     <div class="modal" id="modal">
       <div class="card" role="dialog" aria-modal="true">
+        <div class="customer-product-hero">
+          <img id="modalProductImage" class="customer-product-image" src="" alt="">
+        </div>
         <h3 id="modalTitle">Adicionais</h3>
+        <p id="modalProductDescription" class="customer-product-description"></p>
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
           <div><strong id="modalItemName"></strong></div>
           <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
@@ -3928,15 +3936,19 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
     <div class="brasa-checkout-steps" role="tablist" aria-label="Etapas do checkout">
       <button type="button" class="brasa-checkout-step is-current" data-checkout-step="1" role="tab" aria-selected="true">
         <span class="brasa-checkout-step-index">1</span>
-        <span><strong>Sacola</strong><small>Itens do pedido</small></span>
+        <span><strong>Carrinho</strong></span>
       </button>
       <button type="button" class="brasa-checkout-step" data-checkout-step="2" role="tab" aria-selected="false">
         <span class="brasa-checkout-step-index">2</span>
-        <span><strong>Entrega</strong><small>Seus dados e endereço</small></span>
+        <span><strong>Entrega</strong></span>
       </button>
       <button type="button" class="brasa-checkout-step" data-checkout-step="3" role="tab" aria-selected="false">
         <span class="brasa-checkout-step-index">3</span>
-        <span><strong>Pagamento</strong><small>Revisão e confirmação</small></span>
+        <span><strong>Pagamento</strong></span>
+      </button>
+      <button type="button" class="brasa-checkout-step" data-checkout-step="4" role="tab" aria-selected="false">
+        <span class="brasa-checkout-step-index">4</span>
+        <span><strong>Revisão</strong></span>
       </button>
     </div>
 
@@ -4089,27 +4101,33 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               <div class="brasa-checkout-note brasa-secure-note"><strong>Pedido protegido.</strong> Seus dados são usados apenas para entregar e registrar o pedido.</div>
             </div>
 
-            <aside class="brasa-review-card" aria-label="Revisão final do pedido">
-              <div class="brasa-summary-card-title">Revise antes de confirmar</div>
-              <div class="brasa-review-group">
-                <div class="brasa-review-heading"><strong>Entrega</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="2">Alterar</button></div>
-                <div id="checkoutReviewName" class="brasa-review-value">—</div>
-                <div id="checkoutReviewPhone" class="brasa-review-value">—</div>
-                <div id="checkoutReviewAddress" class="brasa-review-value">—</div>
-                <div id="checkoutReviewArea" class="brasa-review-value">—</div>
+          </div>
+        </section>
+
+        <section class="brasa-checkout-panel hidden" data-checkout-panel="4" role="tabpanel" aria-labelledby="checkoutModalTitle" hidden>
+          <div class="brasa-checkout-layout brasa-review-layout-full">
+            <div>
+              <div class="brasa-section-heading">
+                <div>
+                  <span class="brasa-checkout-kicker">ETAPA 04</span>
+                  <h4>Confira sua comanda</h4>
+                  <p class="brasa-checkout-subtitle">Tudo certo? Revise os dados abaixo antes de enviar o pedido para a loja.</p>
+                </div>
               </div>
-              <div class="brasa-review-group">
-                <div class="brasa-review-heading"><strong>Pagamento</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="3">Alterar</button></div>
-                <div id="checkoutReviewPayment" class="brasa-review-value">Cartão de crédito</div>
+              <div class="brasa-review-card brasa-order-ticket">
+                <div class="brasa-summary-card-title">Comanda do pedido</div>
+                <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Itens do pedido</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="1">Alterar</button></div><div id="checkoutReviewItems" class="brasa-mini-items"></div></div>
+                <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Entrega</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="2">Alterar</button></div><div id="checkoutReviewName" class="brasa-review-value">—</div><div id="checkoutReviewPhone" class="brasa-review-value">—</div><div id="checkoutReviewAddress" class="brasa-review-value">—</div><div id="checkoutReviewArea" class="brasa-review-value">—</div></div>
+                <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Pagamento</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="3">Alterar</button></div><div id="checkoutReviewPayment" class="brasa-review-value">Cartão de crédito</div><div id="checkoutReviewChange" class="brasa-review-value"></div></div>
               </div>
-              <div class="brasa-review-group">
-                <div class="brasa-review-heading"><strong>Itens</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="1">Alterar</button></div>
-                <div id="checkoutReviewItems" class="brasa-mini-items"></div>
-              </div>
+            </div>
+            <aside class="brasa-checkout-summary-card brasa-sticky-summary" aria-label="Totais da comanda">
+              <div class="brasa-summary-card-title">Fechamento do pedido</div>
               <div class="brasa-summary-line"><span>Subtotal</span><strong id="checkoutReviewSubtotal">R$ 0,00</strong></div>
               <div class="brasa-summary-line brasa-summary-discount"><span>Desconto</span><strong id="checkoutReviewDiscount">- R$ 0,00</strong></div>
-              <div class="brasa-summary-line"><span>Entrega</span><strong id="checkoutReviewDeliveryFee">R$ 0,00</strong></div>
+              <div class="brasa-summary-line"><span>Taxa de entrega</span><strong id="checkoutReviewDeliveryFee">R$ 0,00</strong></div>
               <div class="brasa-summary-total"><span>Total a pagar</span><strong id="checkoutReviewTotal">R$ 0,00</strong></div>
+              <div class="brasa-checkout-note"><strong>Última conferência.</strong> Ao clicar em “Enviar pedido”, a loja receberá esta comanda com todos os dados.</div>
             </aside>
           </div>
         </section>
@@ -4120,7 +4138,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
         <div class="brasa-checkout-actions">
           <button type="button" id="checkoutPrevious" class="pill" hidden>Voltar</button>
           <button type="button" id="checkoutNext" class="btn">Continuar</button>
-          <button type="submit" id="checkoutSubmit" class="btn" hidden disabled>Confirmar pedido</button>
+          <button type="submit" id="checkoutSubmit" class="btn" hidden disabled>Enviar pedido</button>
         </div>
       </div>
     </form>
@@ -4217,8 +4235,6 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
           <div class="ifood-code-num" id="ifoodConfirmCode">0000</div>
           <div class="ifood-code-hint">Informe ao entregador ao receber</div>
         </div>
-
-        <div class="ifood-confirm-summary-toggle" id="ifoodSummaryToggle">Ver resumo do pedido ▼</div>
         <div class="ifood-confirm-summary" id="confirmationSummaryContent" style="display:none;"></div>
 
         <div class="ifood-confirm-footer">
@@ -6705,7 +6721,7 @@ function logoutUser(){
 
 async function finalizeOrder(e) {
   e.preventDefault();
-  if (checkoutStep !== 3 || !validateCheckoutStep(3)) return;
+  if (checkoutStep !== 4 || !validateCheckoutStep(4)) return;
   
   if (!currentUser) {
       alert("Você precisa estar logado para fazer o pedido.");
@@ -8447,6 +8463,16 @@ function openModal(item, isPdv = false){
     document.querySelector("#modalTitle").textContent = "Personalizar " + safeItem.name;
     document.querySelector("#modalItemName").textContent = safeItem.name;
     document.querySelector("#modalItemQty").textContent = modalState.qty;
+
+    const productImage = document.querySelector("#modalProductImage");
+    if (productImage) {
+        productImage.src = safeItem.img || safeItem.image || blankSVG();
+        productImage.alt = safeItem.name || "Produto";
+    }
+    const productDescription = document.querySelector("#modalProductDescription");
+    if (productDescription) {
+        productDescription.textContent = safeItem.desc || safeItem.description || "Descrição não cadastrada.";
+    }
     
     renderModalAddons();
     calculateModalTotal();
@@ -9558,12 +9584,23 @@ async function saveImageEdit(e){
 
 function openAddonManagementModal(item){
     addonManagerState = item;
+    const modal = document.querySelector("#addonManagementModal");
     document.querySelector("#addonManagementTitle").textContent = "Gerenciar Adicionais para ";
     document.querySelector("#addonItemName").textContent = item.name;
+
+    const productImage = modal?.querySelector(".addon-product-image");
+    if (productImage) {
+        productImage.src = item.img || item.image || blankSVG();
+        productImage.alt = item.name || "Produto";
+    }
+    const productDescription = modal?.querySelector(".addon-product-description");
+    if (productDescription) {
+        productDescription.textContent = item.desc || item.description || "Descrição não cadastrada.";
+    }
     
     renderAddonGroups();
     
-    document.querySelector("#addonManagementModal").classList.add('open');
+    modal?.classList.add('open');
 }
 
 function closeAddonManagementModal(){
@@ -11505,6 +11542,9 @@ function updateCheckoutReview() {
   set('checkoutReviewAddress', document.getElementById('checkoutAddress')?.value.trim());
   set('checkoutReviewArea', getCheckoutDeliverySummary());
   set('checkoutReviewPayment', getCheckoutPaymentLabel());
+  const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+  const cashChange = Number(document.getElementById('cashChange')?.value) || 0;
+  set('checkoutReviewChange', selectedPayment?.value === 'cash' && cashChange > 0 ? `Troco para ${formatBRL(cashChange)}` : '');
 
   const miniItems = document.getElementById('checkoutDeliveryMiniItems');
   const reviewItems = document.getElementById('checkoutReviewItems');
@@ -11517,7 +11557,7 @@ function updateCheckoutReview() {
 }
 
 function setCheckoutStep(step, options = {}) {
-  const nextStep = Math.max(1, Math.min(3, Number(step) || 1));
+  const nextStep = Math.max(1, Math.min(4, Number(step) || 1));
   checkoutStep = nextStep;
   document.querySelectorAll('[data-checkout-panel]').forEach(panel => {
     const active = Number(panel.dataset.checkoutPanel) === checkoutStep;
@@ -11536,9 +11576,9 @@ function setCheckoutStep(step, options = {}) {
   const next = document.getElementById('checkoutNext');
   const submit = document.getElementById('checkoutSubmit');
   if (previous) previous.hidden = checkoutStep === 1;
-  if (next) next.hidden = checkoutStep === 3;
-  if (submit) submit.hidden = checkoutStep !== 3;
-  const titles = { 1: 'Confira sua sacola', 2: 'Onde vamos entregar?', 3: 'Como você prefere pagar?' };
+  if (next) next.hidden = checkoutStep === 4;
+  if (submit) submit.hidden = checkoutStep !== 4;
+  const titles = { 1: 'Confira sua sacola', 2: 'Onde vamos entregar?', 3: 'Como você prefere pagar?', 4: 'Revise sua comanda antes de enviar' };
   if (!options.keepMessage) showCheckoutFeedback(titles[checkoutStep]);
   updateCheckoutReview();
 
@@ -11851,6 +11891,11 @@ function validateCheckoutStep(step) {
     }
     return getCheckoutTotalNumber() > 0;
   }
+  if (step === 4) {
+    if (!validateCheckoutStep(1) || !validateCheckoutStep(2) || !validateCheckoutStep(3)) return false;
+    updateCheckoutReview();
+    return getCheckoutTotalNumber() > 0;
+  }
   return true;
 }
 
@@ -11870,11 +11915,13 @@ function openCheckoutModal(){
         return;
     }
 
-    // No mobile, fecha o painel flutuante antes de abrir o checkout para não sobrepor o modal.
-    if (window.innerWidth <= 1024) {
-        const cartPanel = document.querySelector("#cartPanel");
-        if (cartPanel) cartPanel.style.display = 'none';
+    // Fecha o carrinho em qualquer largura antes de abrir o checkout completo.
+    const cartPanel = document.querySelector("#cartPanel");
+    if (cartPanel) {
+        cartPanel.style.display = 'none';
+        cartPanel.classList.remove('cart-fullscreen-open');
     }
+    document.body.classList.remove('cart-screen-open');
 
     appliedCoupon = null;
     document.querySelector("#checkoutName").value = currentUser.name || currentUser.displayName || '';
@@ -12402,15 +12449,19 @@ function initListeners(){
   });
   
   // --- Footer/Carrinho Mobile ---
-  document.querySelector("#btnViewCart").addEventListener("click", () => {
+  // Usa delegação de eventos para continuar funcionando mesmo quando o rodapé
+  // ou o painel são re-renderizados por outras rotinas da loja.
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest?.("#btnViewCart");
+    if (!button) return;
     const cartPanel = document.querySelector("#cartPanel");
-    const isActive = window.getComputedStyle(cartPanel).display === 'block';
-
-    if (isActive) {
-      cartPanel.style.display = 'none';
-    } else {
-      cartPanel.style.display = 'block';
-    }
+    if (!cartPanel) return;
+    event.preventDefault();
+    // Retira o painel do grid da página e o transforma em overlay real de viewport.
+    if (cartPanel.parentElement !== document.body) document.body.appendChild(cartPanel);
+    cartPanel.classList.add('cart-fullscreen-open');
+    cartPanel.style.display = 'block';
+    document.body.classList.add('cart-screen-open');
   });
 
 
@@ -17314,7 +17365,11 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 
     <div class="modal" id="addonManagementModal">
       <div class="card" role="dialog" aria-modal="true" style="max-width:800px">
+        <div class="addon-product-hero">
+          <img class="addon-product-image" id="addonProductImage" src="" alt="">
+        </div>
         <h3 id="addonManagementTitle">Gerenciar Adicionais para <span id="addonItemName" style="color:var(--primary);"></span></h3>
+        <p class="addon-product-description" id="addonProductDescription"></p>
         
         <div id="addonGroupsList"></div>
         
@@ -22035,3 +22090,391 @@ updatedAt:changedAt };
   window.addEventListener('beforeunload', stopMarketingFlyerTimer);
 })();
 </script>
+
+<style id="delivery-fullscreen-overrides">
+/* Carrinho e checkout em experiência de tela única */
+.cart-close{display:none}
+#cartPanel:not(.cart-fullscreen-open){display:none!important}
+#cartPanel.cart-fullscreen-open,#cartPanel[style*="display: block"]{position:fixed!important;top:0!important;left:0!important;right:auto!important;bottom:auto!important;inset:0 auto auto 0!important;transform:none!important;z-index:400!important;width:100dvw!important;min-width:100dvw!important;height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;display:block!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain;background:#151310!important;padding-bottom:24px!important}
+#cartPanel.cart-fullscreen-open h3{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(21,19,16,.98);backdrop-filter:blur(14px)}
+#cartPanel.cart-fullscreen-open .cart-close{display:inline-grid;place-items:center;width:34px;height:34px;margin-left:auto;border:1px solid rgba(246,232,214,.18);border-radius:50%;background:#24211d;color:#f5ece2;font-size:23px;line-height:1;cursor:pointer}
+#cartPanel.cart-fullscreen-open #cartList{min-height:0;padding:12px 20px}
+#cartPanel.cart-fullscreen-open .cart-summary{padding:18px 20px}
+#cartPanel.cart-fullscreen-open #btnCheckout{width:calc(100% - 40px);margin:0 20px 20px;min-height:50px}
+@media (max-width:1024px){
+  body.cart-screen-open{overflow:hidden}
+  #cartPanel{position:fixed!important;inset:0!important;z-index:400!important;width:100vw!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;display:none;overflow-y:auto;overscroll-behavior:contain;background:#151310!important;padding-bottom:24px!important}
+  #cartPanel h3{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(21,19,16,.98);backdrop-filter:blur(14px)}
+  #cartPanel .cart-close{display:inline-grid;place-items:center;width:34px;height:34px;margin-left:auto;border:1px solid rgba(246,232,214,.18);border-radius:50%;background:#24211d;color:#f5ece2;font-size:23px;line-height:1;cursor:pointer}
+  #cartPanel #cartList{min-height:0;padding:12px 20px}
+  #cartPanel .cart-summary{padding:18px 20px}
+  #cartPanel #btnCheckout{width:calc(100% - 40px);margin:0 20px 20px;min-height:50px}
+}
+/* Checkout modal em tela completa, com rolagem interna segura */
+.brasa-checkout-steps{grid-template-columns:repeat(4,minmax(0,1fr))}
+.brasa-checkout-step{min-width:0;overflow:hidden}
+.brasa-checkout-step>span:last-child{min-width:0;max-width:100%;overflow:hidden}
+.brasa-checkout-step strong,.brasa-checkout-step small{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:normal;overflow-wrap:anywhere}
+.brasa-review-layout-full{align-items:stretch;min-width:0}
+.brasa-review-layout-full>*{min-width:0}
+.brasa-order-ticket{min-width:0;overflow:hidden}
+.brasa-order-ticket .brasa-review-heading{flex-wrap:wrap}
+.brasa-order-ticket .brasa-review-value,.brasa-order-ticket .brasa-mini-item,.brasa-order-ticket .brasa-mini-item>*{min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.brasa-order-ticket{height:100%;background:linear-gradient(145deg,rgba(255,90,31,.055),rgba(8,8,7,.26))}
+.brasa-order-ticket .brasa-review-group{padding:15px 0}
+#checkoutModal{padding:0!important;align-items:stretch!important;justify-content:stretch!important;z-index:400!important}
+#checkoutModal .brasa-checkout-card{width:100vw!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+#checkoutModal .brasa-checkout-header{position:sticky;top:0;z-index:5;background:rgba(27,23,19,.98);backdrop-filter:blur(14px)}
+#checkoutModal .brasa-checkout-footer{position:sticky;bottom:0;z-index:20;margin-top:auto;background:rgba(8,8,7,.98);box-shadow:0 -10px 24px rgba(0,0,0,.36)}
+@media(max-width:900px){#checkoutModal .brasa-review-layout-full{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:760px){#checkoutModal .brasa-checkout-steps{grid-template-columns:repeat(4,minmax(0,1fr));}.brasa-checkout-step{padding-left:8px;padding-right:8px;gap:5px}.brasa-checkout-step strong{font-size:9px}.brasa-checkout-step small{font-size:8px;line-height:1.2}.brasa-order-ticket .brasa-review-heading{align-items:flex-start}.brasa-order-ticket .brasa-review-heading .brasa-link-button{flex:none}}
+/* Confirmação compacta, objetiva e sem o resumo expandível */
+#confirmationModal{padding:16px!important}
+#confirmationModal .ifood-confirm-card{width:min(420px,calc(100vw - 32px));max-width:420px!important;max-height:min(680px,calc(100dvh - 32px));overflow-y:auto;border-radius:14px}
+#confirmationModal .ifood-confirm-header{padding:20px 18px 15px}
+#confirmationModal .ifood-confirm-check{width:46px;height:46px;font-size:25px;margin-bottom:9px}
+#confirmationModal .ifood-confirm-title{font-size:20px}
+#confirmationModal .ifood-confirm-subtitle{font-size:12px}
+#confirmationModal .ifood-confirm-order-num{padding:9px 18px;font-size:22px}
+#confirmationModal .ifood-confirm-timeline{padding:17px 14px 10px}
+#confirmationModal .ifood-step-label{font-size:9px}
+#confirmationModal .ifood-confirm-eta,#confirmationModal .ifood-confirm-code{margin:0 14px 10px;padding:12px}
+#confirmationModal .ifood-confirm-footer{padding:12px 14px 16px}
+#confirmationModal .ifood-confirm-btn{padding:13px;font-size:15px;border-radius:9px}
+</style>
+<script>
+(function(){
+  const cart=document.getElementById('cartPanel');
+  const close=document.getElementById('cartClose');
+  const toggleBody=(open)=>document.body.classList.toggle('cart-screen-open',open);
+  if(cart){
+    const observer=new MutationObserver(()=>toggleBody(cart.style.display==='block'));
+    observer.observe(cart,{attributes:true,attributeFilter:['style','class']});
+  }
+  if(close){close.addEventListener('click',()=>{if(cart){cart.style.display='none';cart.classList.remove('cart-fullscreen-open');toggleBody(false);}})}
+  document.getElementById('btnCheckout')?.addEventListener('click',()=>toggleBody(false));
+  document.getElementById('checkoutClose')?.addEventListener('click',()=>toggleBody(false));
+  document.getElementById('checkoutCancel')?.addEventListener('click',()=>toggleBody(false));
+})();
+</script>
+
+
+<style id="admin-fullscreen-overrides">
+/* Painel administrativo acima do rodapé em qualquer tamanho de tela. */
+#adminModal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 500 !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+#adminModal.open {
+  display: flex !important;
+}
+
+#adminModal > .card {
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#adminModal > .card > h3 {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 0 16px !important;
+  padding: 18px 20px !important;
+  background: rgba(35, 32, 28, .98);
+  border-bottom: 1px solid rgba(246, 232, 214, .12);
+}
+
+#adminModal .admin-tabs {
+  position: sticky;
+  top: 69px;
+  z-index: 4;
+  margin: 0 0 16px !important;
+  padding: 0 0 8px !important;
+  background: rgba(35, 32, 28, .98);
+}
+
+#adminModal #adminContent {
+  min-width: 0;
+  padding-bottom: 28px;
+}
+
+body:has(#adminModal.open) {
+  overflow: hidden !important;
+}
+
+@media (max-width: 600px) {
+  #adminModal > .card {
+    width: 100dvw !important;
+  }
+
+  #adminModal > .card > h3 {
+    padding: 15px 14px !important;
+    font-size: 25px !important;
+  }
+
+  #adminModal .admin-tabs {
+    top: 62px;
+    gap: 6px;
+    padding: 0 0 8px !important;
+  }
+
+  #adminModal .admin-tabs button {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+}
+</style>
+
+
+<style id="addon-fullscreen-overrides">
+/* Modal de adicionais em tela cheia, acima do painel administrativo e do rodapé. */
+#addonManagementModal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 520 !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+#addonManagementModal.open {
+  display: flex !important;
+}
+
+#addonManagementModal > .card {
+  display: flex;
+  flex-direction: column;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  padding: 0 20px 24px !important;
+  box-sizing: border-box !important;
+  border-radius: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#addonManagementModal .addon-product-hero {
+  flex: 0 0 auto;
+  width: calc(100% + 40px);
+  height: clamp(220px, 34vh, 380px);
+  margin: 0 -20px 18px;
+  background: #171513;
+  border-bottom: 1px solid rgba(246, 232, 214, .14);
+  overflow: hidden;
+}
+
+#addonManagementModal .addon-product-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+#addonManagementModal #addonManagementTitle {
+  flex: 0 0 auto;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  color: #fff1e7 !important;
+  font-size: clamp(24px, 3vw, 34px) !important;
+  line-height: 1.08;
+}
+
+#addonManagementModal .addon-product-description {
+  flex: 0 0 auto;
+  margin: 0 0 20px;
+  color: #c9bdb0;
+  font-size: clamp(14px, 1.5vw, 18px);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+#addonManagementModal #addonGroupsList {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+#addonManagementModal > .card > div:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  flex: 0 0 auto;
+  margin: 20px -20px 0 !important;
+  padding: 14px 20px 0;
+  background: linear-gradient(to bottom, rgba(35, 32, 28, 0), rgba(35, 32, 28, .98) 22%);
+}
+
+body:has(#addonManagementModal.open) {
+  overflow: hidden !important;
+}
+
+@media (max-width: 600px) {
+  #addonManagementModal > .card {
+    width: 100dvw !important;
+    padding: 0 14px 18px !important;
+  }
+
+  #addonManagementModal .addon-product-hero {
+    width: calc(100% + 28px);
+    height: clamp(210px, 30vh, 310px);
+    margin-left: -14px;
+    margin-right: -14px;
+    margin-bottom: 15px;
+  }
+
+  #addonManagementModal #addonManagementTitle {
+    font-size: 25px !important;
+  }
+
+  #addonManagementModal .addon-product-description {
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+
+  #addonManagementModal > .card > div:last-child {
+    margin-left: -14px !important;
+    margin-right: -14px !important;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+</style>
+
+
+<style id="customer-product-modal-overrides">
+/* Modal aberto ao clicar no produto: tela cheia e acima do rodapé. */
+#modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 600 !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+#modal.open {
+  display: flex !important;
+}
+
+#modal > .card {
+  display: flex;
+  flex-direction: column;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  padding: 0 20px 24px !important;
+  box-sizing: border-box !important;
+  border-radius: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#modal .customer-product-hero {
+  flex: 0 0 auto;
+  width: calc(100% + 40px);
+  height: clamp(220px, 34vh, 380px);
+  margin: 0 -20px 18px;
+  background: #171513;
+  border-bottom: 1px solid rgba(246, 232, 214, .14);
+  overflow: hidden;
+}
+
+#modal .customer-product-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+#modal #modalTitle {
+  flex: 0 0 auto;
+  margin: 0 0 8px !important;
+  color: #fff1e7 !important;
+  font-size: clamp(24px, 3vw, 34px) !important;
+  line-height: 1.08;
+}
+
+#modal .customer-product-description {
+  flex: 0 0 auto;
+  margin: 0 0 18px;
+  color: #c9bdb0;
+  font-size: clamp(14px, 1.5vw, 18px);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+#modal #modalAddons {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+#modal #productReviewsSection {
+  flex: 0 0 auto;
+}
+
+#modal > .card > div:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  flex: 0 0 auto;
+  margin: 20px -20px 0 !important;
+  padding: 14px 20px 0;
+  background: linear-gradient(to bottom, rgba(35, 32, 28, 0), rgba(35, 32, 28, .98) 22%);
+}
+
+body:has(#modal.open) {
+  overflow: hidden !important;
+}
+
+@media (max-width: 600px) {
+  #modal > .card {
+    width: 100dvw !important;
+    padding: 0 14px 18px !important;
+  }
+
+  #modal .customer-product-hero {
+    width: calc(100% + 28px);
+    height: clamp(210px, 30vh, 310px);
+    margin-left: -14px;
+    margin-right: -14px;
+    margin-bottom: 15px;
+  }
+
+  #modal #modalTitle {
+    font-size: 25px !important;
+  }
+
+  #modal .customer-product-description {
+    margin-bottom: 15px;
+    font-size: 15px;
+  }
+
+  #modal > .card > div:last-child {
+    margin-left: -14px !important;
+    margin-right: -14px !important;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+</style>
