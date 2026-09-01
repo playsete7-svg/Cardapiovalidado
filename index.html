@@ -2964,6 +2964,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               <button id="tabIntegracoes">Integrações & Fiscal</button>
               <button id="tabFinanceiro">Financeiro (DRE)</button>
               <button id="tabTotems">📱 Totem (Autoatendimento)</button>
+              <button id="tabMarketing">Marketing</button>
               <button id="btnComandaAvulsa" class="pill" style="background:#ffe6b3; color:#663300; font-weight:700; margin-left:6px;">Comanda Avulsa</button>
               <button id="closeAdminModal" style="text-align:right;margin-top:16px">Fechar</button>
             </div>
@@ -3381,6 +3382,11 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
   <h4>📱 Gestão de Totens de Autoatendimento</h4>
   <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Cadastre e gerencie os totens (quiosques de autoatendimento) da loja. Cada totem gera credenciais automáticas para login no modo quiosque.</p>
   <div id="totemAdminRoot"></div>
+</div>
+<div id="marketingPanel" class="admin-panel hidden">
+  <h4>Marketing — Flyers do cardápio</h4>
+  <p class="marketing-panel-intro">Cadastre quantos flyers quiser. Eles serão exibidos um por vez entre as categorias e a seção de promoções do cardápio.</p>
+  <div id="marketingRoot"></div>
 </div>
             </div>
           </div>
@@ -5152,7 +5158,6 @@ const firebaseConfig = {
     apiKey: "AIzaSyBYxYq65hf2zwBTKrwuFAg5AmS5iM88aLU", 
     authDomain: "luk123-b1986.firebaseapp.com", 
     projectId: "luk123-b1986", 
-    storageBucket: "luk123-b1986.firebasestorage.app", 
     messagingSenderId: "55447377903", 
     appId: "1:55447377903:web:e9cbbcdba3a4ed5dc4081a"
 };
@@ -5380,6 +5385,7 @@ async function fetchMenuData() {
             if (!activeCategoryExists) activeCat = DATA.categories[0].id;
         }
 
+        if (window.loadMarketingFlyers) await window.loadMarketingFlyers();
         renderAll();
         // Começa a monitorar pedidos em tempo real imediatamente (ou após login)
         setupRealtimeOrdersListener();
@@ -5428,9 +5434,10 @@ async function saveMenuData() {
         console.error("Erro ao salvar cardápio no Firebase:", e);
         alert("Falha ao salvar. Verifique as regras de segurança do seu Firebase.");
         return false;
-    }
+        }
 }
-
+// Ponte pública para módulos independentes, como Marketing, usarem o mesmo salvamento do produto.
+window.saveMenuData = saveMenuData;
 /**
  * Mantém o array 'orders' atualizado em tempo real e notifica o admin.
  */
@@ -7051,6 +7058,8 @@ function fileToBase64(file) {
         reader.readAsDataURL(file);
     });
 }
+// Ponte global para módulos independentes que precisam usar o mesmo upload das fotos dos produtos.
+window.fileToBase64 = fileToBase64;
 
 function escapeStoreAttr(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -7935,6 +7944,7 @@ function renderItems(){
       return;
     }
     itemsEl.innerHTML = '';
+    renderMarketingFlyerCarousel(itemsEl);
     
       const categories = Array.isArray(DATA.categories) ? DATA.categories : [];
       const activeCategoryExists = categories.some(category => category.id === activeCat);
@@ -8058,7 +8068,7 @@ function renderItems(){
         grid.classList.add('menu-grid');
         regularItems.forEach(item => grid.appendChild(renderCustomerCard(item)));
         itemsEl.appendChild(grid);
-    } else if (!promotionalItems.length) {
+    } else if (!promotionalItems.length && !marketingData().flyers.length) {
         itemsEl.innerHTML = '<div class="small" style="color:var(--muted); text-align:center;">Nenhum item nesta categoria.</div>';
     }
 
@@ -9753,6 +9763,8 @@ function showAdminTab(tabId) {
     window.IntegracoesModule?.render();
   } else if (tabId === 'financeiro') {
     window.FinanceiroModule?.render();
+  } else if (tabId === 'marketing') {
+    window.MarketingModule?.render();
   }
 }
 
@@ -12198,6 +12210,7 @@ function initListeners(){
   document.querySelector("#tabSettings").addEventListener("click", () => showAdminTab('settings'));
   document.querySelector("#tabPayments")?.addEventListener("click", () => showAdminTab('payments'));
   document.querySelector("#tabPDV").addEventListener("click", () => showAdminTab('pdv'));
+  document.querySelector("#tabMarketing")?.addEventListener("click", () => showAdminTab('marketing'));
   document.querySelector("#closeAdminModal").addEventListener("click", closeAdminModal);
   document.querySelector("#btnReset").addEventListener("click", resetDemo);
 
@@ -21577,6 +21590,72 @@ updatedAt:changedAt };
 </style>
 
 
+<style id="promotions-mobile-layout-fix">
+  /* A vitrine de promoções ocupa o fluxo da página, sem uma caixa externa destacada. */
+  #items > .menu-promotions-section {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    box-sizing: border-box;
+  }
+  #items > .menu-promotions-section .menu-promotions-heading { margin: 0 2px 8px; }
+  #items > .menu-promotions-section .menu-promotions-carousel,
+  #items > .menu-promotions-section .menu-promotions-grid {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    #items > .menu-promotions-section {
+      width: calc(100% + 14px);
+      margin: 0 -7px 10px;
+      padding: 0;
+    }
+    #items > .menu-promotions-section .menu-promotions-heading { margin: 0 9px 6px; }
+    #items > .menu-promotions-section .menu-promotions-carousel.is-carousel {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+    #items > .menu-promotions-section .menu-promotions-carousel.is-carousel .menu-promotions-grid {
+      width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    /* Os controles ficam sobre as extremidades e não roubam largura dos cards. */
+    #items > .menu-promotions-section .menu-promotions-carousel.is-carousel .menu-promotions-nav {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      transform: translateY(-50%);
+    }
+    #items > .menu-promotions-section .menu-promotions-carousel.is-carousel .menu-promotions-nav[data-promo-nav="-1"] { left: 0; }
+    #items > .menu-promotions-section .menu-promotions-carousel.is-carousel .menu-promotions-nav[data-promo-nav="1"] { right: 0; }
+    /* A grade inferior usa o espaço total do #items; a promoção segue o mesmo eixo. */
+    #items > .menu-promotions-section .menu-promotions-carousel,
+    #items > .menu-promotions-section .menu-promotions-grid {
+      width: 100%;
+      max-width: none;
+    }
+    #items > .menu-promotions-section .menu-promotions-nav {
+      width: 24px;
+      height: 32px;
+      border-color: rgba(255, 172, 119, .22);
+      background: rgba(255, 90, 31, .06);
+      color: rgba(255, 208, 181, .72);
+    }
+    #items > .menu-promotions-section .menu-promotions-nav:hover,
+    #items > .menu-promotions-section .menu-promotions-nav:active {
+      border-color: rgba(255, 188, 139, .42);
+      background: rgba(255, 90, 31, .12);
+    }
+  }
+</style>
 <style id="store-final-application-pdv-fix">
   /* Candidatura: status integrado à interface, sem alert nativo do navegador. */
   #partnerApplicationStatusModal { z-index: 100001; padding: 16px; }
@@ -21690,3 +21769,269 @@ updatedAt:changedAt };
   }
 </style>
 
+
+<style id="marketing-flyers-module-style">
+  .marketing-panel-intro{margin:-4px 0 18px;color:var(--muted);font-size:12px;line-height:1.5}
+  .marketing-flyer-config{display:grid;grid-template-columns:minmax(220px,1fr) 150px auto;gap:10px;align-items:end;margin-bottom:18px;padding:14px;border:1px solid rgba(246,232,214,.12);border-radius:10px;background:rgba(255,255,255,.025)}
+  .marketing-flyer-config label{display:grid;gap:6px;color:#cdbfb2;font-size:11px;font-weight:700}
+  .marketing-flyer-config input[type=file],.marketing-flyer-config input[type=number]{width:100%;box-sizing:border-box;padding:9px;border:1px solid rgba(246,232,214,.18);border-radius:6px;background:#1e1b18;color:#eee5da}
+  .marketing-flyer-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  .marketing-flyer-feedback{min-height:17px;color:#9bd18e;font-size:10px}
+  .marketing-flyer-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+  .marketing-flyer-item{position:relative;overflow:hidden;border:1px solid rgba(246,232,214,.12);border-radius:9px;background:#211e1a}
+  .marketing-flyer-item img{display:block;width:100%;height:115px;object-fit:cover;background:#151311}
+  .marketing-flyer-item-body{display:grid;gap:7px;padding:9px}
+  .marketing-flyer-item-name{overflow:hidden;color:#eee5da;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+  .marketing-flyer-item-meta{color:#96897d;font:9px/1.3 "IBM Plex Mono",monospace}
+  .marketing-flyer-remove{width:100%;padding:6px 8px;border:1px solid rgba(255,90,31,.34);border-radius:5px;background:rgba(255,90,31,.08);color:#ffad89;font-size:10px;cursor:pointer}
+  .marketing-flyer-empty{padding:22px 12px;border:1px dashed rgba(246,232,214,.15);border-radius:9px;color:#96897d;font-size:11px;text-align:center}
+  .menu-marketing-flyer{position:relative;width:100%;margin:0 0 12px;overflow:hidden;border-radius:0;background:transparent}
+  .menu-marketing-flyer-viewport{position:relative;width:100%;overflow:hidden;border-radius:10px;background:#211e1a}
+  .menu-marketing-flyer-track{display:flex;width:100%;touch-action:pan-y;cursor:grab;transition:transform .35s ease;will-change:transform}
+  .menu-marketing-flyer-track.is-dragging{cursor:grabbing;transition:none}
+  .menu-marketing-flyer-slide{flex:0 0 100%;min-width:100%;position:relative}
+  .menu-marketing-flyer-slide img{display:block;width:100%;height:clamp(180px,30vw,280px);object-fit:cover;background:#151311;user-select:none;-webkit-user-drag:none}
+  .menu-marketing-flyer-nav{position:absolute;z-index:2;top:50%;width:32px;height:42px;transform:translateY(-50%);border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(0,0,0,.08);backdrop-filter:blur(2px);color:rgba(255,255,255,.58);font-size:28px;line-height:1;cursor:pointer}
+  .menu-marketing-flyer-nav:hover{background:rgba(0,0,0,.42)}
+  .menu-marketing-flyer-nav[data-flyer-nav="-1"]{left:8px}
+  .menu-marketing-flyer-nav[data-flyer-nav="1"]{right:8px}
+  .menu-card.marketing-flyer-target-highlight{animation:marketingFlyerProductPulse 1.2s ease-in-out 2;position:relative;z-index:2;box-shadow:0 0 0 3px rgba(255,111,45,.82),0 0 24px rgba(255,111,45,.38)!important}
+  @keyframes marketingFlyerProductPulse{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(-4px) scale(1.012)}50%{transform:translateY(-2px) scale(1.015)}75%{transform:translateY(-4px) scale(1.012)}}
+  @media(prefers-reduced-motion:reduce){.menu-card.marketing-flyer-target-highlight{animation:none;outline:3px solid rgba(255,111,45,.82);box-shadow:0 0 0 5px rgba(255,111,45,.2)!important}}
+  @media(max-width:600px){
+    .marketing-flyer-config{grid-template-columns:1fr}
+    .menu-marketing-flyer{margin-bottom:10px}
+    .menu-marketing-flyer-slide img{height:clamp(160px,48vw,230px)}
+    .menu-marketing-flyer-nav{width:28px;height:36px;font-size:24px;background:rgba(0,0,0,.06);border-color:rgba(255,255,255,.10);color:rgba(255,255,255,.52)}.menu-marketing-flyer-nav[data-flyer-nav="-1"]{left:5px}.menu-marketing-flyer-nav[data-flyer-nav="1"]{right:5px}
+  }
+</style>
+<script id="marketing-flyers-module-script">
+(function(){
+  'use strict';
+  const ROTATION_KEY = 'marketingFlyerRotationSeconds';
+  let marketingFlyerTimer = null;
+  let marketingFlyerIndex = 0;
+
+  function marketingData(){
+    if (!window.DATA) return { flyers: [], rotationSeconds: 5 };
+    if (!Array.isArray(window.DATA.marketingFlyers)) window.DATA.marketingFlyers = [];
+    const configured = Number(window.DATA.marketingFlyerRotationSeconds);
+    if (!Number.isFinite(configured)) window.DATA.marketingFlyerRotationSeconds = 5;
+    return { flyers: window.DATA.marketingFlyers, rotationSeconds: Math.max(2, Number(window.DATA.marketingFlyerRotationSeconds) || 5) };
+  }
+  const MARKETING_FLYER_DOC_PREFIX = 'marketingFlyer_';
+  function marketingFlyerRef(id){
+    return window.doc(window.db, 'config', `${MARKETING_FLYER_DOC_PREFIX}${id}`);
+  }
+  function marketingFlyerMeta(flyer){
+    return { id:String(flyer.id), name:flyer.name || '', link:String(flyer.link || '').trim(), productId:String(flyer.productId || '').trim(), createdAt:flyer.createdAt || new Date().toISOString() };
+  }
+  async function persistMarketingFlyer(flyer){
+    if (!window.db || !window.setDoc || !window.doc) throw new Error('Firestore indisponível para salvar o flyer.');
+    await window.setDoc(marketingFlyerRef(flyer.id), { ...marketingFlyerMeta(flyer), dataUrl:flyer.dataUrl });
+    return marketingFlyerMeta(flyer);
+  }
+  async function loadMarketingFlyers(){
+    const current = marketingData();
+    if (!current.flyers.length || !window.getDoc || !window.db) return current.flyers;
+    const loaded = [];
+    for (const meta of current.flyers) {
+      if (meta.dataUrl) { loaded.push(meta); continue; }
+      try {
+        const snap = await window.getDoc(marketingFlyerRef(meta.id));
+        if (snap.exists()) loaded.push({ ...meta, ...snap.data() });
+      } catch (error) { console.warn('[Marketing] Não foi possível carregar o flyer:', error); }
+    }
+    if (loaded.length) window.DATA.marketingFlyers = loaded;
+    return loaded;
+  }
+  window.loadMarketingFlyers = loadMarketingFlyers;
+  async function removeMarketingFlyer(flyer){
+    if (window.deleteDoc && window.db && flyer?.id) {
+      try { await window.deleteDoc(marketingFlyerRef(flyer.id)); } catch (error) { console.warn('[Marketing] Documento do flyer não encontrado para remoção:', error); }
+    }
+  }
+  async function saveMarketingMetadata(){
+    const flyers = marketingData().flyers;
+    for (const flyer of flyers) {
+      if (flyer.dataUrl) await persistMarketingFlyer(flyer);
+    }
+    const metadata = flyers.map(marketingFlyerMeta);
+    window.DATA.marketingFlyers = metadata;
+    return window.saveMenuData();
+  }
+  function marketingEsc(value){
+    return String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+  }
+  // Usa exatamente o mesmo fluxo das fotos dos produtos: FileReader -> data URL -> DATA -> saveMenuData().
+  function marketingFlyerImage(file){
+    if (!file || !file.type.startsWith('image/')) return Promise.reject(new Error('Selecione apenas imagens.'));
+    return window.fileToBase64(file);
+  }
+  function stopMarketingFlyerTimer(){
+    if (marketingFlyerTimer) { clearInterval(marketingFlyerTimer); marketingFlyerTimer = null; }
+  }
+  function openMarketingFlyerDestination(flyer){
+    if (!flyer) return;
+    if (flyer.productId) {
+      const target = [...document.querySelectorAll('[data-item-id]')].find(el => String(el.dataset.itemId) === String(flyer.productId));
+      if (target) { document.querySelectorAll('.marketing-flyer-target-highlight').forEach(el => el.classList.remove('marketing-flyer-target-highlight')); target.scrollIntoView({ behavior:'smooth', block:'center' }); target.classList.remove('marketing-flyer-target-highlight'); void target.offsetWidth; target.classList.add('marketing-flyer-target-highlight'); setTimeout(() => target.classList.remove('marketing-flyer-target-highlight'), 2600); }
+      return;
+    }
+    if (flyer.link) {
+      try { const url = new URL(flyer.link, window.location.href); if (url.protocol === 'http:' || url.protocol === 'https:') window.open(url.href, '_blank', 'noopener,noreferrer'); } catch (_) {}
+    }
+  }
+  window.openMarketingFlyerDestination = openMarketingFlyerDestination;
+  function renderMarketingFlyerCarousel(){
+    stopMarketingFlyerTimer();
+    const itemsEl = document.getElementById('items');
+    const data = marketingData();
+    if (!itemsEl || !data.flyers.length) return;
+    const section = document.createElement('section');
+    section.className = 'menu-marketing-flyer';
+    section.setAttribute('aria-label','Comunicação e ofertas da loja');
+    const viewport = document.createElement('div');
+    viewport.className = 'menu-marketing-flyer-viewport';
+    const track = document.createElement('div');
+    track.className = 'menu-marketing-flyer-track';
+    const count = data.flyers.length;
+    data.flyers.forEach((flyer, index) => {
+      const slide = document.createElement('div');
+      slide.className = 'menu-marketing-flyer-slide';
+      slide.dataset.flyerIndex = String(index);
+      slide.setAttribute('aria-hidden', index === marketingFlyerIndex ? 'false' : 'true');
+      const image = document.createElement('img');
+      image.alt = flyer.name || `Flyer ${index + 1}`;
+      image.src = flyer.dataUrl;
+      if (flyer.link || flyer.productId) { slide.classList.add('has-marketing-flyer-destination'); slide.setAttribute('role','link'); slide.setAttribute('aria-label', `Abrir ${flyer.name || `Flyer ${index + 1}`}`); slide.tabIndex = 0; }
+      slide.appendChild(image);
+      slide.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openMarketingFlyerDestination(flyer); } });
+      track.appendChild(slide);
+    });
+    viewport.appendChild(track);
+    track.addEventListener('click', event => {
+      if (track.dataset.suppressFlyerClick === '1') { track.dataset.suppressFlyerClick = '0'; event.preventDefault(); return; }
+      const clickedSlide = event.target.closest?.('.menu-marketing-flyer-slide') || track.querySelectorAll('.menu-marketing-flyer-slide')[marketingFlyerIndex];
+      const clickedIndex = Number(clickedSlide?.dataset.flyerIndex);
+      if (Number.isInteger(clickedIndex) && data.flyers[clickedIndex]) openMarketingFlyerDestination(data.flyers[clickedIndex]);
+    });
+    marketingFlyerIndex = ((marketingFlyerIndex % count) + count) % count;
+    const update = (nextIndex, animate = true) => {
+      marketingFlyerIndex = ((nextIndex % count) + count) % count;
+      track.style.transition = animate ? 'transform .35s ease' : 'none';
+      track.style.transform = `translate3d(-${marketingFlyerIndex * 100}%,0,0)`;
+      track.querySelectorAll('.menu-marketing-flyer-slide').forEach((slide, i) => slide.setAttribute('aria-hidden', i === marketingFlyerIndex ? 'false' : 'true'));
+    };
+    const move = delta => update(marketingFlyerIndex + delta);
+    if (count > 1) {
+      const startAuto = () => { stopMarketingFlyerTimer(); marketingFlyerTimer = setInterval(() => move(1), data.rotationSeconds * 1000); };
+      [-1, 1].forEach(direction => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'menu-marketing-flyer-nav';
+        button.dataset.flyerNav = String(direction);
+        button.setAttribute('aria-label', direction < 0 ? 'Flyer anterior' : 'Próximo flyer');
+        button.textContent = direction < 0 ? '‹' : '›';
+        button.addEventListener('click', () => { move(direction); startAuto(); });
+        viewport.appendChild(button);
+      });
+      let pointerStartX = 0;
+      let pointerActive = false;
+      let pointerMoved = false;
+      track.addEventListener('pointerdown', event => { pointerActive = true; pointerMoved = false; pointerStartX = event.clientX; track.classList.add('is-dragging'); track.setPointerCapture?.(event.pointerId); stopMarketingFlyerTimer(); });
+      track.addEventListener('pointermove', event => { if (pointerActive && Math.abs(event.clientX - pointerStartX) > 8) pointerMoved = true; });
+      track.addEventListener('pointerup', event => { if (!pointerActive) return; pointerActive = false; track.classList.remove('is-dragging'); const distance = event.clientX - pointerStartX; if (pointerMoved && Math.abs(distance) > 35) track.dataset.suppressFlyerClick = '1'; if (Math.abs(distance) > 35) move(distance < 0 ? 1 : -1); startAuto(); });
+      track.addEventListener('pointercancel', () => { pointerActive = false; pointerMoved = false; track.classList.remove('is-dragging'); startAuto(); });
+      startAuto();
+    }
+    section.appendChild(viewport);
+    itemsEl.appendChild(section);
+    update(marketingFlyerIndex, false);
+  }
+  window.renderMarketingFlyerCarousel = renderMarketingFlyerCarousel;
+
+  function renderMarketingPanel(){
+    const root = document.getElementById('marketingRoot');
+    if (!root) return;
+    const data = marketingData();
+    root.innerHTML = `
+      <div class="marketing-flyer-config">
+        <label>Adicionar flyers
+          <input id="marketingFlyerFiles" type="file" accept="image/*" multiple>
+        </label>
+        <label>Tempo de rotação (segundos)
+          <input id="marketingFlyerRotation" type="number" min="2" max="3600" step="1" value="${data.rotationSeconds}">
+        </label>
+        <button type="button" class="btn" id="marketingFlyerSave">Salvar configuração</button>
+        <div class="marketing-flyer-actions"><span id="marketingFlyerFeedback" class="marketing-flyer-feedback"></span></div>
+      </div>
+      <div class="marketing-flyer-list" id="marketingFlyerList"></div>`;
+    const list = document.getElementById('marketingFlyerList');
+    if (!data.flyers.length) {
+      list.innerHTML = '<div class="marketing-flyer-empty">Nenhum flyer cadastrado. Selecione um ou vários arquivos para começar.</div>';
+    } else {
+      list.innerHTML = data.flyers.map((flyer,index) => `
+        <article class="marketing-flyer-item">
+          <img src="${marketingEsc(flyer.dataUrl)}" alt="${marketingEsc(flyer.name || `Flyer ${index + 1}`)}">
+          <div class="marketing-flyer-item-body">
+            <div class="marketing-flyer-item-name" title="${marketingEsc(flyer.name || '')}">${marketingEsc(flyer.name || `Flyer ${index + 1}`)}</div>
+            <div class="marketing-flyer-item-meta">Ordem ${index + 1} · Exibição individual</div>
+            <label class="marketing-flyer-destination-label">Produto de destino
+              <select class="marketing-flyer-product" data-marketing-product="${index}">
+                <option value="">Sem produto</option>
+                ${(Array.isArray(window.DATA?.items) ? window.DATA.items : []).map(item => `<option value="${marketingEsc(item.id)}" ${String(flyer.productId || '') === String(item.id) ? 'selected' : ''}>${marketingEsc(item.name || item.id)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="marketing-flyer-destination-label">Ou link externo
+              <input class="marketing-flyer-link" data-marketing-link="${index}" type="url" placeholder="https://..." value="${marketingEsc(flyer.link || '')}">
+            </label>
+            <button type="button" class="marketing-flyer-remove" data-marketing-remove="${index}">Remover flyer</button>
+          </div>
+        </article>`).join('');
+    }
+    root.querySelectorAll('[data-marketing-product]').forEach(select => select.addEventListener('change', () => {
+      const index = Number(select.dataset.marketingProduct); const flyer = window.DATA?.marketingFlyers?.[index]; if (flyer) { flyer.productId = select.value; if (select.value) flyer.link = ''; }
+      const link = root.querySelector(`[data-marketing-link=\"${index}\"]`); if (link && select.value) link.value = '';
+    }));
+    root.querySelectorAll('[data-marketing-link]').forEach(input => input.addEventListener('input', () => {
+      const index = Number(input.dataset.marketingLink); const flyer = window.DATA?.marketingFlyers?.[index]; if (flyer) { flyer.link = input.value.trim(); if (input.value.trim()) flyer.productId = ''; }
+      const select = root.querySelector(`[data-marketing-product=\"${index}\"]`); if (select && input.value.trim()) select.value = '';
+    }));
+    root.querySelectorAll('[data-marketing-remove]').forEach(button => button.addEventListener('click', async () => {
+      const index = Number(button.dataset.marketingRemove);
+      if (!Number.isInteger(index) || !window.DATA?.marketingFlyers?.[index]) return;
+      const flyer = window.DATA.marketingFlyers[index];
+      window.DATA.marketingFlyers.splice(index,1);
+      await removeMarketingFlyer(flyer);
+      await saveMarketingMetadata();
+      renderMarketingPanel();
+      renderItems();
+    }));
+    document.getElementById('marketingFlyerSave')?.addEventListener('click', async () => {
+      const feedback = document.getElementById('marketingFlyerFeedback');
+      const input = document.getElementById('marketingFlyerFiles');
+      const rotation = Math.min(3600, Math.max(2, Number(document.getElementById('marketingFlyerRotation')?.value) || 5));
+      window.DATA.marketingFlyerRotationSeconds = rotation;
+      const files = [...(input?.files || [])];
+      try {
+        for (const file of files) {
+          const dataUrl = await marketingFlyerImage(file);
+          const flyer = { id:`flyer-${Date.now()}-${Math.random().toString(36).slice(2,8)}`, name:file.name, dataUrl, createdAt:new Date().toISOString() };
+          await persistMarketingFlyer(flyer);
+          window.DATA.marketingFlyers.push(flyer);
+        }
+        const saved = await saveMarketingMetadata();
+        if (!saved) return;
+        if (feedback) feedback.textContent = files.length ? `${files.length} flyer(s) salvo(s) com sucesso.` : 'Configuração salva com sucesso.';
+        renderMarketingPanel();
+        renderItems();
+      } catch (error) {
+        if (feedback) { feedback.style.color = '#ff9d7b'; feedback.textContent = error.message || 'Não foi possível salvar os flyers.'; }
+      }
+    });
+  }
+  window.MarketingModule = { render: renderMarketingPanel };
+  window.addEventListener('beforeunload', stopMarketingFlyerTimer);
+})();
+</script>
