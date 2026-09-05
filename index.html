@@ -20883,11 +20883,7 @@ updatedAt:changedAt };
         <div class="totem-checkout-section">
           <label>Forma de Pagamento</label>
           <div class="totem-pay-methods">
-            <div class="totem-pay-option selected" data-pay="Dinheiro">
-              <div class="totem-pay-icon">💵</div>
-              <div class="totem-pay-label">Dinheiro</div>
-            </div>
-            <div class="totem-pay-option" data-pay="PIX">
+            <div class="totem-pay-option selected" data-pay="PIX">
               <div class="totem-pay-icon">📱</div>
               <div class="totem-pay-label">PIX</div>
             </div>
@@ -20911,7 +20907,7 @@ updatedAt:changedAt };
     `;
 
     // Eventos checkout
-    let selectedPay = 'Dinheiro';
+    let selectedPay = 'PIX';
     overlay.querySelectorAll('[data-pay]').forEach(opt => {
       opt.addEventListener('click', () => {
         overlay.querySelectorAll('[data-pay]').forEach(o => o.classList.remove('selected'));
@@ -20932,9 +20928,19 @@ updatedAt:changedAt };
     });
 
     document.getElementById('totemConfirmBtn').addEventListener('click', async () => {
+      const button = document.getElementById('totemConfirmBtn');
       const custName = document.getElementById('totemCustName').value.trim() || 'Cliente Totem';
-      await submitTotemOrder(custName, selectedPay, total);
-      resetIdleTimer();
+      button.disabled = true;
+      button.textContent = selectedPay === 'PIX' ? '⏳ Gerando Pix…' : '⏳ Enviando pedido…';
+      try {
+        await submitTotemOrder(custName, selectedPay, total);
+      } finally {
+        if (button && document.body.contains(button)) {
+          button.disabled = false;
+          button.textContent = '✅ Confirmar Pedido';
+        }
+        resetIdleTimer();
+      }
     });
 
     startClock();
@@ -20979,10 +20985,16 @@ updatedAt:changedAt };
     const acceptanceStartedAt = new Date().toISOString();
     const acceptanceDeadlineAt = new Date(new Date(acceptanceStartedAt).getTime() + 5 * 60 * 1000).toISOString();
     const orderNumber = generateOrderNumber();
+    const now = new Date().toISOString();
+    const isPix = String(paymentMethod).toUpperCase() === 'PIX';
+    const totemId = String(kioskState.totem.id || 'totem').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 24) || 'totem';
+    // O totem não possui login. Este e-mail técnico válido identifica o pagador
+    // para o Mercado Pago sem expor ou exigir dados pessoais do cliente.
+    const payerEmail = `totem-${totemId}@foodflow.com.br`;
 
     const newOrder = {
       userId: 'totem_' + kioskState.totem.id,
-      userEmail: '',
+      userEmail: isPix ? payerEmail : '',
       userName: custName,
       userPhone: '',
       address: 'Retirada no balcão (Totem)',
@@ -21007,18 +21019,18 @@ updatedAt:changedAt };
       subtotal: subtotal,
       discount: 0,
       couponCode: null,
-      total: total,
+      total: Number(total.toFixed(2)),
       paymentMethod: paymentMethod,
       changeNeeded: 0,
-      paymentStatus: paymentMethod === 'Dinheiro' ? 'pending_cash' : 'pending',
+      paymentStatus: isPix ? 'pending' : 'pending',
       payment: {
-        provider: 'manual',
-        providerLabel: 'Pagamento no totem/balcão',
-        mode: 'manual',
-        requiresOnlineConfirmation: false,
-        status: paymentMethod === 'Dinheiro' ? 'pending_cash' : 'pending',
+        provider: isPix ? 'mercado_pago' : 'manual',
+        providerLabel: isPix ? 'Mercado Pago — Pix' : 'Pagamento no totem/balcão',
+        mode: isPix ? 'online' : 'manual',
+        requiresOnlineConfirmation: isPix,
+        status: 'pending',
         amount: Number(total.toFixed(2)),
-        createdAt: new Date().toISOString()
+        createdAt: now
       },
       status: 'pending',
       acceptanceStartedAt,
@@ -21029,27 +21041,79 @@ updatedAt:changedAt };
       totemName: kioskState.totem.name,
       serviceType: 'totem',
       orderNumber: orderNumber,
-      createdAt: new Date().toISOString()
+      createdAt: now
     };
 
-    // Salva no Firebase (orders collection) para entrar no kanban principal
+    let docRef = null;
     try {
       if (window.addDoc && window.collection && window.db) {
-        const docRef = await window.addDoc(window.collection(window.db, 'orders'), newOrder);
+        docRef = await window.addDoc(window.collection(window.db, 'orders'), newOrder);
         console.log('Pedido do totem enviado ao Firebase:', docRef.id);
       } else {
-        console.warn('Firebase não disponível, pedido salvo apenas localmente');
+        throw new Error('Firebase não disponível para registrar o pedido.');
       }
-    } catch(e) {
+    } catch (e) {
       console.error('Erro ao salvar pedido do totem no Firebase:', e);
+      alert('Não foi possível registrar o pedido. Verifique a conexão e tente novamente.');
+      return;
     }
 
-    // Salva localmente (histórico do totem)
-    const localOrder = { ...newOrder, id: 'totem_order_' + Date.now(), firebaseId: null };
+    const firebaseOrder = { ...newOrder, id: docRef.id };
+
+    // Pix usa exatamente a mesma interface do checkout online: QR Code,
+    // Pix Copia e Cola, atualização por webhook/Firestore e expiração em 5 min.
+    if (isPix) {
+      if (!window.PaymentHub?.startPixCheckout) {
+        console.error('PaymentHub não está disponível.');
+        alert('O pagamento Pix ainda não está disponível. Tente novamente.');
+        return;
+      }
+      const result = await window.PaymentHub.startPixCheckout(firebaseOrder);
+      if (!result?.started) {
+        console.warn('Pix do totem não iniciado:', result?.message || 'erro desconhecido');
+        return;
+      }
+      // O PaymentHub acompanha o mesmo documento para atualizar a interface
+      // Pix. Este listener também troca a tela própria do totem quando o
+      // webhook confirmar o pagamento.
+      if (window.onSnapshot && window.doc && window.db) {
+        const stopTotemPixListener = window.onSnapshot(
+          window.doc(window.db, 'orders', String(docRef.id)),
+          snap => {
+            if (!snap.exists()) return;
+            const incoming = snap.data() || {};
+            const status = String(incoming.paymentStatus || incoming.payment?.status || '').toLowerCase();
+            if (['paid', 'approved', 'succeeded', 'confirmed'].includes(status)) {
+              kioskState.cart = [];
+              kioskState.screen = 'success';
+              stopTotemPixListener();
+              renderSuccess(orderNumber, preparationTime);
+              resetIdleTimer();
+            }
+          },
+          error => console.warn('Listener do Pix do totem indisponível:', error)
+        );
+      }
+      // O PaymentHub mantém a tela de Pix aberta até a aprovação. O pedido já
+      // está no Firestore e aparecerá no painel assim que o webhook confirmar.
+      const localPending = { ...firebaseOrder, paymentStatus: 'awaiting_payment', payment: { ...firebaseOrder.payment, status: 'pending' } };
+      totemOrders.push(localPending);
+      saveTotemOrders();
+      const totem = totemMachines.find(t => t.id === kioskState.totem.id);
+      if (totem) {
+        totem.totalOrders = (totem.totalOrders || 0) + 1;
+        totem.lastActiveAt = new Date().toISOString();
+        saveTotemMachines();
+      }
+      return;
+    }
+
+    // Crédito e débito continuam disponíveis como formas selecionáveis no totem.
+    // O fluxo existente registra o pedido no painel para tratamento do estabelecimento.
+    const localOrder = { ...firebaseOrder, firebaseId: docRef.id };
     totemOrders.push(localOrder);
     saveTotemOrders();
 
-    // Atualiza contador do totem
     const totem = totemMachines.find(t => t.id === kioskState.totem.id);
     if (totem) {
       totem.totalOrders = (totem.totalOrders || 0) + 1;
@@ -21057,7 +21121,6 @@ updatedAt:changedAt };
       saveTotemMachines();
     }
 
-    // Limpa carrinho e mostra sucesso
     kioskState.cart = [];
     kioskState.screen = 'success';
     renderSuccess(orderNumber, preparationTime);
