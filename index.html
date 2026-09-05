@@ -14939,7 +14939,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.',',')}`;
   const isOnlineMethod = value => ['pix','credit','debit'].includes(String(value || '').toLowerCase());
-  const apiBase = () => String(window.PAYMENT_API_BASE || '/api').replace(/\/$/, '');
+  const apiBase = () => String(window.PAYMENT_API_BASE || 'https://bitter-glitter-5fcf.ht9bccw67h.workers.dev').replace(/\/$/, '');
   const providerName = cfg => PROVIDERS[cfg.provider] || cfg.providerLabel || 'Gateway de pagamento';
 
   function config() {
@@ -22526,7 +22526,7 @@ body:has(#modal.open) {
 <script id="food-flow-pix-module">
 (() => {
   'use strict';
-  const API_BASE = () => String(window.PAYMENT_API_BASE || '/api').replace(/\/$/, '');
+  const API_BASE = () => String(window.PAYMENT_API_BASE || 'https://bitter-glitter-5fcf.ht9bccw67h.workers.dev').replace(/\/$/, '');
   let state = { order:null, payload:null, unsubscribe:null, timer:null, expiresAt:null, retrying:false };
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.',',')}`;
