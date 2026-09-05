@@ -2500,13 +2500,21 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 </style>
 <style id="accessibility-and-profile-overrides">
   /* Contraste administrativo: os módulos legados ainda usam cartões claros inline. */
-  #salesPanel,#customersPanel,#motoboysPanel,#estoquePanel,#integracoesPanel,#financeiroPanel,#totemsPanel{color:#eee5da!important}
-  #estoquePanel h4,#integracoesPanel h4,#financeiroPanel h4,#totemsPanel h4,#estoquePanel h5,#integracoesPanel h5,#financeiroPanel h5,#totemsPanel h5{color:#f7eee5!important}
   #estoquePanel .est-card,#estoquePanel .est-kpi,#estoquePanel .est-kpi-card,#estoquePanel .est-tab,#estoquePanel .est-table-wrap,#estoquePanel .est-empty{background:linear-gradient(145deg,#28231f,#191714)!important;color:#eee5da!important;border-color:rgba(246,232,214,.14)!important;box-shadow:0 10px 24px rgba(0,0,0,.14)!important}
   #estoquePanel .est-card *:not(button):not(input):not(select):not(textarea),#estoquePanel .est-kpi *:not(button):not(input):not(select):not(textarea),#estoquePanel .est-kpi-card *:not(button):not(input):not(select):not(textarea){color:#d9cdc1!important}
   #estoquePanel input,#estoquePanel select,#estoquePanel textarea{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
   #estoquePanel table th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}
   #estoquePanel table td{background:#1e1b18!important;color:#ded2c6!important;border-color:rgba(246,232,214,.08)!important}
+  .mp-observer{display:grid;gap:14px;color:#eee5da}
+  .mp-observer-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:linear-gradient(145deg,#29231f,#1b1816)}
+  .mp-eyebrow{display:block;color:#ff9b72;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.1em}
+  .mp-observer h3{margin:5px 0 4px;color:#fff;font-size:24px}.mp-observer p{margin:0;color:#aa9d91;font-size:11px;line-height:1.45;max-width:680px}
+  .mp-refresh{border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#302a25;color:#f3e8de;padding:9px 12px;cursor:pointer;font:600 11px 'IBM Plex Mono',monospace;white-space:nowrap}
+  .mp-health{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(143,221,164,.18);border-radius:9px;background:rgba(143,221,164,.05)}.mp-health small{margin-left:auto;color:#95887e;font-size:10px}.mp-health-dot{width:8px;height:8px;border-radius:50%;background:#8fdda4}.mp-health-dot.warning{background:#f0bd6a}.mp-health-dot.danger{background:#ee8171}
+  .mp-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.mp-kpis article{padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#211d1a}.mp-kpis span,.mp-kpis small{display:block;color:#a99c91;font-size:10px}.mp-kpis strong{display:block;margin:7px 0 3px;color:#fff;font:700 23px 'Barlow Condensed',sans-serif}.mp-kpis article:nth-child(1) strong{color:#8fdda4}.mp-kpis article:nth-child(3) strong{color:#9ed3c3}.mp-kpis article.attention strong{color:#ff9a70}
+  .mp-legend{display:flex;gap:14px;flex-wrap:wrap;color:#b9aca1;font-size:10px}.mp-legend span{display:inline-flex;align-items:center;gap:5px}.mp-legend i{width:7px;height:7px;border-radius:50%;background:#8fdda4}.mp-legend i.waiting{background:#f0bd6a}.mp-legend i.refund{background:#9ed3c3}.mp-legend i.closed{background:#9c8e87}
+  .mp-table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.1);border-radius:10px}.mp-table{width:100%;min-width:680px;border-collapse:collapse;font-size:11px}.mp-table th{padding:10px;text-align:left;background:#2a2520;color:#bcaea1;font:700 9px 'IBM Plex Mono',monospace;text-transform:uppercase}.mp-table td{padding:10px;border-top:1px solid rgba(255,255,255,.07);color:#ded2c6}.mp-table td small{display:block;margin-top:3px;color:#968a80;font-size:9px}.mp-table code{color:#b9d7ff;font-size:10px}.mp-status{display:inline-flex;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:700;background:rgba(255,255,255,.08)}.mp-status.paid{color:#9be2ab;background:rgba(143,221,164,.1)}.mp-status.waiting{color:#f0c77e;background:rgba(240,189,106,.1)}.mp-status.refund{color:#a9d9d0;background:rgba(158,211,195,.1)}.mp-status.closed{color:#c1b5ad;background:rgba(156,142,135,.1)}.mp-empty{text-align:center;color:#968a80!important;padding:24px!important}.mp-note{padding:10px 12px;border-left:2px solid #7b6b5e;background:rgba(255,255,255,.035);color:#9f9287!important;font-size:10px!important}
+  @media(max-width:700px){.mp-observer-head{display:block}.mp-refresh{margin-top:12px}.mp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mp-kpis strong{font-size:20px}.mp-health{flex-wrap:wrap}.mp-health small{width:100%;margin-left:16px}}
   #financeiroPanel .fin-card,#financeiroPanel .fin-kpi,#financeiroPanel .fin-tab,#financeiroPanel .fin-dre-row,#financeiroPanel .fin-dre-row.subtotal,#financeiroPanel [style*="background:#f9f9f9"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#eee5da!important;border-color:rgba(246,232,214,.14)!important}
   #financeiroPanel .fin-card *:not(button):not(input):not(select):not(textarea):not(.fin-badge){color:#ded2c6!important}
   #financeiroPanel .fin-card strong,#financeiroPanel .fin-kpi strong{color:#f7eee5!important}
@@ -2514,9 +2522,6 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
   #financeiroPanel .fin-table th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}
   #financeiroPanel .fin-table td{background:#1e1b18!important;color:#ded2c6!important;border-color:rgba(246,232,214,.08)!important}
   #financeiroPanel .fin-form-row input,#financeiroPanel .fin-form-row select{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
-  #integracoesPanel .int-card,#integracoesPanel .int-kpi,#integracoesPanel .int-tab,#integracoesPanel th,#integracoesPanel [style*="background: white"],#integracoesPanel [style*="background:white"],#integracoesPanel [style*="background: #fff"],#integracoesPanel [style*="background:#fff"],#integracoesPanel [style*="background: #f9f9f9"],#integracoesPanel [style*="background:#f9f9f9"],#integracoesPanel [style*="background: #f5f5f5"],#integracoesPanel [style*="background:#f5f5f5"],#integracoesPanel [style*="background: #f8fafc"],#integracoesPanel [style*="background:#f8fafc"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#e5d9ce!important;border-color:rgba(246,232,214,.14)!important}
-  #integracoesPanel .int-card *:not(button):not(input):not(select):not(textarea),#integracoesPanel .int-kpi *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: white"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:white"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #fff"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#fff"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #f9f9f9"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#f9f9f9"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background: #f5f5f5"] *:not(button):not(input):not(select):not(textarea),#integracoesPanel [style*="background:#f5f5f5"] *:not(button):not(input):not(select):not(textarea){color:#e5d9ce!important}
-  #integracoesPanel .int-tab{background:#211f1b!important;color:#cbbcaf!important;border-color:rgba(246,232,214,.14)!important}#integracoesPanel .int-tab.active{background:#ff5a1f!important;color:#fff!important;border-color:#ff5a1f!important}#integracoesPanel th{background:#2a2520!important;color:#bcaea1!important;border-color:rgba(246,232,214,.13)!important}#integracoesPanel input,#integracoesPanel select,#integracoesPanel textarea{background:#1b1916!important;color:#efe6dc!important;border-color:rgba(246,232,214,.16)!important}
   #financeiroPanel .fin-badge-pending{color:#24170b!important}
   #settingsPanel #smartCouponAdminPanel [style*="background: white"],#settingsPanel #smartCouponAdminPanel [style*="background:white"],#settingsPanel #smartCouponAdminPanel [style*="background: #fff"],#settingsPanel #smartCouponAdminPanel [style*="background:#fff"],#settingsPanel #smartCouponAdminPanel [style*="background: #f9f9f9"],#settingsPanel #smartCouponAdminPanel [style*="background:#f9f9f9"],#settingsPanel #smartCouponAdminPanel [style*="background: #f5f5f5"],#settingsPanel #smartCouponAdminPanel [style*="background:#f5f5f5"],#settingsPanel #smartCouponAdminPanel [style*="background: #fff3e0"],#settingsPanel #smartCouponAdminPanel [style*="background:#fff3e0"]{background:linear-gradient(145deg,#28231f,#191714)!important;color:#e5d9ce!important;border-color:rgba(246,232,214,.14)!important}
   #settingsPanel #smartCouponAdminPanel [style*="background: white"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:white"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #fff"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#fff"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #f9f9f9"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#f9f9f9"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background: #f5f5f5"] *:not(button):not(input):not(select):not(textarea),#settingsPanel #smartCouponAdminPanel [style*="background:#f5f5f5"] *:not(button):not(input):not(select):not(textarea){color:#e5d9ce!important}
@@ -2962,8 +2967,8 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               <button id="tabMotoboys">Motoboy</button>
               <button id="tabGarcons">Garçons</button>
               <button id="tabEstoque">Estoque & CMV</button>
-              <button id="tabIntegracoes">Integrações & Fiscal</button>
-              <button id="tabFinanceiro">Financeiro (DRE)</button>
+              
+              <button id="tabFinanceiro">Mercado Pago</button>
               <button id="tabTotems">📱 Totem (Autoatendimento)</button>
               <button id="tabMarketing">Marketing</button>
               <button id="btnComandaAvulsa" class="pill" style="background:#ffe6b3; color:#663300; font-weight:700; margin-left:6px;">Comanda Avulsa</button>
@@ -3365,17 +3370,8 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
 
 <!-- ========================================================================= -->
 <!-- === MÓDULO: INTEGRAÇÕES & FISCAL === -->
-<!-- ========================================================================= -->
-<div id="integracoesPanel" class="admin-panel hidden">
-  <h4>Integrações & Emissão Fiscal</h4>
-  <div id="integracoesRoot"></div>
-</div>
-
-<!-- ========================================================================= -->
-<!-- === MÓDULO: FINANCEIRO (DRE) === -->
-<!-- ========================================================================= -->
 <div id="financeiroPanel" class="admin-panel hidden">
-  <h4>Gestão Financeira — DRE & Fluxo de Caixa</h4>
+  <h4>Mercado Pago — Movimentação financeira</h4>
   <div id="financeiroRoot"></div>
 </div>
 
@@ -9914,8 +9910,6 @@ function showAdminTab(tabId) {
     window.TotemModule?.renderAdmin();
   } else if (tabId === 'estoque') {
     window.EstoqueModule?.render();
-  } else if (tabId === 'integracoes') {
-    window.IntegracoesModule?.render();
   } else if (tabId === 'financeiro') {
     window.FinanceiroModule?.render();
   } else if (tabId === 'marketing') {
@@ -16057,591 +16051,6 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 })();
 
 // =========================================================================
-// === MÓDULO: INTEGRAÇÕES (iFOOD) & EMISSÃO FISCAL (NFC-e) ===
-// =========================================================================
-(function() {
-  'use strict';
-  const STORAGE_KEY = 'cardapio_integracoes_v1';
-  let data = {
-    ifood: {
-      enabled: false,
-      clientId: '',
-      clientSecret: '',
-      merchantId: '',
-      accessToken: '',
-      tokenExpiry: 0,
-      status: 'disconnected',
-      lastPolling: 0,
-      importedOrders: 0,
-      autoAccept: false,
-      cancelReasons: [],
-      pollingInterval: null
-    },
-    fiscal: {
-      enabled: false,
-      certTipo: 'A1',
-      cnpj: '',
-      razaoSocial: '',
-      inscricaoEstadual: '',
-      inscricaoMunicipal: '',
-      regimeTributario: 'simples',
-      uf: 'SP',
-      ambiente: 'homologacao',
-      ultimoNumero: 0,
-      serie: 65,
-      csc: '',
-      idCsc: '',
-      endereco: '',
-      notas: []
-    }
-  };
-
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        data = { ifood: { ...data.ifood, ...parsed.ifood }, fiscal: { ...data.fiscal, ...parsed.fiscal } };
-      }
-      // Este HTML não possui backend seguro para OAuth. Nunca reidrata segredos ou tokens locais.
-      data.ifood.clientSecret = '';
-      data.ifood.accessToken = '';
-      data.ifood.tokenExpiry = 0;
-      data.ifood.enabled = false;
-      data.ifood.status = 'disconnected';
-      data.ifood.lastPolling = 0;
-      data.ifood.autoAccept = false;
-      data.ifood.pollingInterval = null;
-      data.fiscal.enabled = false;
-      data.fiscal.csc = '';
-      data.fiscal.idCsc = '';
-      // Regrava somente a configuração saneada para remover segredos legados do navegador.
-      save();
-    } catch(e) {}
-  }
-  function save() {
-    try {
-      const persisted = JSON.parse(JSON.stringify(data));
-      if (persisted.ifood) {
-        persisted.ifood.clientSecret = '';
-        persisted.ifood.accessToken = '';
-        persisted.ifood.tokenExpiry = 0;
-        persisted.ifood.lastPolling = 0;
-        persisted.ifood.autoAccept = false;
-        persisted.ifood.pollingInterval = null;
-      }
-      if (persisted.fiscal) {
-        persisted.fiscal.enabled = false;
-        persisted.fiscal.csc = '';
-        persisted.fiscal.idCsc = '';
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted));
-    } catch(e) {}
-  }
-
-  function fmtBRL(v) { return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
-  function fmtDate(ts) { if (!ts) return '-'; return new Date(ts).toLocaleDateString('pt-BR') + ' ' + new Date(ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
-
-  function getProdutos() {
-    if (typeof DATA !== 'undefined' && DATA.items) return DATA.items;
-    if (typeof window.DATA !== 'undefined' && window.DATA.items) return window.DATA.items;
-    return [];
-  }
-
-  function render() {
-    load();
-    const root = document.getElementById('integracoesRoot');
-    if (!root) return;
-
-    root.innerHTML = `
-    <style>
-      .int-tab-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-      .int-tab{padding:8px 14px;border:1px solid #ddd;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;background:#f9f9f9}
-      .int-tab.active{background:#ff5a1f;color:#fff;border-color:#ff5a1f}
-      .int-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-      .int-form-group{margin-bottom:10px}
-      .int-form-group label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:4px}
-      .int-form-group input,.int-form-group select{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px}
-      .int-btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
-      .int-btn:disabled{opacity:.55;cursor:not-allowed}
-      .int-btn-primary{background:#ff5a1f;color:#fff}.int-btn-sec{background:#e9ecef;color:#333}.int-btn-danger{background:#dc3545;color:#fff}
-      .int-warning{background:#fff8e1;border:1px solid #f0c36d;color:#6b4f00;border-radius:8px;padding:11px 12px;margin-bottom:14px;font-size:12px;line-height:1.5}
-      .int-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
-      .int-status-connected{background:#d4edda;color:#155724}
-      .int-status-disconnected{background:#f8d7da;color:#721c24}
-      .int-status-error{background:#fff3cd;color:#856404}
-      .int-status-dot{width:8px;height:8px;border-radius:50%}
-      .int-table{width:100%;border-collapse:collapse;font-size:12px}
-      .int-table th{background:#f5f5f5;padding:8px;text-align:left;border-bottom:2px solid #eee}
-      .int-table td{padding:8px;border-bottom:1px solid #f0f0f0}
-      .int-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
-      .int-kpi{background:#fff;border:1px solid #eee;border-radius:8px;padding:12px;text-align:center}
-      .int-kpi span{display:block;font-size:11px;color:#888;margin-bottom:4px}
-      .int-kpi strong{font-size:18px}
-      .int-toggle{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-      .int-toggle input{width:18px;height:18px}
-    </style>
-
-    <div class="int-tab-bar">
-      <div class="int-tab active" data-int-tab="ifood">🛵 Integração iFood</div>
-      <div class="int-tab" data-int-tab="fiscal">🧾 Emissão Fiscal (NFC-e)</div>
-    </div>
-
-    <div id="int-content"></div>
-    `;
-
-    root.querySelectorAll('.int-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        root.querySelectorAll('.int-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        renderTab(tab.dataset.intTab);
-      });
-    });
-
-    renderTab('ifood');
-
-    function renderTab(tab) {
-      const c = document.getElementById('int-content');
-      if (tab === 'ifood') renderIFood(c);
-      else if (tab === 'fiscal') renderFiscal(c);
-    }
-
-    function renderIFood(c) {
-      const statusClass = 'int-status-disconnected';
-      const statusLabel = 'Indisponível neste HTML';
-      const dotColor = '#dc3545';
-
-      c.innerHTML = `
-        <div class="int-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <div>
-              <h5 style="margin:0">Integração com iFood Marketplace</h5>
-              <p style="font-size:12px;color:#888;margin:4px 0 0">Receba pedidos do iFood diretamente no seu Painel de Pedidos, sem tablet separado.</p>
-            </div>
-            <div class="int-status ${statusClass}">
-              <div class="int-status-dot" style="background:${dotColor}"></div>${statusLabel}
-            </div>
-          </div>
-
-          <div class="int-warning" role="status"><strong>Configuração somente local:</strong> este arquivo não implementa OAuth, backend seguro, polling de eventos, acknowledgment, detalhes/ações de pedidos ou sincronização real do catálogo iFood. Os controles de conexão permanecem bloqueados para evitar afirmar uma integração que não foi executada.</div>
-
-          <div class="int-kpi-grid">
-            <div class="int-kpi"><span>Pedidos importados</span><strong>${data.ifood.importedOrders}</strong></div>
-            <div class="int-kpi"><span>Último polling</span><strong>${data.ifood.lastPolling ? fmtDate(data.ifood.lastPolling) : 'Nunca'}</strong></div>
-            <div class="int-kpi"><span>Auto-aceitar</span><strong>${data.ifood.autoAccept ? 'Sim' : 'Não'}</strong></div>
-            <div class="int-kpi"><span>Token</span><strong>${data.ifood.accessToken ? 'Ativo' : 'Não obtido'}</strong></div>
-          </div>
-
-          <div class="int-toggle">
-            <input type="checkbox" id="ifoodEnabled" disabled>
-            <label for="ifoodEnabled" style="font-weight:600;color:#777">Ativar integração com iFood (backend necessário)</label>
-          </div>
-
-          <div class="int-form-group">
-            <label>Client ID (iFood Developer)</label>
-            <input type="text" id="ifoodClientId" value="${data.ifood.clientId}" placeholder="Obtido no portal developer.ifood.com.br">
-          </div>
-          <div class="int-form-group">
-            <label>Client Secret</label>
-            <input type="password" id="ifoodClientSecret" value="" autocomplete="new-password" placeholder="Não armazenado neste HTML; usar backend seguro">
-          </div>
-          <div class="int-form-group">
-            <label>Merchant ID (ID da loja)</label>
-            <input type="text" id="ifoodMerchantId" value="${data.ifood.merchantId}" placeholder="ID da loja no Portal do Parceiro">
-          </div>
-
-          <div class="int-toggle">
-            <input type="checkbox" id="ifoodAutoAccept" disabled>
-            <label for="ifoodAutoAccept" style="cursor:pointer;color:#777">Aceitar pedidos automaticamente (backend necessário)</label>
-          </div>
-
-          <div style="display:flex;gap:8px;margin-top:14px">
-            <button class="int-btn int-btn-primary" id="btnSaveIFood">Salvar configuração local</button>
-            <button class="int-btn int-btn-sec" id="btnTestIFood" disabled>Testar conexão (backend)</button>
-            <button class="int-btn int-btn-sec" id="btnPollIFood" disabled>Polling (backend)</button>
-            ${data.ifood.enabled ? '<button class="int-btn int-btn-danger" id="btnStopPolling">Parar polling</button>' : ''}
-          </div>
-        </div>
-
-        <div class="int-card">
-          <h5 style="margin:0 0 10px">📋 Como funciona a integração</h5>
-          <div style="font-size:12px;color:#666;line-height:1.6">
-            <p><strong>1. Credenciamento:</strong> Acesse <a href="https://developer.ifood.com.br" target="_blank">developer.ifood.com.br</a>, crie um aplicativo do tipo "Integradora" e obtenha Client ID e Client Secret.</p>
-            <p><strong>2. Autorização:</strong> No Portal do Parceiro do iFood, aba "Aplicativos", autorize a conexão da integradora com sua loja. Copie o Merchant ID.</p>
-            <p><strong>3. Polling necessário:</strong> uma implementação real precisa consultar os eventos a cada 30 segundos em backend seguro, persistir cada evento antes do acknowledgment e tratar duplicidade, expiração de token e falhas.</p>
-            <p><strong>4. Eventos e pedidos:</strong> a implementação real deve consultar detalhes, mapear estados e executar confirmações, preparo, despacho e cancelamentos por endpoints autenticados.</p>
-            <p><strong>5. Catálogo:</strong> a sincronização real exige chamadas autenticadas à API de Catalog e vínculo consistente por código externo/PDV.</p>
-            <p><strong>6. Estado atual:</strong> este HTML não executa esses fluxos; nenhum pedido iFood pode ser recebido, confirmado, cancelado ou sincronizado por ele.</p>
-          </div>
-        </div>
-
-        <div class="int-card">
-          <h5 style="margin:0 0 10px">🔄 Sincronização de Catálogo</h5>
-          <p style="font-size:12px;color:#888;margin:0 0 10px">Envia seu cardápio para o iFood. Produtos são vinculados pelo Código PDV (external_code).</p>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="int-btn int-btn-primary" id="btnSyncCatalog" disabled>Sincronizar catálogo (backend)</button>
-            <span id="syncStatus" style="font-size:12px;color:#888"></span>
-          </div>
-          <table class="int-table" style="margin-top:14px">
-            <thead><tr><th>Produto</th><th>Preço</th><th>Código PDV</th><th>Status sync</th></tr></thead>
-            <tbody>
-              ${getProdutos().slice(0, 10).map(p => `<tr><td>${p.name}</td><td>${fmtBRL(p.price)}</td><td>${p.id}</td><td><span style="color:#888">Pendente</span></td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-
-      document.getElementById('btnSaveIFood').onclick = () => {
-        data.ifood.enabled = false;
-        data.ifood.status = 'disconnected';
-        data.ifood.clientId = document.getElementById('ifoodClientId').value.trim();
-        data.ifood.clientSecret = '';
-        data.ifood.accessToken = '';
-        data.ifood.tokenExpiry = 0;
-        data.ifood.merchantId = document.getElementById('ifoodMerchantId').value.trim();
-        data.ifood.autoAccept = document.getElementById('ifoodAutoAccept').checked;
-        stopPolling();
-        save();
-        render();
-        alert('Configuração local do iFood salva. A integração permanece desativada: este HTML não possui backend OAuth/polling seguro.');
-      };
-
-      document.getElementById('btnTestIFood').onclick = () => {
-        alert('Teste não executado. A integração iFood requer backend seguro para OAuth, renovação de token e chamadas autenticadas; este HTML não faz conexão externa.');
-      };
-
-      document.getElementById('btnPollIFood').onclick = () => {
-        alert('Polling não executado. Não há endpoint, token OAuth, persistência de eventos ou acknowledgment implementado neste HTML.');
-      };
-
-      document.getElementById('btnStopPolling')?.addEventListener('click', () => {
-        stopPolling();
-        data.ifood.status = 'disconnected';
-        save();
-        render();
-      });
-
-      document.getElementById('btnSyncCatalog').onclick = () => {
-        alert('Sincronização não executada. Este HTML não chama a API Catalog do iFood nem registra resultados externos.');
-      };
-    }
-
-    function renderFiscal(c) {
-      const f = data.fiscal;
-      c.innerHTML = `
-        <div class="int-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <div>
-              <h5 style="margin:0">Emissão Fiscal — NFC-e (Modelo 65)</h5>
-              <p style="font-size:12px;color:#888;margin:4px 0 0">Cupom fiscal eletrônico para consumidor final. Substitui o ECF (cupom fiscal em papel).</p>
-            </div>
-              <div class="int-status int-status-disconnected">
-              <div class="int-status-dot" style="background:#dc3545"></div>
-              Não implementado neste HTML
-            </div>
-          </div>
-
-          <div class="int-warning" role="status"><strong>Modo de configuração/simulação local:</strong> esta tela não é um emissor fiscal. Não há provedor fiscal, certificado seguro, geração/assinatura de XML, autorização SEFAZ, protocolo, QR Code autorizado, cancelamento, contingência ou arquivamento fiscal implementados neste arquivo.</div>
-
-          <div class="int-kpi-grid">
-            <div class="int-kpi"><span>Registros locais (sem validade)</span><strong>${f.notas.length}</strong></div>
-            <div class="int-kpi"><span>Último número</span><strong>${f.ultimoNumero}</strong></div>
-            <div class="int-kpi"><span>Ambiente</span><strong style="font-size:14px">${f.ambiente === 'producao' ? 'Produção' : 'Homologação'}</strong></div>
-            <div class="int-kpi"><span>Regime</span><strong style="font-size:14px">${f.regimeTributario === 'simples' ? 'Simples Nacional' : f.regimeTributario === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'}</strong></div>
-          </div>
-
-          <div class="int-toggle">
-            <input type="checkbox" id="fiscalEnabled" disabled>
-            <label for="fiscalEnabled" style="font-weight:600;color:#777">Ativar emissão de NFC-e (backend/provedor fiscal necessário)</label>
-          </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="int-form-group">
-              <label>CNPJ</label>
-              <input type="text" id="fiscalCNPJ" value="${f.cnpj}" placeholder="00.000.000/0000-00">
-            </div>
-            <div class="int-form-group">
-              <label>Razão Social</label>
-              <input type="text" id="fiscalRazao" value="${f.razaoSocial}" placeholder="Nome da empresa">
-            </div>
-            <div class="int-form-group">
-              <label>Inscrição Estadual</label>
-              <input type="text" id="fiscalIE" value="${f.inscricaoEstadual}" placeholder="000.000.000.000">
-            </div>
-            <div class="int-form-group">
-              <label>Inscrição Municipal</label>
-              <input type="text" id="fiscalIM" value="${f.inscricaoMunicipal}" placeholder="0000000">
-            </div>
-            <div class="int-form-group">
-              <label>UF (SEFAZ)</label>
-              <select id="fiscalUF">
-                ${['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'].map(uf => `<option value="${uf}" ${f.uf === uf ? 'selected' : ''}>${uf}</option>`).join('')}
-              </select>
-            </div>
-            <div class="int-form-group">
-              <label>Regime Tributário</label>
-              <select id="fiscalRegime">
-                <option value="simples" ${f.regimeTributario === 'simples' ? 'selected' : ''}>Simples Nacional</option>
-                <option value="presumido" ${f.regimeTributario === 'presumido' ? 'selected' : ''}>Lucro Presumido</option>
-                <option value="real" ${f.regimeTributario === 'real' ? 'selected' : ''}>Lucro Real</option>
-              </select>
-            </div>
-            <div class="int-form-group">
-              <label>Tipo de Certificado Digital</label>
-              <select id="fiscalCertTipo">
-                <option value="A1" ${f.certTipo === 'A1' ? 'selected' : ''}>A1 (arquivo .pfx/.p12)</option>
-                <option value="A3" ${f.certTipo === 'A3' ? 'selected' : ''}>A3 (token/cartão físico)</option>
-              </select>
-            </div>
-            <div class="int-form-group">
-              <label>Ambiente</label>
-              <select id="fiscalAmbiente">
-                <option value="homologacao" ${f.ambiente === 'homologacao' ? 'selected' : ''}>Homologação (testes)</option>
-                <option value="producao" ${f.ambiente === 'producao' ? 'selected' : ''}>Produção</option>
-              </select>
-            </div>
-            <div class="int-form-group">
-              <label>Série das notas</label>
-              <input type="number" id="fiscalSerie" value="${f.serie}" min="1">
-            </div>
-            <div class="int-form-group">
-              <label>Código CSC (Código de Segurança do Contribuinte)</label>
-              <input type="text" id="fiscalCSC" value="${f.csc}" placeholder="Fornecido pela SEFAZ">
-            </div>
-            <div class="int-form-group">
-              <label>ID do CSC</label>
-              <input type="text" id="fiscalIdCSC" value="${f.idCsc}" placeholder="Ex: 0001">
-            </div>
-            <div class="int-form-group" style="grid-column:1/-1">
-              <label>Endereço do estabelecimento</label>
-              <input type="text" id="fiscalEnd" value="${f.endereco}" placeholder="Rua, número, bairro, CEP, cidade">
-            </div>
-          </div>
-
-          <div style="display:flex;gap:8px;margin-top:14px">
-            <button class="int-btn int-btn-primary" id="btnSaveFiscal">Salvar configuração fiscal</button>
-            <button class="int-btn int-btn-sec" id="btnTestFiscal">Testar comunicação SEFAZ</button>
-          </div>
-        </div>
-
-        <div class="int-card">
-          <h5 style="margin:0 0 10px">🧾 Configuração Fiscal de Produtos</h5>
-          <p style="font-size:12px;color:#888;margin:0 0 10px">Cada produto precisa de NCM, CFOP e CST/CSOSN para emissão da NFC-e.</p>
-          <table class="int-table">
-            <thead><tr><th>Produto</th><th>NCM</th><th>CFOP</th><th>CST/CSOSN</th><th>Alíquota</th><th>Editar</th></tr></thead>
-            <tbody>
-              ${getProdutos().slice(0, 15).map(p => {
-                const fc = p.fiscalConfig || {};
-                return `<tr>
-                  <td>${p.name}</td>
-                  <td>${fc.ncm || '<span style="color:#dc3545">Pendente</span>'}</td>
-                  <td>${fc.cfop || '-'}</td>
-                  <td>${fc.csosn || '-'}</td>
-                  <td>${fc.aliquota ? fc.aliquota + '%' : '-'}</td>
-                  <td><button class="int-btn int-btn-sec" style="padding:4px 8px;font-size:11px" onclick="window.IntegracoesModule.editFiscalProduto('${p.id}')">Configurar</button></td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="int-card">
-          <h5 style="margin:0 0 10px">📄 Notas Fiscais Emitidas</h5>
-          ${f.notas.length === 0 ? '<p style="color:#999;font-size:12px">Nenhuma NFC-e emitida ainda.</p>' : `
-          <table class="int-table">
-            <thead><tr><th>Número</th><th>Chave de acesso</th><th>Data</th><th>Cliente</th><th>Valor</th><th>Status</th><th>DANFE</th></tr></thead>
-            <tbody>
-              ${f.notas.slice().reverse().map(n => `<tr>
-                <td>${n.numero}</td>
-                <td style="font-family:monospace;font-size:10px">${n.chave}</td>
-                <td>${fmtDate(n.data)}</td>
-                <td>${n.cliente}</td>
-                <td>${fmtBRL(n.valor)}</td>
-                <td><span class="int-status int-status-error">Registro local — sem autorização</span></td>
-                <td><button class="int-btn int-btn-sec" style="padding:4px 8px;font-size:11px" onclick="window.IntegracoesModule.verDANFE('${n.id}')">Ver DANFE</button></td>
-              </tr>`).join('')}
-            </tbody>
-          </table>`}
-        </div>
-
-        <div class="int-card">
-          <h5 style="margin:0 0 10px">📋 Como funciona a NFC-e</h5>
-          <div style="font-size:12px;color:#666;line-height:1.6">
-            <p><strong>1. Pré-requisitos:</strong> CNPJ ativo com Inscrição Estadual, certificado digital e-CNPJ A1 ou A3, credenciamento na SEFAZ do seu estado.</p>
-            <p><strong>2. Fluxo necessário em um emissor real:</strong> gerar XML conforme MOC/leiautes, assinar com certificado digital, transmitir ao autorizador ou provedor fiscal, obter protocolo/chave e produzir DANFE/QR Code a partir do retorno autorizado.</p>
-            <p><strong>3. Eventos fiscais:</strong> cancelamento, inutilização e demais eventos exigem endpoint, certificado, justificativa e regras da UF.</p>
-            <p><strong>4. Contingência:</strong> exige fluxo próprio, numeração, guarda e transmissão posterior conforme regras estaduais; não é implementada por esta tela.</p>
-            <p><strong>5. Arquivamento:</strong> XMLs e retornos autorizados precisam ser mantidos em armazenamento seguro e auditável, fora do localStorage deste HTML.</p>
-            <p><strong>6. Estado atual:</strong> nenhum provedor NFE.io, FocusNFe ou Tecnospeed foi configurado e este arquivo não suporta emissão fiscal real por nenhum dos modelos.</p>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('btnSaveFiscal').onclick = () => {
-        f.enabled = false;
-        f.cnpj = document.getElementById('fiscalCNPJ').value.trim();
-        f.razaoSocial = document.getElementById('fiscalRazao').value.trim();
-        f.inscricaoEstadual = document.getElementById('fiscalIE').value.trim();
-        f.inscricaoMunicipal = document.getElementById('fiscalIM').value.trim();
-        f.uf = document.getElementById('fiscalUF').value;
-        f.regimeTributario = document.getElementById('fiscalRegime').value;
-        f.certTipo = document.getElementById('fiscalCertTipo').value;
-        f.ambiente = document.getElementById('fiscalAmbiente').value;
-        f.serie = parseInt(document.getElementById('fiscalSerie').value) || 65;
-        f.csc = document.getElementById('fiscalCSC').value.trim();
-        f.idCsc = document.getElementById('fiscalIdCSC').value.trim();
-        f.endereco = document.getElementById('fiscalEnd').value.trim();
-        save();
-        alert('Configuração fiscal salva.');
-        render();
-      };
-
-      document.getElementById('btnTestFiscal').onclick = () => {
-        const cnpjDigits = String(f.cnpj || '').replace(/\D/g, '');
-        const missing = [];
-        if (cnpjDigits.length !== 14) missing.push('CNPJ com 14 dígitos');
-        if (!f.inscricaoEstadual) missing.push('Inscrição Estadual');
-        if (!f.csc) missing.push('CSC');
-        if (!f.idCsc) missing.push('ID do CSC');
-        const detail = missing.length ? 'Pendências locais: ' + missing.join(', ') + '.' : 'Campos básicos presentes.';
-        alert('Validação local concluída (' + detail + ') Comunicação real com a SEFAZ não foi testada: não existe certificado, provedor ou endpoint configurado neste HTML.');
-      };
-    }
-  }
-
-  // --- Funções de polling ---
-  function startPolling() {
-    stopPolling();
-    console.warn('[Integrações] Polling iFood não iniciado: falta backend OAuth/eventos; este HTML não simula atividade de conexão.');
-  }
-
-  function stopPolling() {
-    if (data.ifood.pollingInterval) {
-      clearInterval(data.ifood.pollingInterval);
-      data.ifood.pollingInterval = null;
-    }
-  }
-
-  // --- Funções auxiliares expostas ---
-  function editFiscalProduto(produtoId) {
-    const produtos = getProdutos();
-    const p = produtos.find(pr => pr.id === produtoId);
-    if (!p) return;
-    const fc = p.fiscalConfig || {};
-    const bg = document.createElement('div');
-    bg.className = 'est-modal-bg';
-    bg.innerHTML = `<div class="est-modal">
-      <h5 style="margin:0 0 14px">Configuração fiscal — ${p.name}</h5>
-      <div style="display:grid;gap:10px">
-        <label>NCM (Nomenclatura Comum do Mercosul)<input type="text" id="fpNCM" value="${fc.ncm || ''}" placeholder="Ex: 2106.90.10 (preparações alimentícias)" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-        <label>CFOP (Código Fiscal de Operações)<input type="text" id="fpCFOP" value="${fc.cfop || ''}" placeholder="Ex: 5102 (venda de mercadoria)" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-        <label>CST/CSOSN (Código de Situação Tributária)<input type="text" id="fpCSOSN" value="${fc.csosn || ''}" placeholder="Ex: 102 (Tributada pelo Simples Nacional sem permitência de crédito)" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-        <label>Alíquota ICMS %<input type="number" id="fpAliq" value="${fc.aliquota || ''}" step="0.01" placeholder="Ex: 17" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-        <label>Valor do PIS %<input type="number" id="fpPIS" value="${fc.pis || ''}" step="0.01" placeholder="Ex: 0.65" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-        <label>Valor do COFINS %<input type="number" id="fpCOFINS" value="${fc.cofins || ''}" step="0.01" placeholder="Ex: 3.00" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px"></label>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
-        <button class="int-btn int-btn-sec" id="fpCancel">Cancelar</button>
-        <button class="int-btn int-btn-primary" id="fpSave">Salvar</button>
-      </div>
-    </div>`;
-    bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
-    document.body.appendChild(bg);
-
-    document.getElementById('fpCancel').onclick = () => bg.remove();
-    document.getElementById('fpSave').onclick = () => {
-      p.fiscalConfig = {
-        ncm: document.getElementById('fpNCM').value.trim(),
-        cfop: document.getElementById('fpCFOP').value.trim(),
-        csosn: document.getElementById('fpCSOSN').value.trim(),
-        aliquota: parseFloat(document.getElementById('fpAliq').value) || 0,
-        pis: parseFloat(document.getElementById('fpPIS').value) || 0,
-        cofins: parseFloat(document.getElementById('fpCOFINS').value) || 0
-      };
-      if (typeof saveMenuData === 'function') saveMenuData();
-      bg.remove();
-      render();
-    };
-  }
-
-  function verDANFE(notaId) {
-    const n = data.fiscal.notas.find(nt => nt.id === notaId);
-    if (!n) return;
-    const bg = document.createElement('div');
-    bg.className = 'est-modal-bg';
-    bg.innerHTML = `<div class="est-modal" style="max-width:420px">
-      <h5 style="margin:0 0 10px">Registro local de NFC-e — Nota ${n.numero}</h5>
-      <div class="int-warning" style="margin-bottom:10px"><strong>SEM VALIDADE FISCAL:</strong> esta é uma prévia local; não representa DANFE autorizado pela SEFAZ.</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:#f9f9f9;padding:14px;border-radius:8px;line-height:1.6">
-        <div style="text-align:center;font-weight:700;font-size:13px;margin-bottom:6px">${data.fiscal.razaoSocial || '---'}</div>
-        <div style="text-align:center">CNPJ: ${data.fiscal.cnpj || '---'}</div>
-        <div style="text-align:center">IE: ${data.fiscal.inscricaoEstadual || '---'}</div>
-        <div style="text-align:center">${data.fiscal.endereco || '---'}</div>
-        <hr style="margin:8px 0">
-        <div>Nota: ${n.numero} | Série: ${data.fiscal.serie}</div>
-        <div>Data: ${fmtDate(n.data)}</div>
-        <div>Cliente: ${n.cliente}</div>
-        <hr style="margin:8px 0">
-        <div style="font-weight:700">Itens:</div>
-        ${(n.itens || []).map(i => `<div>${i.qtd}x ${i.nome} ......... ${fmtBRL(i.total)}</div>`).join('')}
-        <hr style="margin:8px 0">
-        <div style="text-align:right;font-weight:700;font-size:14px">TOTAL: ${fmtBRL(n.valor)}</div>
-        <hr style="margin:8px 0">
-        <div style="font-size:9px;word-break:break-all">Chave: ${n.chave}</div>
-        <div style="text-align:center;margin-top:8px">
-          <div style="display:inline-block;width:120px;height:120px;background:#fff;border:1px solid #000;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;text-align:center">QR CODE NÃO GERADO</div>
-        </div>
-        <div style="text-align:center;margin-top:6px;font-size:9px">Consulta pública/QR Code não gerados: registro local sem autorização SEFAZ.</div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
-        <button class="int-btn int-btn-sec" onclick="this.closest('.est-modal-bg').remove()">Fechar</button>
-        <button class="int-btn int-btn-primary" onclick="window.print()">Imprimir</button>
-      </div>
-    </div>`;
-    bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
-    document.body.appendChild(bg);
-  }
-
-  // --- Emissão de NFC-e (bloqueada até existir backend/provedor fiscal real) ---
-  function emitirNFCe(order) {
-    load();
-    console.warn('[Integrações] NFC-e não emitida: este HTML não gera XML, assina certificado nem transmite à SEFAZ.');
-    return null;
-  }
-
-  function gerarChaveNFCe(f, numero) {
-    const uf = f.uf || 'SP';
-    const ano = new Date().getFullYear().toString().slice(2);
-    const mes = String(new Date().getMonth() + 1).padStart(2, '0');
-    const cnpj = (f.cnpj || '').replace(/\D/g, '').padStart(14, '0');
-    const serie = String(f.serie || 65).padStart(3, '0');
-    const num = String(numero).padStart(9, '0');
-    const cnf = String(Math.floor(Math.random() * 99999999)).padStart(8, '0');
-    const base = '35' + ano + mes + cnpj + '65' + serie + num + cnf;
-    const dv = calcularDV(base);
-    return base + dv;
-  }
-
-  function calcularDV(chave) {
-    let soma = 0, peso = 2;
-    for (let i = chave.length - 1; i >= 0; i--) {
-      soma += parseInt(chave[i]) * peso;
-      peso = peso === 9 ? 2 : peso + 1;
-    }
-    const resto = soma % 11;
-    return resto < 2 ? 0 : 11 - resto;
-  }
-
-  window.IntegracoesModule = {
-    render,
-    editFiscalProduto,
-    verDANFE,
-    emitirNFCe,
-    getData: () => { load(); return data; }
-  };
-})();
-
-// =========================================================================
 // === MÓDULO: CASHBACK ===
 // =========================================================================
 (function() {
@@ -17042,454 +16451,58 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 })();
 
 // =========================================================================
-// === MÓDULO: FINANCEIRO (DRE + FLUXO DE CAIXA + CONCILIAÇÃO) ===
-// =========================================================================
+// === MÓDULO: OBSERVABILIDADE MERCADO PAGO ===
+try { localStorage.removeItem('cardapio_integracoes_v1'); } catch (_) {}
+// Somente leitura: não cria cobrança, não altera pedidos e não solicita estornos.
 (function() {
   'use strict';
-  const STORAGE_KEY = 'cardapio_financeiro_v1';
-  let data = {
-    contasPagar: [],
-    contasReceber: [],
-    despesas: [],
-    conciliacao: [],
-    planoContas: [
-      { id: 'cat-1', nome: 'Aluguel', tipo: 'fixo' },
-      { id: 'cat-2', nome: 'Energia', tipo: 'fixo' },
-      { id: 'cat-3', nome: 'Água', tipo: 'fixo' },
-      { id: 'cat-4', nome: 'Fornecedores', tipo: 'variavel' },
-      { id: 'cat-5', nome: 'Folha de pagamento', tipo: 'fixo' },
-      { id: 'cat-6', nome: 'Marketing', tipo: 'variavel' },
-      { id: 'cat-7', nome: 'Manutenção', tipo: 'variavel' },
-      { id: 'cat-8', nome: 'Contador', tipo: 'fixo' },
-      { id: 'cat-9', nome: 'Taxas de delivery', tipo: 'variavel' },
-      { id: 'cat-10', nome: 'Outros', tipo: 'variavel' }
-    ]
+  try { localStorage.removeItem('cardapio_financeiro_v1'); } catch (_) {}
+  let refreshTimer = null;
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const money = value => (Number(value) || 0).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+  const date = value => { const d = value?.toDate ? value.toDate() : new Date(value || 0); return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }); };
+  const text = value => String(value || '').trim().toLowerCase();
+  const online = order => Boolean(order?.payment?.requiresOnlineConfirmation) || text(order?.payment?.mode) === 'online' || ['pix','pix online'].includes(text(order?.paymentMethod)) || text(order?.payment?.provider) === 'mercadopago';
+  const statusOf = order => text(order?.paymentStatus || order?.payment?.status || 'unknown');
+  const labelOf = status => ({ awaiting_payment:'Aguardando Pix', pending:'Em processamento', paid:'Pago', approved:'Pago', refund_pending:'Estorno pendente', refunded:'Estornado', refund_failed:'Falha no estorno', expired:'Pix expirado', failed:'Pagamento recusado', cancelled:'Cancelado', canceled:'Cancelado' }[status] || status || 'Sem status');
+  const kindOf = status => ['paid','approved'].includes(status) ? 'paid' : status.includes('refund') ? 'refund' : ['failed','expired','cancelled','canceled'].includes(status) ? 'closed' : 'waiting';
+  const getOrders = () => {
+    const source = Array.isArray(window.orders) ? window.orders : [];
+    return source.filter(online).sort((a,b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
   };
-
-  function load() {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) { const p = JSON.parse(raw); data = { ...data, ...p }; if (!data.planoContas) data.planoContas = []; } } catch(e) {}
-  }
-  function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {} }
-
-  function fmtBRL(v) { return (Number(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
-  function fmtDate(ts) { if (!ts) return '-'; return new Date(ts).toLocaleDateString('pt-BR'); }
-
-  function uid() { return 'fin-' + Date.now() + '-' + Math.floor(Math.random() * 10000); }
-
-  async function getOrdersForPeriod(ini, fim) {
-    try {
-      if (typeof getDocs === 'function' && typeof ordersCollectionRef !== 'undefined') {
-        const snap = await getDocs(ordersCollectionRef);
-        return snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(o => {
-          const t = new Date(o.createdAt).getTime();
-          return t >= ini && t <= fim;
-        });
-      }
-    } catch(e) {}
-    // Fallback localStorage
-    try { return JSON.parse(localStorage.getItem('cardapio_orders_v1') || '[]'); } catch(e) { return []; }
-  }
-
   function render() {
-    load();
     const root = document.getElementById('financeiroRoot');
     if (!root) return;
-
+    const all = getOrders();
+    const paid = all.filter(o => ['paid','approved'].includes(statusOf(o)));
+    const awaiting = all.filter(o => ['awaiting_payment','pending','processing'].includes(statusOf(o)));
+    const pendingRefund = all.filter(o => statusOf(o) === 'refund_pending');
+    const refunded = all.filter(o => statusOf(o) === 'refunded');
+    const failedRefund = all.filter(o => statusOf(o) === 'refund_failed');
+    const paidTotal = paid.reduce((sum,o) => sum + Number(o.total || o.payment?.amount || 0), 0);
+    const refundTotal = refunded.reduce((sum,o) => sum + Number(o.total || o.payment?.amount || 0), 0);
+    const pendingTotal = awaiting.reduce((sum,o) => sum + Number(o.total || o.payment?.amount || 0), 0);
+    const health = failedRefund.length ? 'Atenção necessária' : pendingRefund.length ? 'Há estornos em andamento' : 'Operação monitorada';
     root.innerHTML = `
-    <style>
-      .fin-tab-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-      .fin-tab{padding:8px 14px;border:1px solid #ddd;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;background:#f9f9f9}
-      .fin-tab.active{background:#ff5a1f;color:#fff;border-color:#ff5a1f}
-      .fin-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-      .fin-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
-      .fin-kpi{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px;text-align:center}
-      .fin-kpi span{display:block;font-size:11px;color:#888;margin-bottom:4px}
-      .fin-kpi strong{font-size:22px}
-      .fin-kpi.positive strong{color:#28a745}
-      .fin-kpi.negative strong{color:#dc3545}
-      .fin-table{width:100%;border-collapse:collapse;font-size:12px}
-      .fin-table th{background:#f5f5f5;padding:8px;text-align:left;border-bottom:2px solid #eee}
-      .fin-table td{padding:8px;border-bottom:1px solid #f0f0f0}
-      .fin-btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
-      .fin-btn-primary{background:#ff5a1f;color:#fff}.fin-btn-sec{background:#e9ecef;color:#333}.fin-btn-danger{background:#dc3545;color:#fff}.fin-btn-ok{background:#28a745;color:#fff}
-      .fin-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:#fff}
-      .fin-badge-pending{background:#ffc107;color:#333}
-      .fin-badge-paid{background:#28a745}
-      .fin-badge-overdue{background:#dc3545}
-      .fin-dre-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
-      .fin-dre-row.total{font-weight:700;font-size:16px;border-top:2px solid #333;border-bottom:none;margin-top:8px;padding-top:10px}
-      .fin-dre-row.subtotal{font-weight:600;background:#f9f9f9;padding-left:12px}
-      .fin-form-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
-      .fin-form-row input,.fin-form-row select{padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px}
-    </style>
-
-    <div class="fin-tab-bar">
-      <div class="fin-tab active" data-fin-tab="dre">📊 DRE</div>
-      <div class="fin-tab" data-fin-tab="fluxo">💧 Fluxo de Caixa</div>
-      <div class="fin-tab" data-fin-tab="pagar">📋 Contas a Pagar</div>
-      <div class="fin-tab" data-fin-tab="receber">📋 Contas a Receber</div>
-      <div class="fin-tab" data-fin-tab="conciliacao">🔄 Conciliação Bancária</div>
-      <div class="fin-tab" data-fin-tab="despesas">💸 Despesas</div>
-    </div>
-
-    <div id="fin-content"></div>
-    `;
-
-    root.querySelectorAll('.fin-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        root.querySelectorAll('.fin-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        renderTab(tab.dataset.finTab);
-      });
-    });
-
-    renderTab('dre');
-
-    function renderTab(tab) {
-      const c = document.getElementById('fin-content');
-      if (tab === 'dre') renderDRE(c);
-      else if (tab === 'fluxo') renderFluxo(c);
-      else if (tab === 'pagar') renderPagar(c);
-      else if (tab === 'receber') renderReceber(c);
-      else if (tab === 'conciliacao') renderConciliacao(c);
-      else if (tab === 'despesas') renderDespesas(c);
-    }
-
-    function renderDRE(c) {
-      const now = new Date();
-      const iniMes = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-      const fimMes = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
-
-      c.innerHTML = '<div style="text-align:center;padding:20px;color:#888">Calculando DRE do mês corrente...</div>';
-
-      (async () => {
-        const orders = await getOrdersForPeriod(iniMes, fimMes);
-        const entregues = orders.filter(o => o.status === 'delivered' || o.status === 'concluded');
-        const receitaBruta = entregues.reduce((sum, o) => sum + (o.total || 0), 0);
-        const taxaDelivery = entregues.filter(o => o.source === 'ifood' || o.source === '99food' || o.deliveryFee).reduce((sum, o) => sum + (o.deliveryFee || 0) + ((o.total || 0) * 0.12), 0);
-
-        // CMV do estoque
-        let cmv = 0;
-        if (window.EstoqueModule) {
-          const estData = window.EstoqueModule.getData();
-          entregues.forEach(o => {
-            (o.items || []).forEach(item => {
-              const produtoId = item.id || item.productId;
-              const ficha = estData.fichasTecnicas[produtoId];
-              if (ficha && ficha.insumos) {
-                const qtd = item.quantity || item.qty || 1;
-                ficha.insumos.forEach(ins => {
-                  const insumo = estData.insumos.find(i => i.id === ins.insumoId);
-                  if (insumo) cmv += (insumo.custoUnitario || 0) * ins.quantidade * qtd;
-                });
-              }
-            });
-          });
-        }
-
-        const receitaLiquida = receitaBruta - taxaDelivery;
-        const lucroBruto = receitaLiquida - cmv;
-        const margemBruta = receitaLiquida > 0 ? (lucroBruto / receitaLiquida * 100) : 0;
-
-        // Despesas operacionais (do mês)
-        const despesasMes = data.despesas.filter(d => {
-          const t = new Date(d.data).getTime();
-          return t >= iniMes && t <= fimMes;
-        });
-        const despesasFixas = despesasMes.filter(d => {
-          const cat = data.planoContas.find(pc => pc.id === d.categoria);
-          return cat && cat.tipo === 'fixo';
-        }).reduce((sum, d) => sum + d.valor, 0);
-        const despesasVariaveis = despesasMes.filter(d => {
-          const cat = data.planoContas.find(pc => pc.id === d.categoria);
-          return cat && cat.tipo === 'variavel';
-        }).reduce((sum, d) => sum + d.valor, 0);
-        const totalDespesas = despesasFixas + despesasVariaveis;
-        const lucroLiquido = lucroBruto - totalDespesas;
-        const margemLiquida = receitaLiquida > 0 ? (lucroLiquido / receitaLiquida * 100) : 0;
-
-        c.innerHTML = `
-          <div class="fin-card">
-            <h5 style="margin:0 0 6px">DRE — Demonstrativo de Resultado do Exercício</h5>
-            <p style="font-size:12px;color:#888;margin:0 0 14px">Período: ${new Date(iniMes).toLocaleDateString('pt-BR')} a ${new Date(fimMes).toLocaleDateString('pt-BR')} (regime de competência)</p>
-
-            <div class="fin-kpi-grid">
-              <div class="fin-kpi positive"><span>Receita bruta</span><strong>${fmtBRL(receitaBruta)}</strong></div>
-              <div class="fin-kpi"><span>CMV</span><strong style="color:#dc3545">${fmtBRL(cmv)}</strong></div>
-              <div class="fin-kpi"><span>Lucro bruto</span><strong style="color:${lucroBruto >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(lucroBruto)}</strong></div>
-              <div class="fin-kpi ${lucroLiquido >= 0 ? 'positive' : 'negative'}"><span>Lucro líquido</span><strong>${fmtBRL(lucroLiquido)}</strong></div>
-              <div class="fin-kpi"><span>Margem bruta</span><strong>${margemBruta.toFixed(1)}%</strong></div>
-              <div class="fin-kpi"><span>Margem líquida</span><strong style="color:${margemLiquida >= 8 ? '#28a745' : '#dc3545'}">${margemLiquida.toFixed(1)}%</strong></div>
-            </div>
-
-            <div style="background:#f9f9f9;border-radius:10px;padding:14px">
-              <div class="fin-dre-row"><span>(+) Receita bruta de vendas</span><strong>${fmtBRL(receitaBruta)}</strong></div>
-              <div class="fin-dre-row"><span>(-) Taxas de delivery e marketplace</span><strong style="color:#dc3545">- ${fmtBRL(taxaDelivery)}</strong></div>
-              <div class="fin-dre-row subtotal"><span>(=) Receita líquida</span><strong>${fmtBRL(receitaLiquida)}</strong></div>
-              <div class="fin-dre-row"><span>(-) CMV — Custo de mercadoria vendida</span><strong style="color:#dc3545">- ${fmtBRL(cmv)}</strong></div>
-              <div class="fin-dre-row subtotal"><span>(=) Lucro bruto (margem: ${margemBruta.toFixed(1)}%)</span><strong style="color:${lucroBruto >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(lucroBruto)}</strong></div>
-              <div class="fin-dre-row"><span>(-) Despesas fixas (aluguel, folha, energia...)</span><strong style="color:#dc3545">- ${fmtBRL(despesasFixas)}</strong></div>
-              <div class="fin-dre-row"><span>(-) Despesas variáveis (marketing, manutenção...)</span><strong style="color:#dc3545">- ${fmtBRL(despesasVariaveis)}</strong></div>
-              <div class="fin-dre-row total"><span>(=) Lucro líquido do exercício</span><strong style="color:${lucroLiquido >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(lucroLiquido)}</strong></div>
-            </div>
-
-            <div style="margin-top:14px;font-size:12px;color:#888">
-              <p><strong>Benchmark do setor:</strong> CMV saudável entre 28-35% • Margem líquida entre 8-15% • Se sua margem está abaixo de 8%, revise preços ou custos.</p>
-              ${cmv === 0 && receitaBruta > 0 ? '<p style="color:#ffc107">⚠️ CMV zerado. Cadastre fichas técnicas no módulo Estoque & CMV para ter o custo real.</p>' : ''}
-              ${despesasFixas === 0 && despesasVariaveis === 0 ? '<p style="color:#ffc107">⚠️ Nenhuma despesa lançada. Cadastre despesas na aba "Despesas" para um DRE completo.</p>' : ''}
-            </div>
-          </div>
-        `;
-      })();
-    }
-
-    function renderFluxo(c) {
-      const now = Date.now();
-      const dias30 = now + 30 * 86400000;
-      const dias60 = now + 60 * 86400000;
-      const dias90 = now + 90 * 86400000;
-
-      const contasPagarPendentes = data.contasPagar.filter(ct => !ct.pago);
-      const contasReceberPendentes = data.contasReceber.filter(ct => !ct.recebido);
-
-      const pagar30 = contasPagarPendentes.filter(ct => ct.vencimento <= dias30).reduce((s, ct) => s + ct.valor, 0);
-      const pagar60 = contasPagarPendentes.filter(ct => ct.vencimento <= dias60).reduce((s, ct) => s + ct.valor, 0);
-      const pagar90 = contasPagarPendentes.filter(ct => ct.vencimento <= dias90).reduce((s, ct) => s + ct.valor, 0);
-      const receber30 = contasReceberPendentes.filter(ct => ct.vencimento <= dias30).reduce((s, ct) => s + ct.valor, 0);
-      const receber60 = contasReceberPendentes.filter(ct => ct.vencimento <= dias60).reduce((s, ct) => s + ct.valor, 0);
-      const receber90 = contasReceberPendentes.filter(ct => ct.vencimento <= dias90).reduce((s, ct) => s + ct.valor, 0);
-
-      const saldoProjetado30 = receber30 - pagar30;
-      const saldoProjetado60 = receber60 - pagar60;
-      const saldoProjetado90 = receber90 - pagar90;
-
-      c.innerHTML = `
-        <div class="fin-card">
-          <h5 style="margin:0 0 6px">Fluxo de Caixa Projetado</h5>
-          <p style="font-size:12px;color:#888;margin:0 0 14px">Previsão de entradas e saídas para os próximos 30, 60 e 90 dias (regime de caixa).</p>
-
-          <table class="fin-table">
-            <thead><tr><th>Período</th><th style="text-align:right">A pagar (saídas)</th><th style="text-align:right">A receber (entradas)</th><th style="text-align:right">Saldo projetado</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:600">Próximos 30 dias</td><td style="text-align:right;color:#dc3545">${fmtBRL(pagar30)}</td><td style="text-align:right;color:#28a745">${fmtBRL(receber30)}</td><td style="text-align:right;font-weight:700;color:${saldoProjetado30 >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(saldoProjetado30)}</td></tr>
-              <tr><td style="font-weight:600">Próximos 60 dias</td><td style="text-align:right;color:#dc3545">${fmtBRL(pagar60)}</td><td style="text-align:right;color:#28a745">${fmtBRL(receber60)}</td><td style="text-align:right;font-weight:700;color:${saldoProjetado60 >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(saldoProjetado60)}</td></tr>
-              <tr><td style="font-weight:600">Próximos 90 dias</td><td style="text-align:right;color:#dc3545">${fmtBRL(pagar90)}</td><td style="text-align:right;color:#28a745">${fmtBRL(receber90)}</td><td style="text-align:right;font-weight:700;color:${saldoProjetado90 >= 0 ? '#28a745' : '#dc3545'}">${fmtBRL(saldoProjetado90)}</td></tr>
-            </tbody>
-          </table>
-
-          ${saldoProjetado30 < 0 ? '<div style="margin-top:12px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:10px;font-size:12px;color:#856404">⚠️ Atenção: saldo projetado negativo para 30 dias. Verifique contas a pagar próximas ao vencimento.</div>' : ''}
+      <section class="mp-observer" aria-label="Observabilidade Mercado Pago">
+        <div class="mp-observer-head"><div><span class="mp-eyebrow">MERCADO PAGO · SOMENTE LEITURA</span><h3>Movimentação Pix da loja</h3><p>Visão baseada nos pedidos reais e nos estados financeiros persistidos no Firestore. Este módulo não altera pedidos, cobranças ou estornos.</p></div><button type="button" class="mp-refresh" data-mp-refresh title="Atualizar dados">↻ Atualizar</button></div>
+        <div class="mp-health"><span class="mp-health-dot ${failedRefund.length ? 'danger' : pendingRefund.length ? 'warning' : 'ok'}"></span><strong>${health}</strong><small>Última leitura: ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</small></div>
+        <div class="mp-kpis">
+          <article><span>Recebido confirmado</span><strong>${money(paidTotal)}</strong><small>${paid.length} pagamento(s) aprovado(s)</small></article>
+          <article><span>Aguardando confirmação</span><strong>${money(pendingTotal)}</strong><small>${awaiting.length} Pix em aberto</small></article>
+          <article><span>Estornado</span><strong>${money(refundTotal)}</strong><small>${refunded.length} estorno(s) concluído(s)</small></article>
+          <article class="${pendingRefund.length || failedRefund.length ? 'attention' : ''}"><span>Estornos em atenção</span><strong>${pendingRefund.length + failedRefund.length}</strong><small>${pendingRefund.length} pendente(s) · ${failedRefund.length} falha(s)</small></article>
         </div>
-      `;
-    }
-
-    function renderPagar(c) {
-      c.innerHTML = `
-        <div class="fin-card">
-          <h5 style="margin:0 0 10px">Contas a Pagar</h5>
-          <div class="fin-form-row">
-            <input type="text" id="cpDesc" placeholder="Descrição" style="flex:1;min-width:150px">
-            <input type="number" id="cpValor" placeholder="Valor R$" step="0.01" style="width:110px">
-            <input type="date" id="cpVenc" style="width:130px">
-            <select id="cpCat">
-              ${data.planoContas.map(pc => `<option value="${pc.id}">${pc.nome}</option>`).join('')}
-            </select>
-            <input type="text" id="cpForn" placeholder="Fornecedor" style="width:120px">
-            <button class="fin-btn fin-btn-primary" id="btnAddPagar">+ Adicionar</button>
-          </div>
-          <table class="fin-table">
-            <thead><tr><th>Descrição</th><th>Fornecedor</th><th>Categoria</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-              ${data.contasPagar.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Nenhuma conta a pagar registrada.</td></tr>' : data.contasPagar.slice().reverse().map(ct => {
-                const cat = data.planoContas.find(pc => pc.id === ct.categoria);
-                const vencTs = new Date(ct.vencimento).getTime();
-                const overdue = !ct.pago && vencTs < Date.now();
-                const status = ct.pago ? '<span class="fin-badge fin-badge-paid">Pago</span>' : overdue ? '<span class="fin-badge fin-badge-overdue">Vencido</span>' : '<span class="fin-badge fin-badge-pending">Pendente</span>';
-                return `<tr>
-                  <td>${ct.descricao}</td>
-                  <td>${ct.fornecedor || '-'}</td>
-                  <td>${cat ? cat.nome : '-'}</td>
-                  <td>${fmtBRL(ct.valor)}</td>
-                  <td>${fmtDate(ct.vencimento)}</td>
-                  <td>${status}</td>
-                  <td style="white-space:nowrap">
-                    ${!ct.pago ? `<button class="fin-btn fin-btn-ok" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.marcarPago('${ct.id}')">Pagar</button>` : ''}
-                    <button class="fin-btn fin-btn-danger" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.deletePagar('${ct.id}')">Excluir</button>
-                  </td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-      document.getElementById('btnAddPagar').onclick = () => {
-        const desc = document.getElementById('cpDesc').value.trim();
-        if (!desc) { alert('Informe a descrição.'); return; }
-        data.contasPagar.push({
-          id: uid(), descricao: desc, valor: parseFloat(document.getElementById('cpValor').value) || 0,
-          vencimento: document.getElementById('cpVenc').value || new Date().toISOString().slice(0, 10),
-          categoria: document.getElementById('cpCat').value, fornecedor: document.getElementById('cpForn').value.trim(),
-          pago: false, dataCriacao: Date.now()
-        });
-        save(); render();
-      };
-    }
-
-    function renderReceber(c) {
-      c.innerHTML = `
-        <div class="fin-card">
-          <h5 style="margin:0 0 10px">Contas a Receber</h5>
-          <div class="fin-form-row">
-            <input type="text" id="crDesc" placeholder="Descrição" style="flex:1;min-width:150px">
-            <input type="number" id="crValor" placeholder="Valor R$" step="0.01" style="width:110px">
-            <input type="date" id="crVenc" style="width:130px">
-            <input type="text" id="crCli" placeholder="Cliente/Fonte" style="width:120px">
-            <button class="fin-btn fin-btn-primary" id="btnAddReceber">+ Adicionar</button>
-          </div>
-          <table class="fin-table">
-            <thead><tr><th>Descrição</th><th>Cliente/Fonte</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-              ${data.contasReceber.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px">Nenhuma conta a receber registrada.</td></tr>' : data.contasReceber.slice().reverse().map(ct => {
-                const vencTs = new Date(ct.vencimento).getTime();
-                const overdue = !ct.recebido && vencTs < Date.now();
-                const status = ct.recebido ? '<span class="fin-badge fin-badge-paid">Recebido</span>' : overdue ? '<span class="fin-badge fin-badge-overdue">Vencido</span>' : '<span class="fin-badge fin-badge-pending">Pendente</span>';
-                return `<tr>
-                  <td>${ct.descricao}</td>
-                  <td>${ct.cliente || '-'}</td>
-                  <td>${fmtBRL(ct.valor)}</td>
-                  <td>${fmtDate(ct.vencimento)}</td>
-                  <td>${status}</td>
-                  <td style="white-space:nowrap">
-                    ${!ct.recebido ? `<button class="fin-btn fin-btn-ok" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.marcarRecebido('${ct.id}')">Receber</button>` : ''}
-                    <button class="fin-btn fin-btn-danger" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.deleteReceber('${ct.id}')">Excluir</button>
-                  </td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-      document.getElementById('btnAddReceber').onclick = () => {
-        const desc = document.getElementById('crDesc').value.trim();
-        if (!desc) { alert('Informe a descrição.'); return; }
-        data.contasReceber.push({
-          id: uid(), descricao: desc, valor: parseFloat(document.getElementById('crValor').value) || 0,
-          vencimento: document.getElementById('crVenc').value || new Date().toISOString().slice(0, 10),
-          cliente: document.getElementById('crCli').value.trim(),
-          recebido: false, dataCriacao: Date.now()
-        });
-        save(); render();
-      };
-    }
-
-    function renderConciliacao(c) {
-      c.innerHTML = `
-        <div class="fin-card">
-          <h5 style="margin:0 0 10px">Conciliação Bancária</h5>
-          <p style="font-size:12px;color:#888;margin:0 0 14px">Compare os lançamentos do sistema com o extrato bancário para identificar divergências.</p>
-          <div class="fin-form-row">
-            <input type="text" id="concDesc" placeholder="Descrição do lançamento" style="flex:1;min-width:150px">
-            <input type="number" id="concValor" placeholder="Valor R$" step="0.01" style="width:110px">
-            <select id="concTipo"><option value="entrada">Entrada</option><option value="saida">Saída</option></select>
-            <input type="date" id="concData" style="width:130px">
-            <button class="fin-btn fin-btn-primary" id="btnAddConc">+ Adicionar</button>
-          </div>
-          <table class="fin-table">
-            <thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-              ${data.conciliacao.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px">Nenhum lançamento para conciliar. Adicione lançamentos do extrato bancário.</td></tr>' : data.conciliacao.slice().reverse().map(ct => {
-                return `<tr>
-                  <td>${fmtDate(ct.data)}</td>
-                  <td>${ct.descricao}</td>
-                  <td>${ct.tipo === 'entrada' ? '<span style="color:#28a745">Entrada</span>' : '<span style="color:#dc3545">Saída</span>'}</td>
-                  <td style="color:${ct.tipo === 'entrada' ? '#28a745' : '#dc3545'}">${ct.tipo === 'entrada' ? '+' : '-'}${fmtBRL(ct.valor)}</td>
-                  <td>${ct.conciliado ? '<span class="fin-badge fin-badge-paid">Conciliado</span>' : '<span class="fin-badge fin-badge-pending">Pendente</span>'}</td>
-                  <td style="white-space:nowrap">
-                    ${!ct.conciliado ? `<button class="fin-btn fin-btn-ok" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.marcarConciliado('${ct.id}')">Conciliar</button>` : ''}
-                    <button class="fin-btn fin-btn-danger" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.deleteConc('${ct.id}')">Excluir</button>
-                  </td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-      document.getElementById('btnAddConc').onclick = () => {
-        const desc = document.getElementById('concDesc').value.trim();
-        if (!desc) { alert('Informe a descrição.'); return; }
-        data.conciliacao.push({
-          id: uid(), descricao: desc, valor: parseFloat(document.getElementById('concValor').value) || 0,
-          tipo: document.getElementById('concTipo').value,
-          data: document.getElementById('concData').value || new Date().toISOString().slice(0, 10),
-          conciliado: false, dataCriacao: Date.now()
-        });
-        save(); render();
-      };
-    }
-
-    function renderDespesas(c) {
-      c.innerHTML = `
-        <div class="fin-card">
-          <h5 style="margin:0 0 10px">Despesas Operacionais</h5>
-          <p style="font-size:12px;color:#888;margin:0 0 14px">Lance despesas para alimentar o DRE. Despesas fixas (aluguel, folha) e variáveis (marketing, manutenção).</p>
-          <div class="fin-form-row">
-            <input type="text" id="desDesc" placeholder="Descrição" style="flex:1;min-width:150px">
-            <input type="number" id="desValor" placeholder="Valor R$" step="0.01" style="width:110px">
-            <input type="date" id="desData" style="width:130px">
-            <select id="desCat">
-              ${data.planoContas.map(pc => `<option value="${pc.id}">${pc.nome} (${pc.tipo})</option>`).join('')}
-            </select>
-            <label style="display:flex;align-items:center;gap:4px;font-size:12px"><input type="checkbox" id="desRec"> Recorrente</label>
-            <button class="fin-btn fin-btn-primary" id="btnAddDes">+ Adicionar</button>
-          </div>
-          <table class="fin-table">
-            <thead><tr><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Data</th><th>Tipo</th><th>Recorrente</th><th>Ações</th></tr></thead>
-            <tbody>
-              ${data.despesas.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Nenhuma despesa lançada.</td></tr>' : data.despesas.slice().reverse().map(d => {
-                const cat = data.planoContas.find(pc => pc.id === d.categoria);
-                return `<tr>
-                  <td>${d.descricao}</td>
-                  <td>${cat ? cat.nome : '-'}</td>
-                  <td style="color:#dc3545">${fmtBRL(d.valor)}</td>
-                  <td>${fmtDate(d.data)}</td>
-                  <td>${cat ? cat.tipo : '-'}</td>
-                  <td>${d.recorrente ? '✓ Sim' : '-'}</td>
-                  <td><button class="fin-btn fin-btn-danger" style="padding:4px 8px;font-size:11px" onclick="window.FinanceiroModule.deleteDespesa('${d.id}')">Excluir</button></td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-      document.getElementById('btnAddDes').onclick = () => {
-        const desc = document.getElementById('desDesc').value.trim();
-        if (!desc) { alert('Informe a descrição.'); return; }
-        data.despesas.push({
-          id: uid(), descricao: desc, valor: parseFloat(document.getElementById('desValor').value) || 0,
-          data: document.getElementById('desData').value || new Date().toISOString().slice(0, 10),
-          categoria: document.getElementById('desCat').value,
-          recorrente: document.getElementById('desRec').checked, dataCriacao: Date.now()
-        });
-        save(); render();
-      };
-    }
+        <div class="mp-legend"><span><i class="paid"></i>Pago</span><span><i class="waiting"></i>Aguardando</span><span><i class="refund"></i>Estorno</span><span><i class="closed"></i>Encerrado</span></div>
+        <div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>Pedido</th><th>Atualização</th><th>Valor</th><th>Situação financeira</th><th>Referência Mercado Pago</th></tr></thead><tbody>${all.slice(0,30).map(order => { const status=statusOf(order); const providerId=order.payment?.orderId || order.payment?.transactionId || '—'; return `<tr><td><strong>#${esc(String(order.id || '').slice(0,8).toUpperCase())}</strong><small>${esc(order.userName || 'Cliente')}</small></td><td>${date(order.updatedAt || order.createdAt)}</td><td>${money(order.total || order.payment?.amount)}</td><td><span class="mp-status ${kindOf(status)}">${esc(labelOf(status))}</span></td><td><code>${esc(providerId)}</code></td></tr>`; }).join('') || '<tr><td colspan="5" class="mp-empty">Nenhuma movimentação Pix encontrada nos pedidos carregados.</td></tr>'}</tbody></table></div>
+        <p class="mp-note">Os dados exibidos são informativos. A confirmação do pagamento vem do Mercado Pago via Worker; a decisão da loja continua nos botões da comanda.</p>
+      </section>`;
+    root.querySelector('[data-mp-refresh]')?.addEventListener('click', render);
   }
-
-  function marcarPago(id) { const ct = data.contasPagar.find(c => c.id === id); if (ct) { ct.pago = true; save(); render(); } }
-  function deletePagar(id) { if (!confirm('Excluir esta conta?')) return; data.contasPagar = data.contasPagar.filter(c => c.id !== id); save(); render(); }
-  function marcarRecebido(id) { const ct = data.contasReceber.find(c => c.id === id); if (ct) { ct.recebido = true; save(); render(); } }
-  function deleteReceber(id) { if (!confirm('Excluir esta conta?')) return; data.contasReceber = data.contasReceber.filter(c => c.id !== id); save(); render(); }
-  function marcarConciliado(id) { const ct = data.conciliacao.find(c => c.id === id); if (ct) { ct.conciliado = true; save(); render(); } }
-  function deleteConc(id) { data.conciliacao = data.conciliacao.filter(c => c.id !== id); save(); render(); }
-  function deleteDespesa(id) { data.despesas = data.despesas.filter(d => d.id !== id); save(); render(); }
-
-  window.FinanceiroModule = {
-    render, marcarPago, deletePagar, marcarRecebido, deleteReceber, marcarConciliado, deleteConc, deleteDespesa,
-    getData: () => { load(); return data; }
-  };
+  function startRefresh() { if (refreshTimer) clearInterval(refreshTimer); refreshTimer = setInterval(() => { if (!document.getElementById('financeiroPanel')?.classList.contains('hidden')) render(); }, 15000); }
+  window.FinanceiroModule = { render, startRefresh };
 })();
-
 </script>
-
 <!-- ===================== TOTEM KIOSK CONTAINER ===================== -->
 <div id="totemKioskOverlay" style="display:none"></div>
 
@@ -19615,8 +18628,7 @@ updatedAt:changedAt };
   function setupAdmin(){
     byId('tabGarcons')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('garconsPanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabGarcons')?.classList.add('active'); renderAdminGarcons(); });
     byId('tabEstoque')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('estoquePanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabEstoque')?.classList.add('active'); window.EstoqueModule?.render(); });
-    byId('tabIntegracoes')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('integracoesPanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabIntegracoes')?.classList.add('active'); window.IntegracoesModule?.render(); });
-    byId('tabFinanceiro')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('financeiroPanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabFinanceiro')?.classList.add('active'); window.FinanceiroModule?.render(); });
+    byId('tabFinanceiro')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('financeiroPanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabFinanceiro')?.classList.add('active'); window.FinanceiroModule?.render(); window.FinanceiroModule?.startRefresh?.(); });
     byId('tabTotems')?.addEventListener('click', () => { document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden')); byId('totemsPanel')?.classList.remove('hidden'); document.querySelectorAll('.admin-tabs button').forEach(button => button.classList.remove('active')); byId('tabTotems')?.classList.add('active'); window.TotemModule?.renderAdmin(); });
     byId('btnOpenGarcomModal')?.addEventListener('click', () => { if(!window.currentUser?.isAdmin){ window.alert('Apenas o administrador pode cadastrar garçons.'); return; } byId('garcomForm')?.reset(); byId('garcomModal')?.classList.add('open'); });
     byId('garcomCancel')?.addEventListener('click', () => byId('garcomModal')?.classList.remove('open'));
