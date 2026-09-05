@@ -20743,7 +20743,7 @@ updatedAt:changedAt };
 
       // Confirmar
       document.getElementById('totemAddonConfirm').addEventListener('click', () => {
-        if (!canConfirm) return;
+        if (document.getElementById('totemAddonConfirm')?.disabled) return;
         const selectedAddons = [];
         groups.forEach(g => {
           const gs = modalState.addons.find(s => s.groupId === g.id);
