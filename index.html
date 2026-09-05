@@ -5623,10 +5623,11 @@ function setupRealtimeOrdersListener() {
         
         // Verifica se há novos pedidos pendentes APENAS se for Admin
         if (isAdmin && !window.__garcomSession) {
-            const currentPending = ((newOrders || [])).filter(o => o.status === "pending").length;
+            const operationalPendingOrders = ((newOrders || [])).filter(o => o.status === "pending" && isOperationalOrder(o));
+            const currentPending = operationalPendingOrders.length;
             if (currentPending > lastPendingCount) {
                 // Novo pedido detectado
-                const newPendingOrders = ((newOrders || [])).filter(o => o.status === "pending");
+                const newPendingOrders = operationalPendingOrders;
                 const latestNewOrder = newPendingOrders[0]; // O primeiro é o mais recente, pois a query é decrescente
 
                 // 1. Notificação Sonora
@@ -6391,10 +6392,24 @@ function customerMotoboyMessage(order) {
   return `<div class="order-customer-alert" style="background:rgba(86,137,176,.10);border:1px solid rgba(109,158,193,.28);color:#3f6f95;"><strong>🏍️ O motoboy ${escapeOrderText(riderName)} já saiu para entregar o seu pedido.</strong></div>`;
 }
 
+function isOnlinePaymentOrder(order) {
+  const method = String(order?.paymentMethod || '').toLowerCase();
+  const paymentMode = String(order?.payment?.mode || '').toLowerCase();
+  const provider = String(order?.payment?.provider || '').toLowerCase();
+  return Boolean(order?.payment?.requiresOnlineConfirmation)
+    || paymentMode === 'online'
+    || method === 'pix'
+    || method === 'pix online'
+    || provider === 'mercadopago';
+}
 function isPaymentApproved(order) {
   const status = String(order?.paymentStatus || '').toLowerCase();
   const providerStatus = String(order?.payment?.status || '').toLowerCase();
   return status === 'paid' || ['approved','processed','accredited','succeeded','confirmed','completed'].includes(providerStatus);
+}
+function isOperationalOrder(order) {
+  if (!isOnlinePaymentOrder(order)) return true;
+  return isPaymentApproved(order);
 }
 function workerApiBase() { return typeof API_BASE === 'function' ? API_BASE() : (window.FOODFLOW_API_BASE || ''); }
 async function requestOrderRefund(order, reason) {
@@ -6420,7 +6435,7 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
   if (newStatus === 'in_production' && currentOrder?.payment?.requiresOnlineConfirmation && !isPaymentApproved(currentOrder)) {
     throw new Error('A confirmação do pagamento online ainda não foi recebida.');
   }
-  if (newStatus === 'in_production' && currentOrder?.payment?.mode === 'online' && !isPaymentApproved(currentOrder)) {
+  if (newStatus === 'in_production' && isOnlinePaymentOrder(currentOrder) && !isPaymentApproved(currentOrder)) {
     throw new Error('O pedido só pode ser aceito após a confirmação do pagamento.');
   }
   if (newStatus === 'in_production' && ['rejected','refunded','refund_pending','refund_failed'].includes(String(currentOrder.paymentStatus || '').toLowerCase())) {
@@ -10259,8 +10274,7 @@ function renderAdminOrders(){
 
   liveOrders.forEach(order => {
     // Pagamentos online só entram no Kanban após confirmação real do provedor.
-    if (order?.payment?.requiresOnlineConfirmation && !isPaymentApproved(order)
-        && !['refund_pending','refunded','refund_failed'].includes(String(order.paymentStatus || '').toLowerCase())) return;
+    if (!isOperationalOrder(order)) return;
     // Normaliza o status para os novos IDs, tratando 'accepted' como 'in_production'
     const normalizedStatus = STATUS_MAP[order.status] || order.status;
     const cancellationRequested = order.cancellationRequest?.status === 'requested';
