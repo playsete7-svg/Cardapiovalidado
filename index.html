@@ -6391,6 +6391,24 @@ function customerMotoboyMessage(order) {
   return `<div class="order-customer-alert" style="background:rgba(86,137,176,.10);border:1px solid rgba(109,158,193,.28);color:#3f6f95;"><strong>🏍️ O motoboy ${escapeOrderText(riderName)} já saiu para entregar o seu pedido.</strong></div>`;
 }
 
+function isPaymentApproved(order) {
+  const status = String(order?.paymentStatus || '').toLowerCase();
+  const providerStatus = String(order?.payment?.status || '').toLowerCase();
+  return status === 'paid' || ['approved','processed','accredited','succeeded','confirmed','completed'].includes(providerStatus);
+}
+function workerApiBase() { return typeof API_BASE === 'function' ? API_BASE() : (window.FOODFLOW_API_BASE || ''); }
+async function requestOrderRefund(order, reason) {
+  if (!order?.id || !isPaymentApproved(order)) throw new Error('O pedido não possui pagamento confirmado; nenhum estorno será solicitado.');
+  const operatorId = String(currentUser?.id || currentUser?.uid || 'local_admin');
+  const idempotencyKey = String(order.payment?.refundIdempotencyKey || `refund-${order.id}`);
+  const headers = { 'Content-Type':'application/json', 'X-Operator-Id':operatorId };
+  try { const token = await window.auth?.currentUser?.getIdToken?.(); if (token) headers.Authorization = `Bearer ${token}`; } catch (_) {}
+  const response = await fetch(`${workerApiBase()}/payments/refund`, { method:'POST', headers, credentials:'include', body:JSON.stringify({ foodFlowOrderId:String(order.id), reason, operatorId, idempotencyKey }) });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result.sucesso === false) throw new Error(result.erro || 'O Mercado Pago não confirmou o estorno.');
+  return result;
+}
+
 async function updateOrderStatus(orderId, newStatus, metadata = {}) {
   if (!isAdmin) throw new Error('Acesso negado.');
   const currentOrder = (orders || []).find(order => order.id === orderId);
@@ -6399,8 +6417,14 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
     await expirePendingAcceptanceOrder(currentOrder);
     throw new Error('O prazo de cinco minutos para aceitar este pedido terminou. Ele foi cancelado automaticamente.');
   }
-  if (newStatus === 'in_production' && currentOrder?.payment?.requiresOnlineConfirmation && currentOrder.paymentStatus !== 'paid') {
+  if (newStatus === 'in_production' && currentOrder?.payment?.requiresOnlineConfirmation && !isPaymentApproved(currentOrder)) {
     throw new Error('A confirmação do pagamento online ainda não foi recebida.');
+  }
+  if (newStatus === 'in_production' && currentOrder?.payment?.mode === 'online' && !isPaymentApproved(currentOrder)) {
+    throw new Error('O pedido só pode ser aceito após a confirmação do pagamento.');
+  }
+  if (newStatus === 'in_production' && ['rejected','refunded','refund_pending','refund_failed'].includes(String(currentOrder.paymentStatus || '').toLowerCase())) {
+    throw new Error('Pedido recusado ou estornado não pode entrar em produção.');
   }
 
   try {
@@ -6420,25 +6444,31 @@ async function updateOrderStatus(orderId, newStatus, metadata = {}) {
     }
     if (newStatus === 'cancelled') {
       const reason = String(metadata.rejectionReason || 'A loja não poderá preparar este pedido neste momento.').trim();
+      patch.status = 'rejected';
       patch.decisionStatus = 'rejected';
-      if (currentOrder?.payment?.requiresOnlineConfirmation && currentOrder.paymentStatus === 'paid') {
-        patch.paymentStatus = 'refund_pending';
-        patch.refund = { status:'pending', reason, requestedAt:changedAt, amount:Number(currentOrder.total || 0), provider:currentOrder.payment?.provider || 'gateway' };
-      }
       patch.rejectionReason = reason;
       patch.rejectedAt = changedAt;
-      patch.rejectedBy = currentUser?.name || 'Administrador';
-      patch.customerNotification = {
-        type: 'order_rejected',
-        title: 'Pedido recusado',
-        message: reason,
-        createdAt: changedAt,
-        read: false
-      };
+      patch.rejectedBy = currentUser?.id || currentUser?.name || 'Administrador';
+      patch.customerNotification = { type:'order_rejected', title:'Pedido recusado', message:reason, createdAt:changedAt, read:false };
+      if (isPaymentApproved(currentOrder)) {
+        patch.paymentStatus = 'refund_pending';
+        patch.payment = { ...(currentOrder.payment || {}), status:'refund_pending', refundIdempotencyKey: currentOrder.payment?.refundIdempotencyKey || `refund-${orderId}` };
+      } else {
+        patch.paymentStatus = currentOrder.paymentStatus === 'awaiting_payment' ? 'cancelled' : (currentOrder.paymentStatus || 'cancelled');
+        patch.payment = { ...(currentOrder.payment || {}), status: patch.paymentStatus };
+      }
     }
-
     const orderDocRef = doc(db, "orders", orderId);
     await updateDoc(orderDocRef, patch);
+    if (newStatus === 'cancelled' && isPaymentApproved(currentOrder)) {
+      try {
+        const refundResult = await requestOrderRefund({ ...currentOrder, ...patch }, patch.rejectionReason);
+        if (refundResult.paymentStatus === 'refunded') await updateDoc(orderDocRef, { paymentStatus:'refunded', 'payment.status':'refunded', 'payment.refundId':refundResult.refundId || patch.payment?.refundIdempotencyKey, 'payment.refundedAt':new Date().toISOString(), updatedAt:new Date().toISOString() });
+      } catch (refundError) {
+        await updateDoc(orderDocRef, { paymentStatus:'refund_failed', 'payment.status':'refund_failed', 'payment.refundError':String(refundError.message || 'Falha no estorno').slice(0,500), 'payment.refundFailedAt':new Date().toISOString(), updatedAt:new Date().toISOString() }).catch(() => {});
+        throw refundError;
+      }
+    }
 
     // === INTEGRAÇÃO DE MÓDULOS NOVOS ===
     // Quando o pedido é marcado como entregue:
@@ -10157,13 +10187,28 @@ async function expirePendingAcceptanceOrder(order) {
     updatedAt: changedAt,
     customerNotification: { type:'order_expired', title:'Pedido cancelado', message:reason, createdAt:changedAt, read:false }
   };
-  if (order?.payment?.requiresOnlineConfirmation && order.paymentStatus === 'paid') {
+  if (isPaymentApproved(order)) {
+    patch.status = 'rejected';
     patch.paymentStatus = 'refund_pending';
-    patch.refund = { status:'pending', reason, requestedAt:changedAt, amount:Number(order.total || 0), provider:order.payment?.provider || 'gateway' };
+    patch.payment = { ...(order.payment || {}), status:'refund_pending', refundIdempotencyKey: order.payment?.refundIdempotencyKey || `refund-${order.id}` };
+  } else {
+    patch.paymentStatus = order.paymentStatus === 'awaiting_payment' ? 'expired' : (order.paymentStatus || 'expired');
+    patch.payment = { ...(order.payment || {}), status: patch.paymentStatus };
+    patch.cancellationReason = 'pix_expired';
   }
   try {
     if (typeof window.updateDoc !== 'function' || typeof window.doc !== 'function' || !window.db) throw new Error('Firebase indisponível para cancelar o pedido.');
     await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), patch);
+    if (isPaymentApproved(order)) {
+      try {
+        const result = await requestOrderRefund({ ...order, ...patch }, reason);
+        const refundPatch = result.paymentStatus === 'refunded' ? { paymentStatus:'refunded', 'payment.status':'refunded', 'payment.refundId':result.refundId || patch.payment.refundIdempotencyKey, 'payment.refundedAt':new Date().toISOString(), updatedAt:new Date().toISOString() } : { paymentStatus:'refund_failed', 'payment.status':'refund_failed', 'payment.refundError':'O Mercado Pago não confirmou o estorno.', 'payment.refundFailedAt':new Date().toISOString(), updatedAt:new Date().toISOString() };
+        await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), refundPatch); Object.assign(patch, refundPatch);
+      } catch (error) {
+        const refundPatch = { paymentStatus:'refund_failed', 'payment.status':'refund_failed', 'payment.refundError':String(error.message || 'Falha no estorno').slice(0,500), 'payment.refundFailedAt':new Date().toISOString(), updatedAt:new Date().toISOString() };
+        await window.updateDoc(window.doc(window.db, 'orders', String(order.id)), refundPatch).catch(() => {}); Object.assign(patch, refundPatch);
+      }
+    }
     Object.assign(order, patch);
     delete order.__acceptanceExpiryInFlight;
     let pendingOrders = [];
@@ -10213,6 +10258,9 @@ function renderAdminOrders(){
   colDelivered.innerHTML = `<div class='kanban-title'>✔️ Entregues</div>`;
 
   liveOrders.forEach(order => {
+    // Pagamentos online só entram no Kanban após confirmação real do provedor.
+    if (order?.payment?.requiresOnlineConfirmation && !isPaymentApproved(order)
+        && !['refund_pending','refunded','refund_failed'].includes(String(order.paymentStatus || '').toLowerCase())) return;
     // Normaliza o status para os novos IDs, tratando 'accepted' como 'in_production'
     const normalizedStatus = STATUS_MAP[order.status] || order.status;
     const cancellationRequested = order.cancellationRequest?.status === 'requested';
@@ -22849,7 +22897,7 @@ body:has(#modal.open) {
     const applyIncoming = incoming => {
       state.order = { ...state.order, ...incoming };
       const statuses = [incoming.paymentStatus, incoming.payment?.status].map(value => String(value || '').toLowerCase());
-      if (statuses.some(status => approved.includes(status)) && !state.finishing) {
+      if (statuses.some(status => approved.includes(status)) && !state.finishing && !['rejected','refunded','refund_pending','refund_failed'].includes(String(state.order?.status || '').toLowerCase())) {
         state.finishing = true;
         localStorage.removeItem('food_flow_pending_pix');
         window.dispatchEvent(new CustomEvent('foodflow:pix-approved', { detail: { order: state.order } }));
@@ -22865,7 +22913,7 @@ body:has(#modal.open) {
       try {
         const response = await fetch(`${API_BASE()}/payments/status?orderId=${encodeURIComponent(mercadoPagoOrderId)}`, { credentials:'include' });
         const result = await response.json().catch(() => ({}));
-        if (response.ok && result.approved) {
+        if (response.ok && result.approved && !['rejected','refunded','refund_pending','refund_failed'].includes(String(state.order?.status || '').toLowerCase()) && !['refunded','refund_pending','refund_failed'].includes(String(state.order?.paymentStatus || '').toLowerCase())) {
           const changedAt = new Date().toISOString();
           const payment = withoutUndefined({ ...(state.order?.payment || {}), status:'approved', statusDetail:result.statusDetail || '', orderId:mercadoPagoOrderId, updatedAt:changedAt });
           try {
