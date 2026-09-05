@@ -22514,6 +22514,12 @@ body:has(#modal.open) {
   .checkout-review-pix-notice{margin-top:10px;padding:11px 12px;border-left:3px solid #e95b2d;border-radius:8px;background:rgba(233,91,45,.10);color:#f2c3ad;font-size:12px;line-height:1.45}
   .checkout-review-pix-notice strong{color:#fff0e7}
 </style>
+<style id="food-flow-pix-exit-style">
+  .ff-pix-exit-confirm{position:fixed;inset:0;z-index:2;display:grid;place-items:center;padding:18px;background:rgba(35,24,18,.58)}
+  .ff-pix-exit-card{width:min(100%,390px);padding:24px;border-radius:20px;background:#fffaf5;box-shadow:0 18px 50px rgba(35,24,18,.28);color:#2d241e}
+  .ff-pix-exit-card h3{margin:0 0 9px;font-size:21px}.ff-pix-exit-card p{margin:0;color:#75675d;font-size:14px;line-height:1.45}
+  .ff-pix-exit-actions{display:grid;gap:9px;margin-top:20px}.ff-pix-exit-actions button{min-height:47px;border-radius:11px;font-weight:800;cursor:pointer}.ff-pix-exit-cancel{border:0;background:#d9532b;color:#fff}.ff-pix-exit-continue{border:1px solid #d8c7bb;background:#fff;color:#5d4d42}
+</style>
 <style id="food-flow-pix-style">
   #foodFlowPixOverlay{position:fixed;inset:0;z-index:10050;background:linear-gradient(145deg,#fffaf5 0%,#f5eee7 100%);overflow:auto;display:none;color:#2d241e;font-family:Manrope,Arial,sans-serif}
   #foodFlowPixOverlay.is-open{display:block;animation:foodFlowPixIn .22s ease-out}
@@ -22553,9 +22559,40 @@ body:has(#modal.open) {
     if (!node) { node = document.createElement('div'); node.id = 'foodFlowPixOverlay'; node.setAttribute('aria-hidden','true'); document.body.appendChild(node); }
     return node;
   }
-  function closePix(force=false) {
-    if (!force && state.order && !['paid','approved','succeeded'].includes(String(state.order.paymentStatus || state.payload?.status || '').toLowerCase())) {
-      if (!window.confirm('Seu pagamento ainda está pendente. Deseja sair?')) return false;
+  function askCancelExit() {
+    return new Promise(resolve => {
+      const node = overlay();
+      const existing = node.querySelector('[data-pix-exit-confirm]');
+      if (existing) return;
+      node.insertAdjacentHTML('beforeend', `<div class="ff-pix-exit-confirm" data-pix-exit-confirm role="dialog" aria-modal="true" aria-labelledby="ffPixExitTitle"><div class="ff-pix-exit-card"><h3 id="ffPixExitTitle">Pagamento Pix pendente</h3><p>Se você sair agora, o pedido será cancelado. Escolha continuar para permanecer nesta tela e concluir o pagamento.</p><div class="ff-pix-exit-actions"><button type="button" class="ff-pix-exit-cancel" data-pix-exit-cancel>Sair e cancelar pedido</button><button type="button" class="ff-pix-exit-continue" data-pix-exit-continue>Continuar com o pagamento</button></div></div></div>`);
+      const confirm = node.querySelector('[data-pix-exit-cancel]');
+      const stay = node.querySelector('[data-pix-exit-continue]');
+      const finish = value => { node.querySelector('[data-pix-exit-confirm]')?.remove(); resolve(value); };
+      confirm?.addEventListener('click', () => finish(true), { once:true });
+      stay?.addEventListener('click', () => finish(false), { once:true });
+      stay?.focus();
+    });
+  }
+  async function closePix(force=false) {
+    const currentStatus = String(state.order?.paymentStatus || state.order?.payment?.status || state.payload?.status || '').toLowerCase();
+    const paid = ['paid','approved','succeeded','confirmed'].includes(currentStatus);
+    if (!force && state.order && !paid) {
+      const shouldCancel = await askCancelExit();
+      if (!shouldCancel) return false;
+      const closeButton = document.querySelector('#foodFlowPixOverlay [data-pix-close]');
+      if (closeButton) { closeButton.disabled = true; closeButton.textContent = '…'; }
+      try {
+        const changedAt = new Date().toISOString();
+        const payment = withoutUndefined({ ...(state.order.payment || {}), status: 'cancelled', cancelledAt: changedAt, cancellationReason: 'Cliente saiu da tela de pagamento Pix.' });
+        await window.updateDoc(window.doc(window.db, 'orders', String(state.order.id)), { status: 'cancelled', paymentStatus: 'cancelled', payment, cancelledAt: changedAt, cancellationReason: 'Cliente saiu da tela de pagamento Pix.', updatedAt: changedAt });
+        state.order = { ...state.order, status: 'cancelled', paymentStatus: 'cancelled', payment };
+        localStorage.removeItem('food_flow_pending_pix');
+      } catch (error) {
+        if (closeButton) { closeButton.disabled = false; closeButton.textContent = '‹'; }
+        alert('Não foi possível cancelar o pedido agora. Verifique sua conexão e tente novamente.');
+        console.error('Falha ao cancelar pedido Pix:', error);
+        return false;
+      }
     }
     state.unsubscribe?.(); if (state.timer) clearInterval(state.timer); state.unsubscribe=null; state.timer=null;
     const node = document.getElementById('foodFlowPixOverlay'); if (node) { node.classList.remove('is-open'); node.setAttribute('aria-hidden','true'); }
@@ -22577,7 +22614,7 @@ body:has(#modal.open) {
   function open(order,payload) { state.order=order; state.payload=payload; const rawExpiry=payload.expiresAt; const expiryMs=typeof rawExpiry === 'number' ? (rawExpiry < 100000000000 ? rawExpiry * 1000 : rawExpiry) : Date.parse(String(rawExpiry || '')); state.expiresAt=Number.isFinite(expiryMs) ? new Date(expiryMs).toISOString() : new Date(Date.now()+5*60*1000).toISOString(); localStorage.setItem('food_flow_pending_pix',JSON.stringify({orderId:order.id})); renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; renderPending(); subscribe(order.id); }
   function subscribe(orderId) { state.unsubscribe?.(); if(!window.db || !window.doc || !window.onSnapshot)return; try { state.unsubscribe=window.onSnapshot(window.doc(window.db,'orders',String(orderId)), snap=>{ if(!snap.exists())return; const incoming={id:snap.id,...snap.data()}; state.order={...state.order,...incoming}; const status=String(incoming.paymentStatus || incoming.payment?.status || '').toLowerCase(); if(['paid','approved','succeeded','confirmed'].includes(status)){ localStorage.removeItem('food_flow_pending_pix'); renderSuccess(); } else if(['expired','cancelled','rejected'].includes(status)){ setExpired(); } }); } catch(error) { console.warn('Listener Pix indisponível:', error); } }
   async function createPayment(order) { const response=await fetch(`${API_BASE()}/payments`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({orderId:order.id,amount:Number(order.total||0),currency:'BRL',method:'pix',payer:{email:String(order.userEmail || window.currentUser?.email || '').trim().toLowerCase()},idempotencyKey:`order-${String(order.id)}-payment`,returnUrl:window.location.href})}); let payload={}; try{payload=await response.json();}catch(_){} if(!response.ok)throw new Error(payload?.message||`Gateway HTTP ${response.status}`); return normalizePayload(payload); }
-  async function startPixCheckout(order) { if(!order?.id)return {started:false,message:'Pedido inválido.'}; if(state.retrying)return {started:false}; state.retrying=true; renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const body=overlay().querySelector('[data-pix-body]'); body.innerHTML='<div class="ff-pix-error"><p>Gerando pagamento Pix…</p></div>'; try { const payload=await createPayment(order); state.retrying=false; if(!payload.qrCode && !payload.qrCodeBase64 && !payload.pixCopyPaste){ throw new Error('A cobrança foi criada, mas o Worker não retornou QR Code ou Pix Copia e Cola.'); } const changedAt=new Date().toISOString(); const payment=withoutUndefined({...((order && order.payment) || {}),...payload,status:'pending',startedAt:changedAt}); await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'awaiting_payment',payment,updatedAt:changedAt}); open({...order,paymentStatus:'awaiting_payment',payment},payload); return {started:true,payload}; } catch(error) { state.retrying=false; renderError(error.message); return {started:false,message:error.message}; } }
+  async function startPixCheckout(order) { if(!order?.id)return {started:false,message:'Pedido inválido.'}; if(state.retrying)return {started:false}; state.retrying=true; renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const body=overlay().querySelector('[data-pix-body]'); body.innerHTML='<div class="ff-pix-error"><p>Gerando pagamento Pix…</p></div>'; try { const payload=await createPayment(order); state.retrying=false; if(!payload.qrCode && !payload.qrCodeBase64 && !payload.pixCopyPaste){ throw new Error('A cobrança foi criada, mas o Worker não retornou QR Code ou Pix Copia e Cola.'); } const changedAt=new Date().toISOString(); const {expiresAt: _expiresAt, ...payloadForFirestore}=payload; const payment=withoutUndefined({...((order && order.payment) || {}),...payloadForFirestore,status:'pending',startedAt:changedAt}); delete payment.expiresAt; await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'awaiting_payment',payment,updatedAt:changedAt}); open({...order,paymentStatus:'awaiting_payment',payment},payload); return {started:true,payload}; } catch(error) { state.retrying=false; renderError(error.message); return {started:false,message:error.message}; } }
   async function retry() { if(!state.order)return; await startPixCheckout(state.order); }
   window.PaymentHub=window.PaymentHub||{}; window.PaymentHub.startPixCheckout=startPixCheckout; window.PaymentHub.closePix=closePix;
   window.addEventListener('beforeunload', e=>{ if(document.getElementById('foodFlowPixOverlay')?.classList.contains('is-open') && state.order && !['paid','approved'].includes(String(state.order.paymentStatus||'').toLowerCase())){ e.preventDefault(); e.returnValue='Seu pagamento Pix ainda está pendente.'; } });
