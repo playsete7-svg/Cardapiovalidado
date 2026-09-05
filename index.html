@@ -20766,6 +20766,50 @@ updatedAt:changedAt };
       });
     }
 
+    function refreshAddonModalUI() {
+      groups.forEach(group => {
+        const groupState = modalState.addons.find(gs => gs.groupId === group.id);
+        const currentCount = groupState.selected.reduce((sum, item) => sum + item.qty, 0);
+        const maxVal = group.max || 99;
+        groupState.selected.forEach(selected => {
+          const addon = group.addons.find(item => item.id === selected.addonId);
+          const countEl = Array.from(modalBg.querySelectorAll('[data-count]')).find(el => el.dataset.count === `${group.id}:${selected.addonId}`);
+          const option = countEl?.closest('.totem-addon-option');
+          if (!addon || !countEl || !option) return;
+          const qty = selected.qty;
+          countEl.textContent = String(qty);
+          option.classList.toggle('is-selected', qty > 0);
+          option.setAttribute('aria-label', `${addon.name}${qty > 0 ? ' selecionado' : ''}`);
+          const priceEl = option.querySelector('.totem-addon-price');
+          if (priceEl) priceEl.textContent = `${addon.price > 0 ? formatPrice(addon.price) : 'Grátis'}${qty > 0 ? ` · ${qty} selecionado${qty > 1 ? 's' : ''}` : ''}`;
+          const dec = option.querySelector('[data-action="dec"]');
+          const inc = option.querySelector('[data-action="inc"]');
+          if (dec) dec.disabled = qty === 0;
+          if (inc) inc.disabled = currentCount >= maxVal && qty === 0;
+        });
+      });
+      let canConfirm = true;
+      groups.forEach(group => {
+        if (!group.required) return;
+        const groupState = modalState.addons.find(gs => gs.groupId === group.id);
+        if (!groupState.selected.some(item => item.qty > 0)) canConfirm = false;
+      });
+      const confirm = modalBg.querySelector('#totemAddonConfirm');
+      if (confirm) {
+        confirm.disabled = !canConfirm;
+        confirm.textContent = canConfirm ? `Adicionar · ${formatPrice((getProductPrice(product) + modalState.addons.reduce((sum, groupState) => {
+          const group = groups.find(item => item.id === groupState.groupId);
+          const total = groupState.selected.reduce((value, item) => value + item.qty, 0);
+          let free = Math.min(total, group?.free || 0);
+          return sum + groupState.selected.reduce((value, item) => {
+            const addon = group?.addons.find(a => a.id === item.addonId);
+            const paidQty = Math.max(0, item.qty - Math.min(item.qty, free));
+            free = Math.max(0, free - item.qty);
+            return value + (addon?.price || 0) * paidQty;
+          }, 0);
+        }, 0)) * modalState.qty)}` : 'Selecione opções obrigatórias';
+      }
+    }
     function handleAddonChange(groupId, addonId, action) {
       const group = groups.find(g => g.id === groupId);
       const groupState = modalState.addons.find(gs => gs.groupId === groupId);
@@ -20782,7 +20826,7 @@ updatedAt:changedAt };
           addonState.qty -= 1;
         }
       }
-      renderModal();
+      refreshAddonModalUI();
     }
 
     renderModal();
@@ -22790,7 +22834,7 @@ body:has(#modal.open) {
   function renderShell() { const node=overlay(); node.innerHTML=`<div class="ff-pix-shell" role="dialog" aria-modal="true" aria-labelledby="ffPixTitle"><header class="ff-pix-head"><button class="ff-pix-back" data-pix-close aria-label="Voltar">‹</button><div><h2 id="ffPixTitle">Pagamento via Pix</h2><p>Finalize seu pagamento para confirmar o pedido.</p></div></header><main class="ff-pix-card" data-pix-body aria-live="polite"></main></div>`; node.querySelector('[data-pix-close]')?.addEventListener('click',()=>closePix()); }
   function open(order,payload) { state.order=order; state.payload=payload; const rawExpiry=payload.expiresAt; const expiryMs=typeof rawExpiry === 'number' ? (rawExpiry < 100000000000 ? rawExpiry * 1000 : rawExpiry) : Date.parse(String(rawExpiry || '')); state.expiresAt=Number.isFinite(expiryMs) ? new Date(expiryMs).toISOString() : new Date(Date.now()+5*60*1000).toISOString(); localStorage.setItem('food_flow_pending_pix',JSON.stringify({orderId:order.id})); renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; renderPending(); subscribe(order.id); }
   function subscribe(orderId) { state.unsubscribe?.(); if(!window.db || !window.doc || !window.onSnapshot)return; try { state.unsubscribe=window.onSnapshot(window.doc(window.db,'orders',String(orderId)), snap=>{ if(!snap.exists())return; const incoming={id:snap.id,...snap.data()}; state.order={...state.order,...incoming}; const status=String(incoming.paymentStatus || incoming.payment?.status || '').toLowerCase(); if(['paid','approved','succeeded','confirmed'].includes(status)){ localStorage.removeItem('food_flow_pending_pix'); renderSuccess(); } else if(['expired','cancelled','rejected'].includes(status)){ setExpired(); } }); } catch(error) { console.warn('Listener Pix indisponível:', error); } }
-  async function createPayment(order) { const response=await fetch(`${API_BASE()}/payments`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({orderId:order.id,amount:Number(order.total||0),currency:'BRL',method:'pix',payer:{email:String(order.userEmail || window.currentUser?.email || '').trim().toLowerCase()},idempotencyKey:`order-${String(order.id)}-payment`,returnUrl:window.location.href})}); let payload={}; try{payload=await response.json();}catch(_){} if(!response.ok)throw new Error(payload?.message||`Gateway HTTP ${response.status}`); return normalizePayload(payload); }
+  async function createPayment(order) { const response=await fetch(`${API_BASE()}/payments`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({orderId:order.id,amount:Number(order.total||0),currency:'BRL',method:'pix',payer:{email:String(order.userEmail || window.currentUser?.email || '').trim().toLowerCase()},idempotencyKey:`order-${String(order.id)}-payment`,returnUrl:window.location.href})}); let payload={}; try{payload=await response.json();}catch(_){} if(!response.ok)throw new Error(payload?.erro||payload?.message||payload?.error||payload?.detalhes?.[0]?.description||`Gateway HTTP ${response.status}`); return normalizePayload(payload); }
   async function startPixCheckout(order) { if(!order?.id)return {started:false,message:'Pedido inválido.'}; if(state.retrying)return {started:false}; state.retrying=true; renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const body=overlay().querySelector('[data-pix-body]'); body.innerHTML='<div class="ff-pix-error"><p>Gerando pagamento Pix…</p></div>'; try { const payload=await createPayment(order); state.retrying=false; if(!payload.qrCode && !payload.qrCodeBase64 && !payload.pixCopyPaste){ throw new Error('A cobrança foi criada, mas o Worker não retornou QR Code ou Pix Copia e Cola.'); } const changedAt=new Date().toISOString(); const {expiresAt: _expiresAt, ...payloadForFirestore}=payload; const payment=withoutUndefined({...((order && order.payment) || {}),...payloadForFirestore,status:'pending',startedAt:changedAt}); delete payment.expiresAt; await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'awaiting_payment',payment,updatedAt:changedAt}); open({...order,paymentStatus:'awaiting_payment',payment},payload); return {started:true,payload}; } catch(error) { state.retrying=false; renderError(error.message); return {started:false,message:error.message}; } }
   async function retry() { if(!state.order)return; await startPixCheckout(state.order); }
   window.PaymentHub=window.PaymentHub||{}; window.PaymentHub.startPixCheckout=startPixCheckout; window.PaymentHub.closePix=closePix;
