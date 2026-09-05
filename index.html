@@ -5361,6 +5361,85 @@ function hideInitialPageLoader(){
     window.setTimeout(() => loader.remove(), 420);
 }
 
+const MENU_ASSETS_COLLECTION = 'menuImages';
+const MENU_IMAGE_FIELDS = ['img', 'image', 'imageUrl', 'logo', 'logoUrl', 'coverImage', 'cover', 'banner'];
+function menuAssetKey(scope, id, field) {
+    return `${scope}_${String(id || 'root').replace(/[^a-zA-Z0-9_-]/g, '_')}_${field}`;
+}
+function extractMenuImageAssets(menu) {
+    const assets = {};
+    const take = (object, scope, id, field) => {
+        if (!object || !(field in object)) return;
+        const value = String(object[field] || '');
+        if (!value.startsWith('data:image/')) return;
+        const key = menuAssetKey(scope, id, field);
+        object[field] = `__menu_asset__${key}`;
+        assets[key] = value;
+    };
+    (menu.categories || []).forEach(category => MENU_IMAGE_FIELDS.slice(0, 3).forEach(field => take(category, 'category', category.id, field)));
+    (menu.items || []).forEach(item => MENU_IMAGE_FIELDS.slice(0, 3).forEach(field => take(item, 'item', item.id, field)));
+    MENU_IMAGE_FIELDS.slice(3).forEach(field => take(menu.restaurant || {}, 'restaurant', 'store', field));
+    const walk = (value, path = 'root') => {
+        if (Array.isArray(value)) return value.forEach((item, index) => walk(item, `${path}_${index}`));
+        if (!value || typeof value !== 'object') return;
+        Object.entries(value).forEach(([field, item]) => {
+            const itemPath = `${path}_${field}`;
+            if (typeof item === 'string' && item.startsWith('data:image/')) {
+                const key = menuAssetKey('data', itemPath, 'value');
+                assets[key] = item;
+                value[field] = `__menu_asset__${key}`;
+            } else walk(item, itemPath);
+        });
+    };
+    walk(menu);
+    return assets;
+}
+async function hydrateMenuImageAssets(menu) {
+    try {
+        if (typeof getDocs !== 'function' || typeof collection !== 'function') return;
+        const snapshot = await getDocs(collection(db, MENU_ASSETS_COLLECTION));
+        const assets = new Map((snapshot.docs || []).map(item => [item.id, item.data()?.value]).filter(([, value]) => typeof value === 'string' && value));
+        const restore = value => {
+            if (Array.isArray(value)) return value.forEach(restore);
+            if (!value || typeof value !== 'object') return;
+            Object.keys(value).forEach(field => {
+                const marker = String(value[field] || '');
+                if (marker.startsWith('__menu_asset__')) value[field] = assets.get(marker.slice('__menu_asset__'.length)) || '';
+                else restore(value[field]);
+            });
+        };
+        restore(menu);
+    } catch (error) {
+        console.warn('Imagens separadas do cardápio não puderam ser carregadas:', error);
+    }
+}
+
+const MENU_CHUNKS_COLLECTION = 'menuDataChunks';
+const MENU_CORE_MAX_BYTES = 780000;
+const MENU_CHUNK_MAX_BYTES = 650000;
+function jsonBytes(value) { return new TextEncoder().encode(JSON.stringify(value)).length; }
+function splitMenuItems(items) {
+    const chunks = []; let current = [];
+    for (const item of (Array.isArray(items) ? items : [])) {
+        const candidate = [...current, item];
+        if (current.length && jsonBytes({ items: candidate }) > MENU_CHUNK_MAX_BYTES) { chunks.push(current); current = [item]; }
+        else current = candidate;
+    }
+    if (current.length || !chunks.length) chunks.push(current);
+    return chunks;
+}
+async function hydrateMenuChunks(menu) {
+    const count = Number(menu?.__menuItemChunkCount || 0);
+    if (!count || typeof getDocs !== 'function' || typeof collection !== 'function') return;
+    try {
+        const snapshot = await getDocs(collection(db, MENU_CHUNKS_COLLECTION));
+        const chunks = (snapshot.docs || []).map(item => ({ id:item.id, data:item.data() })).filter(item => /^items_\d+$/.test(item.id)).sort((a,b) => Number(a.id.slice(6)) - Number(b.id.slice(6)));
+        menu.items = chunks.slice(0, count).flatMap(item => Array.isArray(item.data?.items) ? item.data.items : []);
+    } catch (error) {
+        console.warn('Produtos divididos do cardápio não puderam ser carregados:', error);
+        menu.items = [];
+    }
+}
 async function fetchMenuData() {
     try {
         // A página pode estar visível no celular antes da resposta assíncrona.
@@ -5370,6 +5449,8 @@ async function fetchMenuData() {
         const menuSnap = await getDoc(menuDocRef);
         if (menuSnap.exists()) {
             DATA = menuSnap.data();
+            await hydrateMenuChunks(DATA);
+            await hydrateMenuImageAssets(DATA);
             window.DATA = DATA; // CORREÇÃO: expõe DATA no escopo global para o módulo do totem
             
             // Garante que os novos campos de entrega por raio existam
@@ -5397,8 +5478,8 @@ async function fetchMenuData() {
         } else {
             console.warn("Nenhum dado de cardápio encontrado no Firebase. Usando Demo e salvando.");
             DATA = loadDemoData();
-            // Salva a demo no Firebase para começar a persistência
-            await setDoc(menuDocRef, DATA);
+            // Salva a demo usando o mesmo particionamento de imagens do cardápio
+            await saveMenuData();
         }
 
         // Inicializa somente uma categoria válida antes da primeira renderização.
@@ -5463,9 +5544,20 @@ async function saveMenuData() {
         return false;
     }
     try {
-        const sanitizedData = sanitizeFirestoreValue(DATA);
-        await setDoc(menuDocRef, sanitizedData);
-        console.log("Dados do cardápio salvos no Firebase com sucesso!", { projectId: firebaseConfig.projectId, document: 'config/cardapioData' });
+        const sanitizedData = sanitizeFirestoreValue(JSON.parse(JSON.stringify(DATA)));
+        const assets = extractMenuImageAssets(sanitizedData);
+        await Promise.all(Object.entries(assets).map(([key, value]) => setDoc(doc(db, MENU_ASSETS_COLLECTION, key), { value, updatedAt: new Date().toISOString() }, { merge: true })));
+        const itemChunks = jsonBytes(sanitizedData) > MENU_CORE_MAX_BYTES ? splitMenuItems(sanitizedData.items) : null;
+        if (itemChunks) {
+            const coreData = { ...sanitizedData, items: [], __menuItemChunkCount: itemChunks.length, __menuSplitVersion: 1 };
+            await setDoc(menuDocRef, coreData);
+            await Promise.all(itemChunks.map((items, index) => setDoc(doc(db, MENU_CHUNKS_COLLECTION, `items_${index}`), { items, updatedAt: new Date().toISOString() }, { merge: true })));
+            console.log("Dados do cardápio salvos em blocos", { projectId: firebaseConfig.projectId, document: 'config/cardapioData', itemChunks: itemChunks.length, separatedImages: Object.keys(assets).length });
+        } else {
+            delete sanitizedData.__menuItemChunkCount; delete sanitizedData.__menuSplitVersion;
+            await setDoc(menuDocRef, sanitizedData);
+            console.log("Dados do cardápio salvos no Firebase com sucesso!", { projectId: firebaseConfig.projectId, document: 'config/cardapioData', separatedImages: Object.keys(assets).length });
+        }
         return true;
     } catch (e) {
         const code = String(e?.code || '').trim();
