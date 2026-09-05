@@ -5187,11 +5187,14 @@ import {
     getFirestore, collection, doc, getDoc, setDoc, updateDoc, 
     addDoc, query, orderBy, onSnapshot, deleteDoc, getDocs, where, limit, startAfter, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
 
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 window.db = db;
+window.auth = auth;
 window.doc = doc;
 window.updateDoc = updateDoc;
 window.firebaseConfig = firebaseConfig;
@@ -5313,6 +5316,7 @@ let adminOrdersHistoryPage = [];
 let adminOrdersHistoryCursor = null;
 let adminOrdersHistoryHasMore = false;
 let adminOrdersHistoryLoading = false;
+let adminOrdersBackgroundLoading = false;
 let adminOrdersHistoryError = '';
 let adminOrdersRealtimeError = '';
 let adminOrdersRealtimeInitialized = false;
@@ -5439,20 +5443,41 @@ async function fetchMenuData() {
 /**
  * Salva o cardápio (DATA) de volta para o Firestore.
  */
+function sanitizeFirestoreValue(value, path = 'DATA') {
+    if (value === undefined) return undefined;
+    if (typeof value === 'number' && !Number.isFinite(value)) return null;
+    if (Array.isArray(value)) return value.map((item, index) => sanitizeFirestoreValue(item, `${path}[${index}]`)).filter(item => item !== undefined);
+    if (value && typeof value === 'object' && !(value instanceof Date)) {
+        return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined).map(([key, item]) => [key, sanitizeFirestoreValue(item, `${path}.${key}`)]));
+    }
+    return value;
+}
+
 async function saveMenuData() {
     if (!isAdmin && !window.__garcomSession) {
-        alert("Acesso negado. Apenas administradores ou garçons autenticados podem salvar.");
+        alert("Acesso negado. Entre com a conta administrativa antes de salvar o cardápio.");
+        return false;
+    }
+    if (!DATA || typeof DATA !== 'object') {
+        alert("Não foi possível salvar: os dados do cardápio ainda não foram carregados.");
         return false;
     }
     try {
-        await setDoc(menuDocRef, DATA);
-        console.log("Dados do cardápio salvos no Firebase com sucesso!");
+        const sanitizedData = sanitizeFirestoreValue(DATA);
+        await setDoc(menuDocRef, sanitizedData);
+        console.log("Dados do cardápio salvos no Firebase com sucesso!", { projectId: firebaseConfig.projectId, document: 'config/cardapioData' });
         return true;
     } catch (e) {
-        console.error("Erro ao salvar cardápio no Firebase:", e);
-        alert("Falha ao salvar. Verifique as regras de segurança do seu Firebase.");
-        return false;
+        const code = String(e?.code || '').trim();
+        const message = String(e?.message || e || 'Erro desconhecido');
+        console.error("Erro ao salvar cardápio no Firebase:", { code, message, projectId: firebaseConfig.projectId, document: 'config/cardapioData', isAdmin, hasGarcomSession: Boolean(window.__garcomSession) });
+        if (code === 'permission-denied') {
+            alert("O Firebase recusou a gravação (permission-denied). Confira se a regra permite write em config/cardapioData e se este projeto é luk123-b1986.");
+        } else {
+            alert(`Falha ao salvar o cardápio: ${message}`);
         }
+        return false;
+    }
 }
 // Ponte pública para módulos independentes, como Marketing, usarem o mesmo salvamento do produto.
 window.saveMenuData = saveMenuData;
@@ -6584,130 +6609,65 @@ async function doLogin(){
     const identifier = document.querySelector('#loginUser').value.trim();
     const pass = document.querySelector('#loginPass').value;
     if(!identifier || !pass){ showAuthError('Preencha os campos para continuar.'); return; }
-
-    // Administrador local: não usa Firebase Auth nem precisa de e-mail.
-    if(identifier.toLowerCase() === LOCAL_ADMIN_CREDENTIALS.username.toLowerCase()
-        && pass === LOCAL_ADMIN_CREDENTIALS.password){
-        const adminUser = saveLocalSession({
-            id: LOCAL_ADMIN_CREDENTIALS.id,
-            name: LOCAL_ADMIN_CREDENTIALS.name,
-            email: '',
-            phone: '',
-            savedAddresses: [],
-            isAdmin: true
-        });
-        applyLocalSession(adminUser);
-        document.querySelector('#loginPass').value = '';
-        closeAuthModal();
-        alert('Acesso administrativo liberado.');
-        return;
+    if(identifier.toLowerCase() === LOCAL_ADMIN_CREDENTIALS.username.toLowerCase() && pass === LOCAL_ADMIN_CREDENTIALS.password){
+        const adminUser = saveLocalSession({ id:LOCAL_ADMIN_CREDENTIALS.id, name:LOCAL_ADMIN_CREDENTIALS.name, email:'', phone:'', savedAddresses:[], isAdmin:true });
+        applyLocalSession(adminUser); document.querySelector('#loginPass').value=''; closeAuthModal(); alert('Acesso administrativo liberado.'); return;
     }
-
-    // Verificação de credencial de Totem (autoatendimento)
-    if (window.TotemModule && window.TotemModule.isTotemLogin && window.TotemModule.isTotemLogin(identifier, pass)) {
-        const totem = window.TotemModule.authenticate(identifier, pass);
-        if (totem) {
-            document.querySelector('#loginPass').value = '';
-            closeAuthModal();
-            window.TotemModule.launchKiosk(totem);
-            return;
-        }
+    if(window.TotemModule && window.TotemModule.isTotemLogin && window.TotemModule.isTotemLogin(identifier, pass)){
+        const totem = window.TotemModule.authenticate(identifier, pass); if(totem){ document.querySelector('#loginPass').value=''; closeAuthModal(); window.TotemModule.launchKiosk(totem); return; }
     }
-
-    if(!/^\S+@\S+\.\S+$/.test(identifier)){
-        showAuthError('Não foi possível entrar. Confira os dados e tente novamente.');
-        return;
-    }
-
-    const normalizedIdentifier = identifier.toLowerCase();
-    let user = (users || []).find(candidate => normalizedLocalEmail(candidate) === normalizedIdentifier);
-    if(!user) user = await importMarketplaceAccount(identifier, pass);
-    if(!user){
-        showAuthError('Usuário não encontrado. Faça seu cadastro primeiro.');
-        return;
-    }
-
-    // Compatibilidade: versões anteriores podiam guardar um e-mail no campo username.
-    if(!user.email && user.username){
-        user.email = normalizedIdentifier;
-        saveUsers();
-    }
-    const passwordHash = await hashLocalPassword(pass);
-    const matchesCurrentHash = user.passwordHash === passwordHash;
-    const matchesLegacyPassword = !user.passwordHash && user.password === pass;
-    if(!matchesCurrentHash && !matchesLegacyPassword){
-        showAuthError('Senha incorreta. Confira os dados e tente novamente.');
-        return;
-    }
-    if(matchesLegacyPassword){
-        user.passwordHash = passwordHash;
-        delete user.password;
-        saveUsers();
-    }
-
-    mirrorStoreAccountToMarketplace(user);
-    const sessionUser = saveLocalSession(user);
-    applyLocalSession(sessionUser);
-    document.querySelector('#loginPass').value = '';
-    closeAuthModal();
-    alert(`Sessão iniciada. Bem-vindo, ${sessionUser.name.split(' ')[0]}!`);
-}
-
-async function doRegister(){
-    const name = document.querySelector('#regName').value.trim();
-    const email = document.querySelector('#regEmail').value.trim().toLowerCase();
-    const phone = document.querySelector('#regPhone').value.trim();
-    const pass = document.querySelector('#regPass').value;
-    if(!name || !email || !pass){ showAuthError('Preencha nome, e-mail e senha.'); return; }
-    if(!/^\S+@\S+\.\S+$/.test(email)){ showAuthError('Digite um e-mail válido.'); return; }
-    if(pass.length < 6){ showAuthError('A senha deve ter pelo menos 6 caracteres.'); return; }
-    if(email === LOCAL_ADMIN_CREDENTIALS.username || email === `${LOCAL_ADMIN_CREDENTIALS.username}@local`){
-        showAuthError('Esse identificador é reservado para o administrador.');
-        return;
-    }
-    if((users || []).some(candidate => normalizedLocalEmail(candidate) === email)){
-        showAuthError('Já existe um cadastro com este e-mail. Use Entrar.');
-        return;
-    }
-
-    const user = {
-        id: localUserId(email),
-        name,
-        email,
-        phone,
-        passwordHash: await hashLocalPassword(pass),
-        savedAddresses: [],
-        isAdmin: false,
-        createdAt: new Date().toISOString()
-    };
-    users.push(user);
-    saveUsers();
-    mirrorStoreAccountToMarketplace(user);
-
-    // Espelha o cadastro no Firebase para que o CRM de Clientes e o marketing place recebam o perfil.
-    // O hash da senha permanece apenas no armazenamento local da loja.
+    if(!/^\S+@\S+\.\S+$/.test(identifier)){ showAuthError('Digite um e-mail válido para entrar.'); return; }
+    const email = identifier.toLowerCase();
     try {
-        if (typeof setDoc === 'function' && typeof doc === 'function' && typeof db !== 'undefined') {
-            const { passwordHash, password, ...cloudUser } = user;
-            await setDoc(doc(db, 'users', user.id), {
-                ...cloudUser,
-                source: 'loja',
-                syncedAt: typeof serverTimestamp === 'function' ? serverTimestamp() : new Date().toISOString()
-            }, { merge: true });
-        }
+        const credential = await signInWithEmailAndPassword(auth, email, pass);
+        const authUser = credential.user;
+        let profile = {};
+        try { const profileSnap = await getDoc(doc(db, 'users', authUser.uid)); if(profileSnap.exists()) profile = profileSnap.data() || {}; } catch (_) {}
+        const user = sanitizeLocalUser({ ...profile, id:authUser.uid, uid:authUser.uid, name:profile.name || authUser.displayName || email.split('@')[0], email:authUser.email || email, phone:profile.phone || '', isAdmin:false, source:'firebase-auth' });
+        const index = users.findIndex(item => String(item.uid || item.id) === authUser.uid || normalizedLocalEmail(item) === email);
+        if(index >= 0) users[index] = { ...users[index], ...user }; else users.push(user);
+        saveUsers();
+        const sessionUser = saveLocalSession(user); applyLocalSession(sessionUser); document.querySelector('#loginPass').value=''; closeAuthModal(); alert(`Sessão iniciada. Bem-vindo, ${sessionUser.name.split(' ')[0]}!`); return;
     } catch (firebaseError) {
-        console.warn('Cadastro local concluído, mas não foi possível sincronizar o cliente com o Firebase:', firebaseError);
+        console.warn('Login Firebase indisponível; tentando compatibilidade local:', firebaseError);
     }
-
-    mirrorStoreAccountToMarketplace(user);
-    const sessionUser = saveLocalSession(user);
-    applyLocalSession(sessionUser);
-    document.querySelector('#regPass').value = '';
-    closeAuthModal();
-    alert(`Cadastro realizado. Bem-vindo, ${name.split(' ')[0]}!`);
+    const user = (users || []).find(candidate => normalizedLocalEmail(candidate) === email);
+    if(!user){ showAuthError('Usuário não encontrado ou o acesso Firebase ainda não está habilitado para este projeto.'); return; }
+    const passwordHash = await hashLocalPassword(pass);
+    if(user.passwordHash !== passwordHash && !(user.passwordHash == null && user.password === pass)){ showAuthError('Senha incorreta. Confira os dados e tente novamente.'); return; }
+    if(!user.passwordHash){ user.passwordHash=passwordHash; delete user.password; saveUsers(); }
+    try {
+        const migrated = await createUserWithEmailAndPassword(auth, email, pass);
+        const oldId = user.id;
+        user.id = migrated.user.uid; user.uid = migrated.user.uid; user.source = 'firebase-auth';
+        const oldIndex = users.findIndex(item => String(item.id) === String(oldId));
+        if (oldIndex >= 0) users[oldIndex] = user; else users.push(user);
+        await setDoc(doc(db, 'users', migrated.user.uid), { id:migrated.user.uid, uid:migrated.user.uid, name:user.name, email, phone:user.phone || '', savedAddresses:user.savedAddresses || [], isAdmin:false, source:'firebase-auth', syncedAt:typeof serverTimestamp==='function'?serverTimestamp():new Date().toISOString() }, { merge:true });
+        saveUsers();
+    } catch (migrationError) {
+        console.warn('Conta local mantida sem migração Firebase:', migrationError);
+    }
+    const sessionUser=saveLocalSession(user); applyLocalSession(sessionUser); document.querySelector('#loginPass').value=''; closeAuthModal(); alert(`Sessão iniciada. Bem-vindo, ${sessionUser.name.split(' ')[0]}!`);
 }
-
-function logoutUser(){
+async function doRegister(){
+    const name=document.querySelector('#regName').value.trim(), email=document.querySelector('#regEmail').value.trim().toLowerCase(), phone=document.querySelector('#regPhone').value.trim(), pass=document.querySelector('#regPass').value;
+    if(!name||!email||!pass){showAuthError('Preencha nome, e-mail e senha.');return;}
+    if(!/^\S+@\S+\.\S+$/.test(email)){showAuthError('Digite um e-mail válido.');return;}
+    if(pass.length<6){showAuthError('A senha deve ter pelo menos 6 caracteres.');return;}
+    if(email===LOCAL_ADMIN_CREDENTIALS.username||email===`${LOCAL_ADMIN_CREDENTIALS.username}@local`){showAuthError('Esse identificador é reservado para o administrador.');return;}
+    try {
+        const credential=await createUserWithEmailAndPassword(auth,email,pass), authUser=credential.user;
+        const user={id:authUser.uid,uid:authUser.uid,name,email,phone,passwordHash:await hashLocalPassword(pass),savedAddresses:[],isAdmin:false,createdAt:new Date().toISOString(),source:'firebase-auth'};
+        await setDoc(doc(db,'users',authUser.uid),{id:authUser.uid,uid:authUser.uid,name,email,phone,savedAddresses:[],isAdmin:false,createdAt:user.createdAt,source:'firebase-auth',syncedAt:typeof serverTimestamp==='function'?serverTimestamp():new Date().toISOString()},{merge:true});
+        users.push(user); saveUsers(); mirrorStoreAccountToMarketplace(user); const sessionUser=saveLocalSession(user); applyLocalSession(sessionUser); document.querySelector('#regPass').value=''; closeAuthModal(); alert(`Cadastro realizado. Bem-vindo, ${name.split(' ')[0]}!`);
+    } catch(error) {
+        console.error('Falha no cadastro Firebase:',error);
+        const code=String(error?.code||'');
+        showAuthError(code.includes('email-already-in-use')?'Este e-mail já possui cadastro. Use Entrar.':code.includes('operation-not-allowed')?'Ative o provedor E-mail/senha em Authentication > Sign-in method no Firebase.':'Não foi possível criar a conta agora. Verifique a conexão e tente novamente.');
+    }
+}
+async function logoutUser(){
+    try { await signOut(auth); } catch (_) {}
     resetCustomerOrderTrackerOnLogout();
     clearLocalSession();
     applyLocalSession(null);
@@ -10354,12 +10314,31 @@ function renderAdminOrders(){
           ? `Exibindo ${loaded} pedidos carregados · os pedidos mais antigos permanecem no Firebase até você clicar em “Carregar mais pedidos”.`
           : `Exibindo ${loaded} pedidos · histórico carregado até o fim desta sessão.`;
     }
-  startPendingAcceptanceMonitor();
-  window.setTimeout(() => window.refreshLiveDeliveryMaps?.(), 0);
+    if (isAdmin) {
+       startPendingAcceptanceMonitor();
+       window.setTimeout(() => window.loadAllAdminOrders?.(), 180);
+   }
+ window.setTimeout(() => window.refreshLiveDeliveryMaps?.(), 0);
     window.restoreLiveMapFullscreenState?.();
 }
 window.renderAdminOrders = renderAdminOrders;
 
+
+window.loadAllAdminOrders = async function loadAllAdminOrders() {
+  if (!isAdmin || adminOrdersBackgroundLoading || !adminOrdersHistoryHasMore || !adminOrdersHistoryCursor) return false;
+  adminOrdersBackgroundLoading = true;
+  try {
+    while (adminOrdersHistoryHasMore && adminOrdersHistoryCursor) {
+      const before = adminOrdersHistoryPage.length;
+      const loaded = await window.loadMoreAdminOrders();
+      if (!loaded || adminOrdersHistoryPage.length === before) break;
+      await new Promise(resolve => setTimeout(resolve, 120));
+    }
+    return true;
+  } finally {
+    adminOrdersBackgroundLoading = false;
+  }
+};
 
 window.loadMoreAdminOrders = async function loadMoreAdminOrders() {
   if (adminOrdersHistoryLoading || !adminOrdersHistoryHasMore || !adminOrdersHistoryCursor) return false;
@@ -14201,9 +14180,50 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     return '';
   }
 
+  const CLOUD_USERS_CACHE_KEY = 'brasa_cloud_users_cache_v1';
+  const CLOUD_USERS_CACHE_TTL = 5 * 60 * 1000;
+  function readCloudUsersCache() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(CLOUD_USERS_CACHE_KEY) || '{}');
+      return { at: Number(cached.at || 0), users: Array.isArray(cached.users) ? cached.users : [] };
+    } catch (_) { return { at: 0, users: [] }; }
+  }
+  function writeCloudUsersCache(items) {
+    try { localStorage.setItem(CLOUD_USERS_CACHE_KEY, JSON.stringify({ at: Date.now(), users: items })); } catch (_) {}
+  }
+  async function loadCloudUsers(force = false) {
+    const cached = readCloudUsersCache();
+    if (!force && cached.users.length) { window.__cloudUsers = cached.users; }
+    if (!force && cached.users.length && Date.now() - cached.at < CLOUD_USERS_CACHE_TTL) {
+      window.renderCustomers?.();
+      return cached.users;
+    }
+    if (typeof getDocs !== 'function' || typeof collection !== 'function' || typeof db === 'undefined') return cached.users;
+    try {
+      const snapshot = await getDocs(collection(db, 'users'));
+      const items = (snapshot.docs || []).map(item => ({ id: item.id, ...item.data() })).filter(item => item.isAdmin !== true);
+      window.__cloudUsers = items;
+      writeCloudUsersCache(items);
+      window.renderCustomers?.();
+      return items;
+    } catch (error) {
+      console.warn('Não foi possível carregar clientes do Firebase; usando o cache local:', error);
+      window.__cloudUsers = cached.users;
+      window.renderCustomers?.();
+      return cached.users;
+    }
+  }
+  window.loadCloudUsers = loadCloudUsers;
+  window.__cloudUsers = window.__cloudUsers || readCloudUsersCache().users;
+
   function customerCache() {
     const version = window.__ordersVersion || orders().length; const key = `${version}|${orders().length}`; if (state.customersCacheKey===key) return state.customers;
     const map = new Map();
+    (window.__cloudUsers || []).forEach(user => {
+      const id = String(user.id || user.uid || '').trim();
+      if (!id) return;
+      map.set(id, { id, name:user.name || user.displayName || 'Cliente sem nome', email:user.email || '', phone:user.phone || '', address:user.deliveryAddress || user.address || '', totalOrders:0, deliveredOrders:0, totalSpent:0, lastOrderDate:0, firstOrderDate:0, pendingOrders:0, items:new Map(), orders:[] });
+    });
     orders().forEach(order => {
       if (isCancelled(order) || (!order.userId && !order.userPhone && !order.userName)) return;
       const id = order.userId || digits(order.userPhone) || `anon_${String(order.userName||'cliente').toLowerCase()}`;
@@ -14304,6 +14324,8 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     $id('openSalesOrdersHistory')?.addEventListener('click', openSalesOrdersHistory);
     $id('tableGarcomReport')?.addEventListener('click', event => { const button = event.target.closest('[data-sales-garcom-history]'); if (!button) return; event.preventDefault(); event.stopPropagation(); window.openGarcomHistory?.(button.dataset.garcomId); });
     window.renderAdminDashboard();window.renderCustomers();window.renderMotoboys();
+    window.loadCloudUsers?.();
+    window.fetchMotoboys?.();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));else setTimeout(init,0);
 })();
