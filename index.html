@@ -6723,6 +6723,7 @@ function logoutUser(){
 
 async function finalizeOrder(e) {
   e.preventDefault();
+  if (window.__foodFlowFinalizingOrder) return;
   if (checkoutStep !== 4 || !validateCheckoutStep(4)) return;
   
   if (!currentUser) {
@@ -6730,6 +6731,11 @@ async function finalizeOrder(e) {
       return;
   }
   if (!validateCheckoutStep(2)) { setCheckoutStep(2); return; }
+
+  window.__foodFlowFinalizingOrder = true;
+  const submitButton = document.getElementById('checkoutSubmit');
+  const originalSubmitLabel = submitButton?.textContent || 'Enviar pedido';
+  if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Processando…'; }
   
   // Variáveis para armazenar informações de entrega
   let deliveryFee = 0;
@@ -6943,20 +6949,33 @@ async function finalizeOrder(e) {
       cart = [];
       saveCart();
       appliedCoupon = null; // Limpa o cupom aplicado
-      closeCheckoutModal();
-      renderCart();
       const savedOrder = { ...newOrder, id: docRef.id };
-      showCustomerOrderTracker(docRef.id, savedOrder);
-      showConfirmationModal(savedOrder);
-      if (paymentPolicy.requiresOnlineConfirmation) {
-        const checkoutResult = await window.PaymentHub?.startCheckout?.(savedOrder);
-        if (!checkoutResult?.redirected) {
-          alert('Pedido registrado e aguardando pagamento. Assim que o gateway confirmar, ele será enviado para análise da loja.');
+      if (paymentMethod === 'pix') {
+        closeCheckoutModal();
+        renderCart();
+        const checkoutResult = await window.PaymentHub?.startPixCheckout?.(savedOrder);
+        if (!checkoutResult?.started) {
+          window.PaymentHub?.closePix?.();
+          alert(checkoutResult?.message || 'Não foi possível gerar o pagamento Pix. Tente novamente.');
+        }
+      } else {
+        closeCheckoutModal();
+        renderCart();
+        showCustomerOrderTracker(docRef.id, savedOrder);
+        showConfirmationModal(savedOrder);
+        if (paymentPolicy.requiresOnlineConfirmation) {
+          const checkoutResult = await window.PaymentHub?.startCheckout?.(savedOrder);
+          if (!checkoutResult?.redirected) {
+            alert('Pedido registrado e aguardando pagamento. Assim que o gateway confirmar, ele será enviado para análise da loja.');
+          }
         }
       }
   } catch (e) {
       console.error("Falha ao salvar pedido no Firebase:", e);
       alert("Falha ao finalizar pedido. Verifique sua conexão ou as regras do Firebase.");
+  } finally {
+      window.__foodFlowFinalizingOrder = false;
+      if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalSubmitLabel; }
   }
 }
 
@@ -22484,3 +22503,70 @@ body:has(#modal.open) {
   }
 }
 </style>
+
+
+<!-- Experiência Pix incremental: usa o endpoint PaymentHub e o webhook/Firestore existentes. -->
+<style id="food-flow-pix-style">
+  #foodFlowPixOverlay{position:fixed;inset:0;z-index:10050;background:linear-gradient(145deg,#fffaf5 0%,#f5eee7 100%);overflow:auto;display:none;color:#2d241e;font-family:Manrope,Arial,sans-serif}
+  #foodFlowPixOverlay.is-open{display:block;animation:foodFlowPixIn .22s ease-out}
+  @keyframes foodFlowPixIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .ff-pix-shell{min-height:100dvh;width:min(100%,720px);margin:auto;padding:clamp(20px,5vw,44px) clamp(16px,5vw,28px) 34px;box-sizing:border-box}
+  .ff-pix-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}.ff-pix-head h2{margin:0;font-size:clamp(26px,7vw,38px);line-height:1.05;color:#241b16}.ff-pix-head p{margin:7px 0 0;color:#75675d;font-size:14px;line-height:1.4}
+  .ff-pix-back{border:0;background:#fff;border-radius:50%;width:42px;height:42px;font-size:23px;color:#5c4a3e;box-shadow:0 4px 14px #3a241312;cursor:pointer;flex:0 0 auto}.ff-pix-card{background:#fff;border:1px solid #eadfd6;border-radius:24px;padding:clamp(18px,5vw,30px);box-shadow:0 12px 34px #3a241312}.ff-pix-qr{display:grid;place-items:center;min-height:270px;margin:2px auto 16px;padding:16px;background:#fff;border:1px solid #eee5df;border-radius:18px;max-width:330px}.ff-pix-qr img{display:block;width:min(280px,72vw);height:auto;aspect-ratio:1;object-fit:contain}.ff-pix-instruction{text-align:center;color:#5d4d42;font-size:14px;margin:0 0 22px}.ff-pix-label{display:block;color:#74645a;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px}.ff-pix-code{display:flex;gap:8px;align-items:stretch}.ff-pix-code input{min-width:0;flex:1;border:1px solid #ddd0c6;border-radius:11px;padding:12px;font-size:12px;color:#5e5148;background:#faf8f6}.ff-pix-copy,.ff-pix-retry{border:0;border-radius:11px;background:#e95b2d;color:#fff;padding:0 16px;min-height:46px;font-weight:800;cursor:pointer}.ff-pix-copy:focus-visible,.ff-pix-retry:focus-visible,.ff-pix-back:focus-visible{outline:3px solid #f2a77e;outline-offset:2px}.ff-pix-feedback{min-height:18px;margin:7px 0 0;color:#328456;font-size:12px;font-weight:700}.ff-pix-status{display:flex;align-items:center;gap:10px;margin:20px 0 12px;padding:13px 14px;border-radius:13px;background:#fff7e8;color:#82551e;font-weight:800}.ff-pix-status-dot{width:10px;height:10px;border-radius:50%;background:#e99c36;box-shadow:0 0 0 5px #e99c3620}.ff-pix-timer{text-align:center;color:#7c6a5f;font-size:13px}.ff-pix-timer strong{color:#2d241e;font-size:18px;margin-left:4px}.ff-pix-error{text-align:center;padding:24px 8px}.ff-pix-error h3{margin:0 0 8px;font-size:22px}.ff-pix-error p{color:#74645a;line-height:1.45}.ff-pix-retry{margin-top:12px;min-height:48px}.ff-pix-success{text-align:center;padding:24px 8px 10px}.ff-pix-success-icon{display:grid;place-items:center;width:68px;height:68px;margin:0 auto 14px;border-radius:50%;background:#35a56a;color:#fff;font-size:38px;font-weight:900;animation:foodFlowPixPop .35s ease-out}@keyframes foodFlowPixPop{from{transform:scale(.6);opacity:.3}to{transform:none;opacity:1}}.ff-pix-success h3{margin:0 0 7px;font-size:25px}.ff-pix-success p{color:#74645a}.ff-pix-meta{margin-top:18px;text-align:center;color:#8b7b70;font-size:12px}
+  @media(max-width:500px){.ff-pix-code{display:grid}.ff-pix-copy{width:100%}.ff-pix-qr{min-height:230px}}
+</style>
+<script id="food-flow-pix-module">
+(() => {
+  'use strict';
+  const API_BASE = () => String(window.PAYMENT_API_BASE || '/api').replace(/\/$/, '');
+  let state = { order:null, payload:null, unsubscribe:null, timer:null, expiresAt:null, retrying:false };
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.',',')}`;
+  const first = (obj, keys) => keys.map(key => obj?.[key]).find(value => value !== undefined && value !== null && String(value) !== '');
+  function normalizePayload(raw) {
+    const p = raw?.payment || raw?.data || raw || {};
+    return { ...p, paymentId:first(p,['paymentId','id','transactionId']), orderId:first(p,['orderId','externalReference']), qrCodeBase64:first(p,['qrCodeBase64','qr_code_base64','qrCodeImage','qr_code_image']), qrCode:first(p,['qrCode','qr_code','qrImageUrl','qr_image_url']), pixCopyPaste:first(p,['pixCopyPaste','pixCopiaECola','pix_copy_paste','copyPaste','qrCode']), status:first(p,['status','paymentStatus']) || 'pending', expiresAt:first(p,['expiresAt','expirationDate','expiration_at','dateOfExpiration']), checkoutUrl:first(p,['checkoutUrl','authorizationUrl']) };
+  }
+  function qrSrc(payload) {
+    const base64 = String(payload?.qrCodeBase64 || '').trim();
+    const value = String(payload?.qrCode || '').trim();
+    if (base64) return base64.startsWith('data:image/') ? base64 : `data:image/png;base64,${base64.replace(/^data:[^,]+,/, '')}`;
+    if (/^data:image\//i.test(value) || /^https?:\/\//i.test(value)) return value;
+    // O campo qrCode do Mercado Pago normalmente é o Pix Copia e Cola, não uma imagem.
+    return '';
+  }
+  function overlay() {
+    let node = document.getElementById('foodFlowPixOverlay');
+    if (!node) { node = document.createElement('div'); node.id = 'foodFlowPixOverlay'; node.setAttribute('aria-hidden','true'); document.body.appendChild(node); }
+    return node;
+  }
+  function closePix(force=false) {
+    if (!force && state.order && !['paid','approved','succeeded'].includes(String(state.order.paymentStatus || state.payload?.status || '').toLowerCase())) {
+      if (!window.confirm('Seu pagamento ainda está pendente. Deseja sair?')) return false;
+    }
+    state.unsubscribe?.(); if (state.timer) clearInterval(state.timer); state.unsubscribe=null; state.timer=null;
+    const node = document.getElementById('foodFlowPixOverlay'); if (node) { node.classList.remove('is-open'); node.setAttribute('aria-hidden','true'); }
+    document.body.style.overflow = '';
+    return true;
+  }
+  function setExpired() { const root=overlay(); root.querySelector('[data-pix-body]')?.replaceChildren(); root.querySelector('[data-pix-body]')?.insertAdjacentHTML('afterbegin', `<div class="ff-pix-error"><h3>Este Pix expirou.</h3><p>Gere uma nova cobrança para continuar o pedido.</p><button class="ff-pix-retry" data-pix-retry>Gerar novo Pix</button></div>`); root.querySelector('[data-pix-retry]')?.addEventListener('click', retry); }
+  function updateTimer() { if (!state.expiresAt) return; const left=Math.max(0, new Date(state.expiresAt).getTime()-Date.now()); const el=overlay().querySelector('[data-pix-countdown]'); if(el) el.textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left/1000)%60).padStart(2,'0')}`; if(!left){ if(state.timer) clearInterval(state.timer); setExpired(); } }
+  function renderPending() {
+    const p=state.payload||{}; const src=qrSrc(p); const body=overlay().querySelector('[data-pix-body]'); if(!body) return;
+    if(!src && !p.pixCopyPaste){ renderError('O backend não retornou os dados do QR Code Pix.'); return; }
+    body.innerHTML=`<div class="ff-pix-qr">${src ? `<img src="${esc(src)}" alt="QR Code para pagamento Pix">` : '<p>Use o Pix Copia e Cola abaixo.</p>'}</div><p class="ff-pix-instruction">Escaneie o QR Code com o aplicativo do seu banco</p><label class="ff-pix-label" for="ffPixCode">Pix Copia e Cola</label><div class="ff-pix-code"><input id="ffPixCode" readonly value="${esc(p.pixCopyPaste || '')}" aria-label="Código Pix Copia e Cola"><button class="ff-pix-copy" data-pix-copy>Copiar Pix</button></div><div class="ff-pix-feedback" data-pix-feedback aria-live="polite"></div><div class="ff-pix-status"><span class="ff-pix-status-dot" aria-hidden="true"></span><span>Aguardando pagamento</span></div><div class="ff-pix-timer">Pagamento disponível por:<strong data-pix-countdown>--:--</strong></div><div class="ff-pix-meta">Pedido #${esc(String(state.order?.id || '').slice(0,8).toUpperCase())} · ${money(state.order?.total)}</div>`;
+    body.querySelector('[data-pix-copy]')?.addEventListener('click', async () => { const code=body.querySelector('#ffPixCode')?.value || ''; try { await navigator.clipboard.writeText(code); } catch (_) { body.querySelector('#ffPixCode')?.select(); document.execCommand('copy'); } const f=body.querySelector('[data-pix-feedback]'); if(f) f.textContent='Copiado!'; setTimeout(()=>{if(f)f.textContent='';},2200); });
+    updateTimer(); state.timer=setInterval(updateTimer,1000);
+  }
+  function renderError(message) { const body=overlay().querySelector('[data-pix-body]'); if(!body)return; body.innerHTML=`<div class="ff-pix-error"><h3>Não foi possível gerar o pagamento Pix.</h3><p>${esc(message || 'Verifique sua conexão e tente novamente.')}</p><button class="ff-pix-retry" data-pix-retry>Tentar novamente</button></div>`; body.querySelector('[data-pix-retry]')?.addEventListener('click', retry); }
+  function renderSuccess() { const body=overlay().querySelector('[data-pix-body]'); if(!body)return; body.innerHTML=`<div class="ff-pix-success"><div class="ff-pix-success-icon" aria-hidden="true">✓</div><h3>Pagamento aprovado!</h3><p>Seu pedido foi confirmado.</p><div class="ff-pix-meta">Pedido #${esc(String(state.order?.id || '').slice(0,8).toUpperCase())} · ${money(state.order?.total)} · Pix</div></div>`; setTimeout(()=>{ closePix(true); const order={...state.order,paymentStatus:'paid',payment:{...(state.order.payment||{}),status:'paid'}}; window.showCustomerOrderTracker?.(order.id,order); window.showConfirmationModal?.(order); },1400); }
+  function renderShell() { const node=overlay(); node.innerHTML=`<div class="ff-pix-shell" role="dialog" aria-modal="true" aria-labelledby="ffPixTitle"><header class="ff-pix-head"><button class="ff-pix-back" data-pix-close aria-label="Voltar">‹</button><div><h2 id="ffPixTitle">Pagamento via Pix</h2><p>Finalize seu pagamento para confirmar o pedido.</p></div></header><main class="ff-pix-card" data-pix-body aria-live="polite"></main></div>`; node.querySelector('[data-pix-close]')?.addEventListener('click',()=>closePix()); }
+  function open(order,payload) { state.order=order; state.payload=payload; const rawExpiry=payload.expiresAt; const expiryMs=typeof rawExpiry === 'number' ? (rawExpiry < 100000000000 ? rawExpiry * 1000 : rawExpiry) : Date.parse(String(rawExpiry || '')); state.expiresAt=Number.isFinite(expiryMs) ? new Date(expiryMs).toISOString() : new Date(Date.now()+5*60*1000).toISOString(); localStorage.setItem('food_flow_pending_pix',JSON.stringify({orderId:order.id})); renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; renderPending(); subscribe(order.id); }
+  function subscribe(orderId) { state.unsubscribe?.(); if(!window.db || !window.doc || !window.onSnapshot)return; try { state.unsubscribe=window.onSnapshot(window.doc(window.db,'orders',String(orderId)), snap=>{ if(!snap.exists())return; const incoming={id:snap.id,...snap.data()}; state.order={...state.order,...incoming}; const status=String(incoming.paymentStatus || incoming.payment?.status || '').toLowerCase(); if(['paid','approved','succeeded','confirmed'].includes(status)){ localStorage.removeItem('food_flow_pending_pix'); renderSuccess(); } else if(['expired','cancelled','rejected'].includes(status)){ setExpired(); } }); } catch(error) { console.warn('Listener Pix indisponível:', error); } }
+  async function createPayment(order) { const response=await fetch(`${API_BASE()}/payments`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({orderId:order.id,amount:Number(order.total||0),currency:'BRL',method:'pix',idempotencyKey:`order-${String(order.id)}-payment`,returnUrl:window.location.href})}); let payload={}; try{payload=await response.json();}catch(_){} if(!response.ok)throw new Error(payload?.message||`Gateway HTTP ${response.status}`); return normalizePayload(payload); }
+  async function startPixCheckout(order) { if(!order?.id)return {started:false,message:'Pedido inválido.'}; if(state.retrying)return {started:false}; state.retrying=true; renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const body=overlay().querySelector('[data-pix-body]'); body.innerHTML='<div class="ff-pix-error"><p>Gerando pagamento Pix…</p></div>'; try { const payload=await createPayment(order); state.retrying=false; if(!payload.qrCode && !payload.qrCodeBase64 && !payload.pixCopyPaste){ throw new Error('A cobrança foi criada, mas o Worker não retornou QR Code ou Pix Copia e Cola.'); } const changedAt=new Date().toISOString(); const payment={...(order.payment||{}),...payload,status:'pending',startedAt:changedAt}; await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'awaiting_payment',payment,updatedAt:changedAt}); open({...order,paymentStatus:'awaiting_payment',payment},payload); return {started:true,payload}; } catch(error) { state.retrying=false; renderError(error.message); return {started:false,message:error.message}; } }
+  async function retry() { if(!state.order)return; await startPixCheckout(state.order); }
+  window.PaymentHub=window.PaymentHub||{}; window.PaymentHub.startPixCheckout=startPixCheckout; window.PaymentHub.closePix=closePix;
+  window.addEventListener('beforeunload', e=>{ if(document.getElementById('foodFlowPixOverlay')?.classList.contains('is-open') && state.order && !['paid','approved'].includes(String(state.order.paymentStatus||'').toLowerCase())){ e.preventDefault(); e.returnValue='Seu pagamento Pix ainda está pendente.'; } });
+})();
+</script>
