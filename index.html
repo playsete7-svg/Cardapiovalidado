@@ -21436,6 +21436,7 @@ updatedAt:changedAt };
   window.addEventListener('foodflow:pix-approved', event => {
     if (!kioskState || kioskState.screen === 'success') return;
     const order = event.detail?.order || {};
+    window.PaymentHub?.closePix?.(true);
     kioskState.cart = [];
     kioskState.screen = 'success';
     renderSuccess(order.orderNumber || order.id || '');
@@ -22867,7 +22868,12 @@ body:has(#modal.open) {
         if (response.ok && result.approved) {
           const changedAt = new Date().toISOString();
           const payment = withoutUndefined({ ...(state.order?.payment || {}), status:'approved', statusDetail:result.statusDetail || '', orderId:mercadoPagoOrderId, updatedAt:changedAt });
-          await window.updateDoc(window.doc(window.db, 'orders', String(orderId)), { paymentStatus:'paid', payment, paidAt:changedAt, updatedAt:changedAt });
+          try {
+            await window.updateDoc(window.doc(window.db, 'orders', String(orderId)), { paymentStatus:'paid', payment, paidAt:changedAt, updatedAt:changedAt });
+          } catch (updateError) {
+            console.warn('Pagamento aprovado, mas não foi possível atualizar o Firestore:', updateError);
+          }
+          // O retorno visual não depende do Firestore: o Worker já confirmou o Mercado Pago.
           applyIncoming({ paymentStatus:'paid', payment, paidAt:changedAt, updatedAt:changedAt });
         }
       } catch(error) { console.warn('Consulta de confirmação Pix indisponível:', error); }
