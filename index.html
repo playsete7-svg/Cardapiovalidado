@@ -21433,6 +21433,14 @@ updatedAt:changedAt };
   // CSS precisa estar disponível desde o início
   injectCSS();
 
+  window.addEventListener('foodflow:pix-approved', event => {
+    if (!kioskState || kioskState.screen === 'success') return;
+    const order = event.detail?.order || {};
+    kioskState.cart = [];
+    kioskState.screen = 'success';
+    renderSuccess(order.orderNumber || order.id || '');
+    resetIdleTimer();
+  });
   // ====== API PÚBLICA ======
   window.TotemModule = {
     // Autenticação
@@ -22754,7 +22762,7 @@ body:has(#modal.open) {
 (() => {
   'use strict';
   const API_BASE = () => String(window.PAYMENT_API_BASE || 'https://bitter-glitter-5fcf.ht9bccw67h.workers.dev').replace(/\/$/, '');
-  let state = { order:null, payload:null, unsubscribe:null, timer:null, expiresAt:null, retrying:false };
+  let state = { order:null, payload:null, unsubscribe:null, poll:null, timer:null, expiresAt:null, retrying:false, finishing:false };
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.',',')}`;
   const first = (obj, keys) => keys.map(key => obj?.[key]).find(value => value !== undefined && value !== null && String(value) !== '');
@@ -22815,7 +22823,7 @@ body:has(#modal.open) {
         return false;
       }
     }
-    state.unsubscribe?.(); if (state.timer) clearInterval(state.timer); state.unsubscribe=null; state.timer=null;
+    state.unsubscribe?.(); if (state.poll) clearInterval(state.poll); if (state.timer) clearInterval(state.timer); state.unsubscribe=null; state.poll=null; state.timer=null;
     const node = document.getElementById('foodFlowPixOverlay'); if (node) { node.classList.remove('is-open'); node.setAttribute('aria-hidden','true'); }
     document.body.style.overflow = '';
     return true;
@@ -22833,7 +22841,41 @@ body:has(#modal.open) {
   function renderSuccess() { const body=overlay().querySelector('[data-pix-body]'); if(!body)return; body.innerHTML=`<div class="ff-pix-success"><div class="ff-pix-success-icon" aria-hidden="true">✓</div><h3>Pagamento aprovado!</h3><p>Seu pedido foi confirmado.</p><div class="ff-pix-meta">Pedido #${esc(String(state.order?.id || '').slice(0,8).toUpperCase())} · ${money(state.order?.total)} · Pix</div></div>`; setTimeout(()=>{ closePix(true); const order={...state.order,paymentStatus:'paid',payment:{...(state.order.payment||{}),status:'paid'}}; window.showCustomerOrderTracker?.(order.id,order); window.showConfirmationModal?.(order); },1400); }
   function renderShell() { const node=overlay(); node.innerHTML=`<div class="ff-pix-shell" role="dialog" aria-modal="true" aria-labelledby="ffPixTitle"><header class="ff-pix-head"><button class="ff-pix-back" data-pix-close aria-label="Voltar">‹</button><div><h2 id="ffPixTitle">Pagamento via Pix</h2><p>Finalize seu pagamento para confirmar o pedido.</p></div></header><main class="ff-pix-card" data-pix-body aria-live="polite"></main></div>`; node.querySelector('[data-pix-close]')?.addEventListener('click',()=>closePix()); }
   function open(order,payload) { state.order=order; state.payload=payload; const rawExpiry=payload.expiresAt; const expiryMs=typeof rawExpiry === 'number' ? (rawExpiry < 100000000000 ? rawExpiry * 1000 : rawExpiry) : Date.parse(String(rawExpiry || '')); state.expiresAt=Number.isFinite(expiryMs) ? new Date(expiryMs).toISOString() : new Date(Date.now()+5*60*1000).toISOString(); localStorage.setItem('food_flow_pending_pix',JSON.stringify({orderId:order.id})); renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; renderPending(); subscribe(order.id); }
-  function subscribe(orderId) { state.unsubscribe?.(); if(!window.db || !window.doc || !window.onSnapshot)return; try { state.unsubscribe=window.onSnapshot(window.doc(window.db,'orders',String(orderId)), snap=>{ if(!snap.exists())return; const incoming={id:snap.id,...snap.data()}; state.order={...state.order,...incoming}; const statuses=[incoming.paymentStatus,incoming.payment?.status].map(value=>String(value||'').toLowerCase()); if(statuses.some(status=>['paid','approved','processed','accredited','succeeded','confirmed','completed'].includes(status))){ localStorage.removeItem('food_flow_pending_pix'); renderSuccess(); } else if(['expired','cancelled','rejected'].includes(status)){ setExpired(); } }); } catch(error) { console.warn('Listener Pix indisponível:', error); } }
+  function subscribe(orderId) {
+    state.unsubscribe?.();
+    if (state.poll) clearInterval(state.poll);
+    const approved = ['paid','approved','processed','accredited','succeeded','confirmed','completed'];
+    const applyIncoming = incoming => {
+      state.order = { ...state.order, ...incoming };
+      const statuses = [incoming.paymentStatus, incoming.payment?.status].map(value => String(value || '').toLowerCase());
+      if (statuses.some(status => approved.includes(status)) && !state.finishing) {
+        state.finishing = true;
+        localStorage.removeItem('food_flow_pending_pix');
+        window.dispatchEvent(new CustomEvent('foodflow:pix-approved', { detail: { order: state.order } }));
+        if (state.order?.source !== 'totem') renderSuccess();
+      } else if (statuses.some(status => ['expired','cancelled','canceled','rejected'].includes(status))) setExpired();
+    };
+    if (window.db && window.doc && window.onSnapshot) {
+      try { state.unsubscribe = window.onSnapshot(window.doc(window.db, 'orders', String(orderId)), snap => { if (snap.exists()) applyIncoming({ id:snap.id, ...snap.data() }); }, error => console.warn('Listener Pix indisponível:', error)); } catch(error) { console.warn('Listener Pix indisponível:', error); }
+    }
+    const pollStatus = async () => {
+      const mercadoPagoOrderId = String(state.payload?.orderId || state.order?.payment?.orderId || '').trim();
+      if (!mercadoPagoOrderId) return;
+      try {
+        const response = await fetch(`${API_BASE()}/payments/status?orderId=${encodeURIComponent(mercadoPagoOrderId)}`, { credentials:'include' });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok && result.approved) {
+          const changedAt = new Date().toISOString();
+          const payment = withoutUndefined({ ...(state.order?.payment || {}), status:'approved', statusDetail:result.statusDetail || '', orderId:mercadoPagoOrderId, updatedAt:changedAt });
+          await window.updateDoc(window.doc(window.db, 'orders', String(orderId)), { paymentStatus:'paid', payment, paidAt:changedAt, updatedAt:changedAt });
+          applyIncoming({ paymentStatus:'paid', payment, paidAt:changedAt, updatedAt:changedAt });
+        }
+      } catch(error) { console.warn('Consulta de confirmação Pix indisponível:', error); }
+    };
+    pollStatus();
+    state.poll = setInterval(pollStatus, 3000);
+  }
+
   async function createPayment(order) { const response=await fetch(`${API_BASE()}/payments`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({orderId:order.id,amount:Number(order.total||0),currency:'BRL',method:'pix',payer:{email:(String(order.userEmail || window.currentUser?.email || (order.source === 'totem' ? 'totem-' + String(order.totemId || order.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,48) + '@foodflow.com.br' : '')).trim().toLowerCase())},idempotencyKey:`order-${String(order.id)}-payment`,returnUrl:window.location.href})}); let payload={}; try{payload=await response.json();}catch(_){} if(!response.ok)throw new Error(payload?.erro||payload?.message||payload?.error||payload?.detalhes?.[0]?.description||`Gateway HTTP ${response.status}`); return normalizePayload(payload); }
   async function startPixCheckout(order) { if(!order?.id)return {started:false,message:'Pedido inválido.'}; if(state.retrying)return {started:false}; state.retrying=true; renderShell(); overlay().classList.add('is-open'); overlay().setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const body=overlay().querySelector('[data-pix-body]'); body.innerHTML='<div class="ff-pix-error"><p>Gerando pagamento Pix…</p></div>'; try { const payload=await createPayment(order); state.retrying=false; if(!payload.qrCode && !payload.qrCodeBase64 && !payload.pixCopyPaste){ throw new Error('A cobrança foi criada, mas o Worker não retornou QR Code ou Pix Copia e Cola.'); } const changedAt=new Date().toISOString(); const {expiresAt: _expiresAt, ...payloadForFirestore}=payload; const payment=withoutUndefined({...((order && order.payment) || {}),...payloadForFirestore,status:'pending',startedAt:changedAt}); delete payment.expiresAt; await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{paymentStatus:'awaiting_payment',payment,updatedAt:changedAt}); open({...order,paymentStatus:'awaiting_payment',payment},payload); return {started:true,payload}; } catch(error) { state.retrying=false; renderError(error.message); return {started:false,message:error.message}; } }
   async function retry() { if(!state.order)return; await startPixCheckout(state.order); }
