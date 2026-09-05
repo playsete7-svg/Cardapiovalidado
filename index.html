@@ -4119,7 +4119,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
                 <div class="brasa-summary-card-title">Comanda do pedido</div>
                 <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Itens do pedido</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="1">Alterar</button></div><div id="checkoutReviewItems" class="brasa-mini-items"></div></div>
                 <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Entrega</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="2">Alterar</button></div><div id="checkoutReviewName" class="brasa-review-value">—</div><div id="checkoutReviewPhone" class="brasa-review-value">—</div><div id="checkoutReviewAddress" class="brasa-review-value">—</div><div id="checkoutReviewArea" class="brasa-review-value">—</div></div>
-                <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Pagamento</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="3">Alterar</button></div><div id="checkoutReviewPayment" class="brasa-review-value">Cartão de crédito</div><div id="checkoutReviewChange" class="brasa-review-value"></div></div>
+                <div class="brasa-review-group"><div class="brasa-review-heading"><strong>Pagamento</strong><button type="button" class="pill brasa-link-button" data-edit-checkout-step="3">Alterar</button></div><div id="checkoutReviewPayment" class="brasa-review-value">Cartão de crédito</div><div id="checkoutReviewChange" class="brasa-review-value"></div><div id="checkoutReviewPixNotice" class="checkout-review-pix-notice" hidden role="status" aria-live="polite">Você escolheu Pix. Ao clicar em <strong>Enviar pedido</strong>, o pedido será registrado e a tela de pagamento Pix será aberta.</div></div>
               </div>
             </div>
             <aside class="brasa-checkout-summary-card brasa-sticky-summary" aria-label="Totais da comanda">
@@ -11564,6 +11564,8 @@ function updateCheckoutReview() {
   set('checkoutReviewArea', getCheckoutDeliverySummary());
   set('checkoutReviewPayment', getCheckoutPaymentLabel());
   const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+  const pixNotice = document.getElementById('checkoutReviewPixNotice');
+  if (pixNotice) pixNotice.hidden = selectedPayment?.value !== 'pix';
   const cashChange = Number(document.getElementById('cashChange')?.value) || 0;
   set('checkoutReviewChange', selectedPayment?.value === 'cash' && cashChange > 0 ? `Troco para ${formatBRL(cashChange)}` : '');
 
@@ -15164,10 +15166,12 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     const pixLabel = pix?.closest('label');
     const pixReady = Boolean(cfg.enabled && cfg.acceptedMethods?.pix && isConnectionReady(cfg));
     if (pix && pixLabel) {
-      pix.disabled = !pixReady;
-      pixLabel.hidden = !pixReady;
+      // O Pix continua sendo uma escolha válida na etapa 3. A experiência de
+      // pagamento só começa depois da revisão e do clique em Enviar pedido.
+      pix.disabled = false;
+      pixLabel.hidden = false;
       const hint = pixLabel.querySelector('small');
-      if (hint) hint.textContent = pixReady ? `Aprovação rápida por ${providerName(cfg)}` : 'Conecte pagamentos online na administração';
+      if (hint) hint.textContent = pixReady ? `Aprovação rápida por ${providerName(cfg)}` : 'Pagamento via Pix';
     }
     ['paymentCredit','paymentDebit'].forEach(id => {
       const input = document.getElementById(id);
@@ -22506,6 +22510,10 @@ body:has(#modal.open) {
 
 
 <!-- Experiência Pix incremental: usa o endpoint PaymentHub e o webhook/Firestore existentes. -->
+<style id="food-flow-pix-review-style">
+  .checkout-review-pix-notice{margin-top:10px;padding:11px 12px;border-left:3px solid #e95b2d;border-radius:8px;background:rgba(233,91,45,.10);color:#f2c3ad;font-size:12px;line-height:1.45}
+  .checkout-review-pix-notice strong{color:#fff0e7}
+</style>
 <style id="food-flow-pix-style">
   #foodFlowPixOverlay{position:fixed;inset:0;z-index:10050;background:linear-gradient(145deg,#fffaf5 0%,#f5eee7 100%);overflow:auto;display:none;color:#2d241e;font-family:Manrope,Arial,sans-serif}
   #foodFlowPixOverlay.is-open{display:block;animation:foodFlowPixIn .22s ease-out}
