@@ -1717,6 +1717,12 @@ window.printOrder = function(orderId) {
   }
 </style>
 
+<style id="pdv-pickup-delivery-customer">
+  .pdv-retirada-payment-choices{display:flex;gap:6px;flex:1}.pdv-retirada-payment-choices button,.pdv-retirada-payment-state{min-height:38px;flex:1;padding:8px 10px;border-radius:8px;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-retirada-payment-choices button:first-child{background:#1f9d55!important;color:#fff!important;border:1px solid #6ee7a0!important}.pdv-retirada-payment-choices button:last-child{background:#ff5a1f!important;color:#fff!important;border:1px solid #ff9b72!important}.pdv-retirada-payment-state{width:100%;border:0;color:#fff!important}.pdv-retirada-payment-state.is-paid{background:#1f9d55!important}.pdv-retirada-payment-state.is-awaiting{background:#ff5a1f!important}.pdv-order-retirada .pdv-order-actions{grid-template-columns:42px minmax(0,1fr)}.pdv-order-retirada .pdv-retirada-payment-choices,.pdv-order-retirada .pdv-retirada-payment-state{grid-column:1/-1}.pdv-order-retirada .pdv-print-icon{grid-column:1}.pdv-order-retirada .pdv-order-actions>[data-order-action="add"]{grid-column:2}.pdv-print-icon{flex:0 0 42px!important;width:42px;padding:8px!important;font-size:18px!important;line-height:1}.pdv-delivery-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}.pdv-delivery-field label{display:block;margin:7px 0 5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase}.pdv-delivery-field label:first-child{margin-top:0}.pdv-delivery-field textarea,.pdv-delivery-field select{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-delivery-field textarea{min-height:66px;resize:vertical}.pdv-delivery-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-delivery-field small strong{color:#ffd0b4}
+  .pdv-customer-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}
+  .pdv-customer-field label{display:block;margin-bottom:5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+  .pdv-customer-field>div{display:flex;gap:6px}.pdv-customer-field input{min-width:0;flex:1;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-customer-field input::placeholder{color:#9f9187}.pdv-customer-field button{padding:8px 10px;border:1px solid #ff9b72;border-radius:7px;background:#ff5a1f;color:#fff;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-customer-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-customer-field small strong{color:#ffd0b4}
+</style>
 </head>
       <body>
 ===============================================
@@ -8417,6 +8423,7 @@ function addItemToCart(item, qty, addons){
         ((addons || [])).forEach(group => { ((group.selected || [])).forEach(addon => { const originalGroup = addonGroups.find(g => g.id === group.groupId); const originalAddon = originalGroup ? originalGroup.addons.find(a => a.id === addon.addonId) : null; totalAddons += (originalAddon ? originalAddon.price : 0) * addon.qty; }); });
         cartItem.totalPrice = (salePrice + totalAddons) * qty;
         pdvCartState.items.push(cartItem);
+        window.syncProfessionalPdvDraftFromState?.();
         renderPDVCart();
         closeModal();
         return;
@@ -8859,12 +8866,17 @@ async function finalizePDVOrder(clientName = "") {
         retirada: "Retirada no balcão (PDV)",
         delivery: "Delivery (PDV)"
       }[serviceType] || "Atendimento no local (PDV)";
-      const tableLabel = serviceType === "mesa" ? getPdvTableLabel(pdvCartState.tableId, clientName) : '';
+      const tableLabel = serviceType === "mesa" ? (pdvCartState.tableLabel || getPdvTableLabel(pdvCartState.tableId, clientName)) : '';
+      const paidImmediately = Boolean(pdvCartState.finalizeAsDelivered);
+      const orderCreatedAt = new Date().toISOString();
       orderToSave = {
         userId: "pdv_" + pdvCartState.tableId,
         userName: serviceType === "mesa" ? tableLabel : (clientName || serviceLabel),
         ...(serviceType === "mesa" ? { tableName: tableLabel } : {}),
-        address: serviceLabel,
+        address: serviceType === 'delivery' ? (pdvCartState.deliveryAddress || serviceLabel) : serviceLabel,
+        deliveryAddress: serviceType === 'delivery' ? (pdvCartState.deliveryAddress || '') : '',
+        motoboyId: serviceType === 'delivery' ? (pdvCartState.motoboyId || '') : '',
+        motoboyName: serviceType === 'delivery' ? (pdvCartState.motoboyName || '') : '',
         deliveryAreaId: null,
         deliveryAreaName: "PDV",
         deliveryFee: 0,
@@ -8901,12 +8913,14 @@ async function finalizePDVOrder(clientName = "") {
         paymentMethod: pdvCartState.paymentMethod || "pdv",
         serviceType: serviceType,
         changeNeeded: 0,
-        status: "pending",
-        createdAt: new Date().toISOString(),
-        acceptanceStartedAt: new Date().toISOString(),
+        status: paidImmediately ? "delivered" : "pending",
+        paymentStatus: paidImmediately ? "paid" : "pending",
+        paidAt: paidImmediately ? orderCreatedAt : null,
+        deliveredAt: paidImmediately ? orderCreatedAt : null,
+        createdAt: orderCreatedAt,
+        acceptanceStartedAt: orderCreatedAt,
         acceptanceDeadlineAt: new Date(Date.now() + ORDER_ACCEPTANCE_TIMEOUT_MS).toISOString(),
-        pdvTable: pdvCartState.tableId,
-        tableId: pdvCartState.tableId,
+        ...(serviceType === "mesa" ? { pdvTable: pdvCartState.tableId, tableId: pdvCartState.tableId } : {}),
         waiterId: window.__garcomSession?.id || '',
         waiterName: window.__garcomSession?.name || '',
         source: window.__garcomSession ? 'garcom' : 'pdv'
@@ -13384,6 +13398,14 @@ ${totalComandas > 0 ? `<div class="footer-line"><span>Comandas Avulsas:</span><s
 
 
 window.__professionalPdvBridge = {
+  markPdvOrderDelivered: async (orderId, paymentMethod) => {
+    const order = orders.find(item => String(item.id) === String(orderId));
+    const changedAt = new Date().toISOString();
+    const patch = { status:'delivered', paymentStatus:'paid', paidAt:changedAt, deliveredAt:changedAt, updatedAt:changedAt, paymentMethod, payment:{...(order?.payment || {}), method:paymentMethod, status:'paid', paidAt:changedAt} };
+    if (window.updateDoc && window.doc && window.db) await window.updateDoc(window.doc(window.db, 'orders', String(orderId)), patch);
+    if (order) Object.assign(order, patch);
+    return true;
+  },
   getData: () => DATA,
   getOrders: () => orders,
   getPdvState: () => pdvCartState,
@@ -14499,373 +14521,199 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
 </script>
 
 
+<style id="pdv-product-card-reform">
+  .pdv-pro-products{grid-template-columns:repeat(3,minmax(170px,1fr));gap:12px}
+  .pdv-pro-product{display:flex;flex-direction:column;min-height:0;height:100%;padding:0!important;border-radius:10px;text-transform:none;background:linear-gradient(145deg,#28231e,#191816);text-align:left}
+  .pdv-pro-product:after{display:none}.pdv-pro-product-image{width:100%;height:132px;margin:0!important;border:0!important;border-radius:9px 9px 0 0!important;object-fit:cover;background:#161513}.pdv-pro-product-body{display:flex;flex:1;flex-direction:column;gap:6px;padding:11px 12px 12px}.pdv-pro-product h5{max-width:none!important;margin:0!important;font-size:17px!important;line-height:1.08!important;text-transform:none!important}.pdv-pro-product p{min-height:28px;margin:0!important;font-size:10px!important;line-height:1.35!important}.pdv-pro-product .product-promo-badge{align-self:flex-start}.pdv-pro-product-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:7px}.pdv-pro-product-footer b{position:static!important;color:#ff9b72;font-size:13px!important}.pdv-pro-add{display:inline-flex;align-items:center;justify-content:center;padding:6px 8px;border-radius:6px;background:#ff5a1f;color:#fff;font:700 9px 'IBM Plex Mono',monospace}.pdv-pro-product:hover .pdv-pro-add{filter:brightness(1.1)}
+  @media(max-width:1100px){.pdv-pro-products{grid-template-columns:repeat(2,minmax(170px,1fr))}}
+  @media(max-width:560px){.pdv-pro-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pdv-pro-product-image{height:94px}.pdv-pro-product-body{padding:9px}.pdv-pro-product h5{font-size:15px!important}.pdv-pro-product p{font-size:9px!important}.pdv-pro-add{padding:5px 6px;font-size:8px}}
+</style>
+<style id="pdv-clarity-reform">
+  .pdv-pro-channel-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+  .pdv-pro-channel{display:flex;align-items:center;gap:9px;min-width:0;padding:10px 11px;border:1px solid rgba(246,232,214,.12);border-radius:9px;background:rgba(255,255,255,.035);color:#b9aca1;text-align:left;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}
+  .pdv-pro-channel:hover{transform:translateY(-1px);border-color:rgba(255,155,114,.38)}.pdv-pro-channel.active{border-color:rgba(255,155,114,.7);background:rgba(255,90,31,.13);color:#fff}
+  .pdv-pro-channel-icon{display:grid;flex:0 0 28px;width:28px;height:28px;place-items:center;border-radius:7px;background:rgba(255,255,255,.07);font-size:15px}.pdv-pro-channel.active .pdv-pro-channel-icon{background:rgba(255,155,114,.2);color:#ffb18d}
+  .pdv-pro-channel strong,.pdv-pro-channel small{display:block}.pdv-pro-channel strong{font-size:11px;color:inherit}.pdv-pro-channel small{margin-top:3px;color:#92867c;font-size:9px;line-height:1.25}.pdv-pro-channel.active small{color:#cbb8aa}
+  .pdv-pro-current-context{display:flex;align-items:center;gap:10px;margin:10px 0;padding:10px 12px;border:1px solid rgba(255,155,114,.2);border-radius:9px;background:rgba(255,155,114,.055)}.pdv-pro-context-mark{display:grid;flex:0 0 27px;width:27px;height:27px;place-items:center;border-radius:50%;background:#ff5a1f;color:#fff;font:700 9px 'IBM Plex Mono',monospace}.pdv-pro-current-context strong,.pdv-pro-current-context small{display:block}.pdv-pro-current-context strong{color:#f5e9df;font-size:12px}.pdv-pro-current-context small{margin-top:3px;color:#a99b90;font-size:10px}.pdv-pro-context-change{margin-left:auto;border:0;background:transparent;color:#ffae8d;font:700 10px 'IBM Plex Mono',monospace;cursor:pointer}.pdv-pro-cart-context-label{display:block;margin-top:3px;color:#8f8278;font:500 9px 'IBM Plex Mono',monospace;text-transform:none}
+  .pdv-pro-channel-note{display:flex;align-items:flex-start;gap:7px;flex-direction:column;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.035)}.pdv-pro-channel-note.hidden{display:none}.pdv-pro-channel-note strong{color:#ffb18d;font-size:12px}.pdv-pro-channel-note span{color:#d8c9bd;font-size:11px}.pdv-pro-channel-note small{color:#95887d;font-size:10px;line-height:1.4}.pdv-pro-tables-hidden{display:none!important}
+  .pdv-pro-customer-modal{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:16px;background:rgba(10,8,7,.72)}.pdv-pro-customer-dialog{width:min(390px,100%);padding:18px;border:1px solid rgba(255,155,114,.28);border-radius:12px;background:linear-gradient(145deg,#2b2521,#1c1917);box-shadow:0 18px 48px rgba(0,0,0,.45);color:#eee5da}.pdv-pro-customer-dialog h3{margin:0;color:#fff;font-size:18px}.pdv-pro-customer-dialog p{margin:6px 0 14px;color:#aa9d91;font-size:11px;line-height:1.4}.pdv-pro-customer-dialog label{display:block;margin-bottom:5px;color:#cbbcaf;font-size:10px}.pdv-pro-customer-dialog input{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(255,255,255,.16);border-radius:7px;background:#171513;color:#fff;font-size:13px}.pdv-pro-customer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.pdv-pro-customer-actions button{padding:9px 11px;border:1px solid rgba(255,255,255,.14);border-radius:7px;background:#302a25;color:#eee5da;cursor:pointer;font-size:10px}.pdv-pro-customer-actions button.primary{border-color:rgba(255,155,114,.45);background:#ff5a1f;color:#fff}
+  .pdv-pro-finish{min-height:42px!important}.pdv-pro-finish:focus,.pdv-pro-context-change:focus,.pdv-pro-channel:focus{outline:2px solid rgba(255,155,114,.65);outline-offset:2px}
+  @media(max-width:760px){.pdv-pro-channel-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.pdv-pro-channel{padding:9px}.pdv-pro-current-context{align-items:flex-start}.pdv-pro-context-change{font-size:9px}}
+  @media(max-width:430px){.pdv-pro-channel small{display:none}.pdv-pro-channel-icon{flex-basis:24px;width:24px;height:24px}.pdv-pro-current-context{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px}.pdv-pro-context-change{grid-column:2;margin-left:0;text-align:left}}
+</style>
+<style id="pdv-kanban-payment-visibility">
+  .pdv-payment-options button{display:flex!important;align-items:center!important;justify-content:center!important;min-height:52px!important;visibility:visible!important;opacity:1!important;background:#302923!important;color:#f4e8dc!important;border:1px solid rgba(246,232,214,.24)!important;border-radius:8px!important;font:700 12px Manrope,Arial,sans-serif!important;cursor:pointer!important}
+  .pdv-kanban-primary[data-pay]{display:block!important;visibility:visible!important;min-height:42px!important;background:#ff5a1f!important;color:#fff!important;border:1px solid #ff9b72!important;border-radius:8px!important;font:700 12px Manrope,Arial,sans-serif!important}
+  .pdv-payment-options button:hover,.pdv-payment-options button.active{background:rgba(255,90,31,.2)!important;border-color:#ff5a1f!important;color:#fff!important}
+  .pdv-table-new{border-color:rgba(255,155,114,.4)!important;background:rgba(255,90,31,.12)!important}
+</style>
+<style id="pdv-kanban-styles">
+  .pdv-kanban{--pk-bg:#171513;--pk-panel:#211d1a;--pk-panel2:#28221e;--pk-line:rgba(246,232,214,.12);--pk-text:#f4e8dc;--pk-muted:#a99b90;--pk-orange:#ff5a1f;max-width:1500px;margin:0 auto;padding:18px;color:var(--pk-text);font-family:Manrope,Arial,sans-serif}.pdv-kanban-main-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}.pdv-kanban-main-head small,.pdv-kanban-column>header small,.pdv-dialog-head small,.pdv-catalog-head small{color:#ffae8d;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.08em}.pdv-kanban-main-head h2{margin:5px 0 4px;font-size:28px;letter-spacing:-.02em}.pdv-kanban-main-head p{margin:0;color:var(--pk-muted);font-size:12px}.pdv-kanban-status{padding:8px 10px;border:1px solid rgba(255,155,114,.25);border-radius:7px;color:#ffb18d;font:700 10px 'IBM Plex Mono',monospace;white-space:nowrap}.pdv-kanban-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}.pdv-kanban-column{min-width:0;min-height:420px;border:1px solid var(--pk-line);border-radius:11px;background:linear-gradient(145deg,rgba(39,34,30,.96),rgba(24,21,19,.98));overflow:hidden}.pdv-kanban-column>header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border-bottom:1px solid var(--pk-line);background:rgba(255,255,255,.025)}.pdv-kanban-column>header>div{display:flex;align-items:center;gap:9px}.pdv-kanban-column h3{margin:2px 0 0;font-size:15px}.pdv-kanban-icon{display:grid;width:29px;height:29px;place-items:center;border-radius:8px;background:rgba(255,90,31,.14);color:#ffad88;font-size:16px}.pdv-kanban-add{display:grid;width:30px;height:30px;place-items:center;border:1px solid rgba(255,155,114,.4);border-radius:7px;background:rgba(255,90,31,.12);color:#ffb18d;font-size:22px;line-height:1;cursor:pointer}.pdv-kanban-add:hover{background:var(--pk-orange);color:#fff}.pdv-kanban-column-body{display:grid;gap:9px;padding:10px}.pdv-kanban-empty{display:grid;min-height:160px;place-items:center;padding:16px;border:1px dashed rgba(246,232,214,.16);border-radius:8px;color:#b5a79b;text-align:center;font-size:11px;line-height:1.5}.pdv-kanban-empty span{color:#7f746b}.pdv-kanban-empty.next{color:#96887d}.pdv-kanban-order{border:1px solid rgba(246,232,214,.13);border-radius:9px;background:rgba(255,255,255,.035);overflow:hidden}.pdv-kanban-order>header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid var(--pk-line)}.pdv-kanban-order h3{margin:4px 0 0;font-size:14px}.pdv-kanban-order header>span{color:#a99b90;font:700 9px 'IBM Plex Mono',monospace}.pdv-order-items{display:grid;gap:5px;padding:10px;color:#d9cbbf;font-size:11px}.pdv-order-items>div{display:flex;justify-content:space-between;gap:8px}.pdv-order-item>div{min-width:0}.pdv-order-items small{display:block;margin-top:3px;color:#a99b90;font-size:9px;line-height:1.3}.pdv-order-items b{color:#ffb18d;font-size:10px;white-space:nowrap}.pdv-order-items p{margin:0;color:#8f8279;font-size:10px}.pdv-kanban-order>footer{padding:10px;border-top:1px solid var(--pk-line)}.pdv-kanban-order>footer>strong{display:block;margin-bottom:8px;color:#fff;font-size:19px}.pdv-order-actions{display:grid;gap:5px}.pdv-order-actions button,.pdv-kanban-primary{min-height:33px;padding:7px 8px;border:1px solid rgba(246,232,214,.15);border-radius:6px;background:#302923;color:#eaded3;font:700 9px 'IBM Plex Mono',monospace;cursor:pointer}.pdv-order-actions button:first-child,.pdv-kanban-primary{border-color:transparent;background:var(--pk-orange);color:#fff}.pdv-order-actions button:hover,.pdv-kanban-primary:hover{filter:brightness(1.08)}.pdv-kanban-overlay{position:fixed;inset:0;z-index:1300;display:grid;place-items:center;padding:18px;background:rgba(7,6,5,.78)}.pdv-kanban-dialog{width:min(520px,100%);max-height:min(88vh,760px);overflow:auto;padding:18px;border:1px solid rgba(255,155,114,.3);border-radius:13px;background:linear-gradient(145deg,#29231f,#191714);box-shadow:0 22px 70px rgba(0,0,0,.58)}.pdv-dialog-head,.pdv-catalog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.pdv-dialog-head h3,.pdv-catalog-head h3{margin:5px 0 3px;font-size:21px}.pdv-dialog-head p,.pdv-catalog-head p,.pdv-info-dialog>p{margin:0;color:var(--pk-muted);font-size:11px;line-height:1.45}.pdv-dialog-head button{width:28px;height:28px;border:1px solid var(--pk-line);border-radius:6px;background:transparent;color:#d7c8bd;font-size:20px;cursor:pointer}.pdv-table-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.pdv-table-picker button{display:grid;gap:5px;padding:13px;border:1px solid var(--pk-line);border-radius:8px;background:#302923;color:#f4e8dc;text-align:left;cursor:pointer}.pdv-table-picker button:hover{border-color:var(--pk-orange);background:rgba(255,90,31,.12)}.pdv-table-picker span{color:#98c795;font:9px 'IBM Plex Mono',monospace}.pdv-kanban-primary{width:100%;margin-top:15px;min-height:40px}.pdv-kanban-primary:disabled{opacity:.45;cursor:not-allowed}.pdv-kanban-secondary{width:100%;margin-top:8px;min-height:36px;border:1px solid var(--pk-line);border-radius:7px;background:transparent;color:#b9aca1;font:700 10px 'IBM Plex Mono',monospace;cursor:pointer}.pdv-payment-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pdv-payment-options button{min-height:48px;border:1px solid var(--pk-line);border-radius:8px;background:#302923;color:#ded2c8;font-size:11px;font-weight:700;cursor:pointer}.pdv-payment-options button.active{border-color:var(--pk-orange);background:rgba(255,90,31,.16);color:#ffb18d}.pdv-kanban-catalog{width:min(1050px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow:auto;padding:18px;border:1px solid rgba(255,155,114,.3);border-radius:13px;background:linear-gradient(145deg,#29231f,#191714);box-shadow:0 22px 70px rgba(0,0,0,.58)}.pdv-kanban:has(.pdv-kanban-catalog){position:relative}.pdv-kanban-catalog{position:fixed;z-index:1250;top:50%;left:50%;transform:translate(-50%,-50%)}.pdv-kanban-catalog:before{content:'';position:fixed;inset:-100vh;background:rgba(7,6,5,.78);z-index:-1}.pdv-catalog-head{align-items:center}.pdv-kanban-close{min-height:36px;padding:0 11px;border:1px solid rgba(255,155,114,.38);border-radius:7px;background:rgba(255,90,31,.13);color:#ffb18d;font:700 9px 'IBM Plex Mono',monospace;cursor:pointer}.pdv-catalog-categories{display:flex;gap:6px;overflow:auto;margin-bottom:12px}.pdv-catalog-categories span{padding:6px 9px;border:1px solid var(--pk-line);border-radius:5px;color:#bcaea2;font:9px 'IBM Plex Mono',monospace;white-space:nowrap}.pdv-kanban-products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.pdv-kanban-product{display:flex;min-width:0;flex-direction:column;padding:0;border:1px solid var(--pk-line);border-radius:9px;background:#28221e;color:#f4e8dc;text-align:left;overflow:hidden;cursor:pointer}.pdv-kanban-product:hover{border-color:var(--pk-orange);transform:translateY(-1px)}.pdv-kanban-product img{width:100%;height:115px;object-fit:cover;background:#151311}.pdv-kanban-product>div{display:flex;min-height:112px;flex-direction:column;gap:5px;padding:9px}.pdv-kanban-product h4{margin:0;font-size:14px}.pdv-kanban-product p{display:-webkit-box;min-height:27px;margin:0;overflow:hidden;color:#a99b90;font-size:10px;line-height:1.35;-webkit-box-orient:vertical;-webkit-line-clamp:2}.pdv-kanban-product strong{margin-top:auto;color:#ff9b72;font-size:13px}.pdv-kanban-product em{align-self:flex-start;padding:3px 5px;border-radius:4px;background:rgba(255,90,31,.16);color:#ffb18d;font:700 8px 'IBM Plex Mono',monospace;font-style:normal}.pdv-empty{grid-column:1/-1;padding:35px;color:var(--pk-muted);text-align:center}
+  @media(max-width:1100px){.pdv-kanban-board{grid-template-columns:repeat(2,minmax(0,1fr))}.pdv-kanban-products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:650px){.pdv-kanban{padding:10px}.pdv-kanban-main-head{align-items:flex-start;flex-direction:column}.pdv-kanban-main-head h2{font-size:23px}.pdv-kanban-board{grid-template-columns:1fr}.pdv-table-picker{grid-template-columns:repeat(2,minmax(0,1fr))}.pdv-kanban-products{grid-template-columns:repeat(2,minmax(0,1fr))}.pdv-kanban-product img{height:92px}.pdv-catalog-head{align-items:flex-start;flex-direction:column}}
+</style>
 <script id="pdv-professional-cycle-shell">
 (() => {
-  const state = {
-    channel: 'mesa',
-    tableId: null,
-    tableLabel: '',
-    existingOrderId: null,
-    search: '',
-    category: '__all__',
-    payment: 'pix',
-    customerName: '',
-    coupon: '',
-    discount: 0,
-    draftKey: null,
-    restoredSession: false,
-    sentItems: []
-  };
-
-  const PDV_DRAFTS_KEY = 'brasa_pdv_professional_drafts_v2';
-  const PDV_ACTIVE_DRAFT_KEY = 'brasa_pdv_professional_active_v2';
-
-  const api = () => window.__professionalPdvBridge;
+  'use strict';
+  const STORAGE_KEY = 'brasa_pdv_kanban_v1';
   const root = () => document.getElementById('professionalPdvRoot');
-  const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
-  const money = value => api()?.formatBRL ? api().formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.', ',')}`;
+  const api = () => window.__professionalPdvBridge;
   const data = () => api()?.getData?.() || null;
-  const pdv = () => api()?.getPdvState?.() || { items: [] };
-  const pdvItems = () => pdv().items || [];
-  const subtotal = () => pdvItems().reduce((total, item) => total + Number(item.totalPrice || 0), 0);
-  const cloneDraftValue = value => JSON.parse(JSON.stringify(value));
-  const readDrafts = () => {
-    try { return JSON.parse(localStorage.getItem(PDV_DRAFTS_KEY) || '{}') || {}; }
-    catch (_) { return {}; }
-  };
-  const writeDrafts = drafts => localStorage.setItem(PDV_DRAFTS_KEY, JSON.stringify(drafts));
-  const getDraftKey = (channel, tableId) => channel === 'mesa' ? `mesa:${tableId}` : `canal:${channel}`;
-  const getDraftItemCount = draft => (draft?.items || []).reduce((sum, item) => sum + Number(item.qty || 0), 0);
+  const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+  const money = value => api()?.formatBRL ? api().formatBRL(Number(value || 0)) : `R$ ${Number(value || 0).toFixed(2).replace('.', ',')}`;
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const channels = ['mesa','balcao','retirada','delivery'];
+  const labels = { mesa:'Mesa', balcao:'Balcão', retirada:'Retirada', delivery:'Delivery' };
+  const icons = { mesa:'⌂', balcao:'▣', retirada:'▤', delivery:'⌖' };
+  const state = { drafts: { mesa:[], balcao:[], retirada:[], delivery:[] }, activeKey:null, catalogKey:null, restored:false };
 
-  function saveActiveDraft(){
-    const bridge = api();
-    if(!bridge || !state.draftKey || !state.tableId) return;
-    const drafts = readDrafts();
-    const current = bridge.getPdvState() || { items: [] };
-    drafts[state.draftKey] = {
-      channel: state.channel,
-      tableId: state.tableId,
-      tableLabel: state.tableLabel,
-      existingOrderId: state.existingOrderId,
-      payment: state.payment,
-      customerName: state.customerName,
-      coupon: state.coupon,
-      discount: state.discount,
-      items: cloneDraftValue(current.items || []),
-      sentItems: cloneDraftValue(state.sentItems || []),
-      savedAt: Date.now()
-    };
-    writeDrafts(drafts);
-    localStorage.setItem(PDV_ACTIVE_DRAFT_KEY, state.draftKey);
+  function readStore(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {}; } catch (_) { return {}; } }
+  function saveStore(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.drafts)); }
+  function restore(){
+    if(state.restored) return;
+    state.restored = true;
+    const stored = readStore();
+    channels.forEach(channel => { if(Array.isArray(stored[channel])) state.drafts[channel] = stored[channel]; });
   }
-
-  function loadDraft(draftKey){
-    const bridge = api();
-    const draft = readDrafts()[draftKey];
-    if(!bridge || !draft) return false;
-    state.channel = draft.channel;
-    state.tableId = draft.tableId;
-    state.tableLabel = draft.tableLabel;
-    state.existingOrderId = draft.existingOrderId || null;
-    state.payment = draft.payment || 'pix';
-    state.customerName = draft.customerName || '';
-    state.coupon = draft.coupon || '';
-    state.discount = Number(draft.discount || 0);
-    state.draftKey = draftKey;
-    state.sentItems = cloneDraftValue(draft.sentItems || []);
-    localStorage.setItem(PDV_ACTIVE_DRAFT_KEY, draftKey);
-    bridge.setPdvState({
-      tableId: state.tableId,
-      items: cloneDraftValue(draft.items || []),
-      existingOrderId: state.existingOrderId,
-      paymentMethod: state.payment,
-      serviceType: state.channel,
-      discount: state.discount
-    });
-    bridge.setPdvMode(true);
-    return true;
+  function itemTotal(items){ return (items || []).reduce((sum,item) => sum + Number(item.totalPrice || 0), 0); }
+  function itemCount(items){ return (items || []).reduce((sum,item) => sum + Number(item.qty || 0), 0); }
+  function getDraft(channel, key){ return state.drafts[channel]?.find(draft => draft.key === key) || null; }
+  function activeDraft(){
+    if(!state.activeKey) return null;
+    for(const channel of channels){ const found = getDraft(channel, state.activeKey); if(found) return found; }
+    return null;
   }
-
-  function clearDraftForTable(tableId){
-    const draftKey = getDraftKey('mesa', tableId);
-    const drafts = readDrafts();
-    delete drafts[draftKey];
-    writeDrafts(drafts);
-    if(localStorage.getItem(PDV_ACTIVE_DRAFT_KEY) === draftKey) localStorage.removeItem(PDV_ACTIVE_DRAFT_KEY);
-    if(state.draftKey === draftKey){
-      state.tableId = null;
-      state.tableLabel = '';
-      state.existingOrderId = null;
-      state.customerName = '';
-      state.coupon = '';
-      state.discount = 0;
-      state.draftKey = null;
-      state.sentItems = [];
-      api()?.setPdvState({ tableId: null, items: [], existingOrderId: null, paymentMethod: state.payment, serviceType: 'mesa', discount: 0 });
-    }
+  function availableTables(){ return data()?.restaurant?.tables || []; }
+  function tableIsBusy(table){ return Boolean(table.orderId) || state.drafts.mesa.some(draft => draft.tableId === table.id); }
+  function newDraft(channel, tableId='', tableLabel=''){
+    const key = `${channel}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+    const draft = { key, channel, tableId, tableLabel, items:[], createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), customerName:'' };
+    state.drafts[channel].push(draft); state.activeKey = key; saveStore(); return draft;
   }
-
-  function clearDraftForOrder(orderId){
-    const drafts = readDrafts();
-    const keys = Object.entries(drafts).filter(([, draft]) => draft.existingOrderId === orderId).map(([key]) => key);
-    if(!keys.length) return;
-    keys.forEach(key => delete drafts[key]);
-    writeDrafts(drafts);
-    if(keys.includes(localStorage.getItem(PDV_ACTIVE_DRAFT_KEY))) localStorage.removeItem(PDV_ACTIVE_DRAFT_KEY);
-    if(keys.includes(state.draftKey)){
-      state.tableId = null;
-      state.tableLabel = '';
-      state.existingOrderId = null;
-      state.customerName = '';
-      state.coupon = '';
-      state.discount = 0;
-      state.draftKey = null;
-      state.sentItems = [];
-      api()?.setPdvState({ tableId: null, items: [], existingOrderId: null, paymentMethod: state.payment, serviceType: state.channel, discount: 0 });
-    }
+  function setPdvDraft(draft){
+    api()?.setPdvMode(true);
+    api()?.setPdvState({ tableId: draft.channel === 'mesa' ? draft.tableId : draft.key, tableLabel: draft.tableLabel || '', items: clone(draft.items || []), existingOrderId:null, paymentMethod:'cash', serviceType:draft.channel, discount:0, finalizeAsDelivered:false });
   }
-
-  function restoreLastDraft(){
-    if(state.restoredSession) return;
-    state.restoredSession = true;
-    const draftKey = localStorage.getItem(PDV_ACTIVE_DRAFT_KEY);
-    if(draftKey) loadDraft(draftKey);
+  function syncDraftFromPdv(draft){
+    const current = api()?.getPdvState?.();
+    const pdvIdentity = draft.channel === 'mesa' ? draft.tableId : draft.key;
+    if(current?.tableId === pdvIdentity) draft.items = clone(current.items || []);
+    draft.updatedAt = new Date().toISOString(); saveStore();
   }
-  const serviceLabel = () => {
-    if (!state.tableId) return 'Novo atendimento';
-    if (state.channel === 'mesa') return state.tableLabel || 'Mesa';
-    if (state.channel === 'retirada') return 'Retirada';
-    if (state.channel === 'delivery') return 'Delivery';
-    return 'Balcão';
-  };
-
-  const categories = () => {
-    const result = [{ id: '__all__', name: 'Todos' }];
-    (data()?.categories || []).forEach(category => result.push({ id: String(category.id ?? category.name), name: category.name || category.label || 'Categoria' }));
-    return result;
-  };
-
-  const couponDiscount = currentSubtotal => {
-    const code = state.coupon.trim().toUpperCase();
-    if (!code) return 0;
-    const coupons = data()?.restaurant?.coupons || data()?.coupons || [];
-    const coupon = coupons.find(item => String(item.code || '').toUpperCase() === code && item.active !== false && item.enabled !== false);
-    if (!coupon) return 0;
-    const value = Number(coupon.value ?? coupon.discount ?? coupon.amount ?? 0);
-    const type = String(coupon.type || '').toLowerCase();
-    return ['percent', 'percentage', 'percentual'].includes(type) ? currentSubtotal * (value > 1 ? value / 100 : value) : Math.min(value, currentSubtotal);
-  };
-
-  function activateDraft(channel, tableId, tableLabel, existingOrderId = null) {
-    const bridge = api();
-    if(!bridge) return;
-    saveActiveDraft();
-    const draftKey = getDraftKey(channel, tableId);
-    if(loadDraft(draftKey)) { render(); return; }
-    state.channel = channel;
-    state.tableId = tableId;
-    state.tableLabel = tableLabel;
-    state.existingOrderId = existingOrderId;
-    state.payment = 'pix';
-    state.customerName = '';
-    state.coupon = '';
-    state.discount = 0;
-    state.draftKey = draftKey;
-    const existingOrder = existingOrderId ? (api()?.getOrders?.() || []).find(order => order.id === existingOrderId) : null;
-    state.sentItems = cloneDraftValue(existingOrder?.items || []);
-    bridge.setPdvState({ tableId, items: [], existingOrderId, paymentMethod: state.payment, serviceType: channel, discount: 0 });
-    bridge.setPdvMode(true);
-    saveActiveDraft();
-    render();
+  function openCatalog(draft){
+    state.activeKey = draft.key;
+    syncDraftFromPdv(draft); setPdvDraft(draft); state.catalogKey = draft.key; render();
   }
-
-  function start(channel) {
-    if(channel === 'mesa') {
-      saveActiveDraft();
-      state.channel = 'mesa';
-      state.tableId = null;
-      state.tableLabel = '';
-      state.existingOrderId = null;
-      state.draftKey = null;
-      const bridge = api();
-      bridge?.setPdvState({ tableId: null, items: [], existingOrderId: null, paymentMethod: state.payment, serviceType: 'mesa', discount: 0 });
-      render();
-      return;
-    }
-    const labels = { balcao: 'Balcão', retirada: 'Retirada', delivery: 'Delivery' };
-    activateDraft(channel, `${channel}_principal`, labels[channel] || 'Atendimento');
+  function closeCatalog(){
+    const draft = activeDraft(); if(draft) syncDraftFromPdv(draft);
+    state.catalogKey = null; api()?.setPdvMode(false); render();
   }
-
-  function openTable(tableId, existingOrderId = null) {
-    const table = (data()?.restaurant?.tables || []).find(item => item.id === tableId);
-    if(table) activateDraft('mesa', table.id, table.name || 'Mesa', existingOrderId || table.orderId || null);
+  function openNew(channel){
+    if(channel === 'retirada' || channel === 'delivery') { openCatalog(newDraft(channel, '', labels[channel])); return; }
+    if(channel === 'balcao') { openCatalog(newDraft('balcao')); return; }
+    if(channel === 'mesa') { const number = state.drafts.mesa.length + 1; const draft = newDraft('mesa', `mesa_pdv_${Date.now()}`, `Mesa ${number}`); openCatalog(draft); return; }
   }
-
-  function chooseChannel(channel) {
-    start(channel);
-  }
-
-  function addProduct(itemId) {
-    const bridge = api();
-    const item = bridge?.getItem?.(itemId);
-    if (!item) return;
-    if (!state.tableId && state.channel === 'mesa') {
-      alert('Selecione uma mesa no mapa antes de adicionar itens ao pedido.');
-      return;
-    }
-    if (!state.tableId) start('balcao');
-    bridge.setPdvMode(true);
-    if ((item.addonGroups || []).length) bridge.openModal(item, true);
-    else {
-      bridge.addItemToCart(item, 1, []);
-      saveActiveDraft();
-    }
-  }
-
-  function changeQuantity(index, delta) {
-    const bridge = api();
-    const current = bridge?.getPdvState?.();
-    const item = current?.items?.[index];
-    if (!item) return;
-    const nextQuantity = Number(item.qty || 1) + delta;
-    if (nextQuantity <= 0) current.items.splice(index, 1);
-    else {
-      const unit = Number(item.totalPrice || 0) / Number(item.qty || 1);
-      item.qty = nextQuantity;
-      item.totalPrice = unit * nextQuantity;
-    }
-    bridge.setPdvState(current);
-    saveActiveDraft();
-    render();
-  }
-
-  function setCustomer() {
-    const next = prompt('Nome do cliente (opcional):', state.customerName || '');
-    if (next !== null) { state.customerName = next.trim(); saveActiveDraft(); render(); }
-  }
-
-  function applyCoupon() {
-    state.discount = couponDiscount(subtotal());
-    if (state.coupon && state.discount <= 0) alert('Cupom não localizado ou indisponível nas configurações da loja.');
-    saveActiveDraft();
-    render();
-  }
-
-  async function sendToKitchen() {
-    const bridge = api();
-    if (!bridge?.getIsAdmin?.()) { alert('Apenas administradores podem enviar pedidos pelo PDV.'); return; }
-    if (!state.tableId) { alert('Selecione uma mesa ou inicie um atendimento de balcão, retirada ou delivery.'); return; }
-    if (!pdvItems().length) { alert('Adicione pelo menos um item à comanda.'); return; }
-    const current = bridge.getPdvState();
-    const sentNow = cloneDraftValue(current.items || []);
-    current.paymentMethod = state.payment;
-    current.serviceType = state.channel;
-    current.discount = state.discount;
-    bridge.setPdvState(current);
-    const orderId = await bridge.finalizePDVOrder(state.customerName);
-    if(!orderId) return;
-    state.existingOrderId = orderId;
-    state.sentItems = [...(state.sentItems || []), ...sentNow];
-    state.coupon = '';
-    state.discount = 0;
-    bridge.setPdvState({
-      tableId: state.tableId,
-      items: [],
-      existingOrderId: orderId,
-      paymentMethod: state.payment,
-      serviceType: state.channel,
-      discount: 0
-    });
-    saveActiveDraft();
-    render();
-  }
-
-  async function closeTable() {
-    const bridge = api();
-    if(state.channel !== 'mesa' || !state.tableId) { alert('O fechamento manual é exclusivo para mesas do salão.'); return; }
-    if(pdvItems().length) { alert('Há itens novos na comanda. Envie-os para a cozinha antes de fechar a mesa.'); return; }
-    const table = (data()?.restaurant?.tables || []).find(item => item.id === state.tableId);
-    const orderId = state.existingOrderId || table?.orderId;
-    if(!orderId) { alert('Envie os itens para a cozinha antes de fechar a mesa.'); return; }
-    state.existingOrderId = orderId;
-    const closed = await bridge.closeTableAccount(state.tableId);
-    if(closed) {
-      clearDraftForTable(state.tableId);
-      render();
-    }
-  }
-
-  async function addTable() {
-    const bridge = api();
-    const tables = data()?.restaurant?.tables || [];
-    const name = prompt('Nome da nova mesa:', `Mesa ${tables.length + 1}`);
-    if (!name) return;
-    data().restaurant.tables = tables;
-    tables.push({ id: Date.now().toString(), name, status: 'livre', pedidos: [] });
-    await bridge.saveMenuData();
-    render();
-  }
-
-  function render() {
-    restoreLastDraft();
-    const target = root();
+  async function addNewTable(){
+    const name = window.prompt('Nome da nova mesa:', `Mesa ${availableTables().length + 1}`);
+    if(!name || !name.trim()) return;
+    const table = { id:`pdv_table_${Date.now()}`, name:name.trim(), status:'livre', orderId:null, pedidos:[] };
     const storeData = data();
-    if (!target || !storeData) return;
-    const currentSubtotal = subtotal();
-    const liveDiscount = state.coupon ? couponDiscount(currentSubtotal) : state.discount;
-    state.discount = liveDiscount;
-    const total = Math.max(0, currentSubtotal - liveDiscount);
-    const sentSubtotal = (state.sentItems || []).reduce((sum, item) => sum + Number(item.totalPrice || 0), 0);
-    const canCloseCurrentTable = state.channel === 'mesa' && Boolean(state.tableId) && Boolean(state.existingOrderId);
-    const tables = storeData.restaurant?.tables || [];
-    const orders = api()?.getOrders?.() || [];
-    const activeTables = tables.filter(table => table.orderId).length;
-    const queue = orders.filter(order => ['pending', 'preparing', 'in_production'].includes(order.status)).length;
-    const items = (storeData.items || []).filter(item => {
-      const term = state.search.trim().toLowerCase();
-      return !item.isPaused && (state.category === '__all__' || String(item.category) === state.category) && (!term || `${item.name || ''} ${item.desc || ''} ${item.id || ''}`.toLowerCase().includes(term));
-    });
-    const cartItems = pdvItems();
-    const serviceActive = Boolean(state.tableId);
-    target.innerHTML = `
-      <section class="pdv-pro">
-        <header class="pdv-pro-header"><div><p class="pdv-pro-kicker">PDV profissional · atendimento integrado</p><h2 class="pdv-pro-title">Venda sem trocar de tela.</h2><p class="pdv-pro-subtitle">Comanda, cliente, pagamento e cozinha conectados ao mesmo pedido.</p></div><button class="pdv-pro-button primary" data-action="start" data-channel="balcao">+ Novo atendimento</button></header>
-        <div class="pdv-pro-metrics"><article class="pdv-pro-metric"><span>Comandas abertas</span><strong>${activeTables}</strong></article><article class="pdv-pro-metric"><span>Fila de cozinha</span><strong>${queue}</strong></article><article class="pdv-pro-metric"><span>Itens no atendimento</span><strong>${cartItems.reduce((sum,item) => sum + Number(item.qty || 0), 0)}</strong></article><article class="pdv-pro-metric"><span>Total atual</span><strong class="hot">${money(total)}</strong></article></div>
-        <div class="pdv-pro-rail"><div class="pdv-pro-step ${serviceActive ? '' : 'active'}"><i>01</i><div><strong>Atendimento</strong><span>${serviceActive ? escapeHtml(serviceLabel()) : 'Escolha o canal'}</span></div></div><div class="pdv-pro-step ${serviceActive ? 'active' : ''}"><i>02</i><div><strong>Itens</strong><span>${cartItems.length ? `${cartItems.length} linha(s) na comanda` : 'Monte o pedido'}</span></div></div><div class="pdv-pro-step"><i>03</i><div><strong>Pagamento</strong><span>${escapeHtml(state.payment.toUpperCase())} · ${money(total)}</span></div></div><div class="pdv-pro-step"><i>04</i><div><strong>Cozinha</strong><span>${cartItems.length ? 'Pronto para enviar' : 'Aguardando comanda'}</span></div></div></div>
-        <div class="pdv-pro-layout">
-          <section class="pdv-pro-stage"><div class="pdv-pro-toolbar"><label class="pdv-pro-search"><input id="professionalPdvSearch" value="${escapeHtml(state.search)}" placeholder="Busque por nome, ingrediente ou código"></label><div class="pdv-pro-channels">${[['balcao','Balcão'],['mesa','Mesa'],['retirada','Retirada'],['delivery','Delivery']].map(([id,label]) => `<button class="${state.channel === id ? 'active' : ''}" data-action="channel" data-channel="${id}">${label}</button>`).join('')}</div></div><nav class="pdv-pro-categories">${categories().map(category => `<button class="${state.category === category.id ? 'active' : ''}" data-action="category" data-category="${escapeHtml(category.id)}">${escapeHtml(category.name)}</button>`).join('')}</nav><div class="pdv-pro-products">${items.length ? items.map(item => { const productImage = item.img || window.blankSVG?.() || ''; return `<button class="pdv-pro-product" data-action="item" data-id="${escapeHtml(item.id)}"><img class="pdv-pro-product-image" src="${escapeHtml(productImage)}" alt="${escapeHtml(item.name || 'Produto')}" loading="lazy"><code>${escapeHtml(item.id)} · ${escapeHtml(item.category || 'item')}</code><h5>${escapeHtml(item.name)}</h5><p>${escapeHtml(item.desc || 'Item do cardápio')}</p>${window.getItemPromotion?.(item) ? `<span class="product-promo-badge">-${window.getItemPromotion(item).discountPercent}% OFF</span>` : ''}<b>${money(window.getItemSalePrice?.(item) ?? item.price)}</b></button>`; }).join('') : '<div class="pdv-pro-empty">Nenhum item encontrado com estes filtros.</div>'}</div></section>
-          <aside class="pdv-pro-cart"><div class="pdv-pro-cart-header"><div class="pdv-pro-cart-title">Comanda</div><span class="pdv-pro-cart-id">${escapeHtml(serviceActive ? serviceLabel().toUpperCase() : 'NOVA')}</span></div><div class="pdv-pro-context"><select id="professionalPdvServiceSelect" aria-label="Tipo de atendimento" style="min-height:33px;overflow:hidden;border:1px solid rgba(246,232,214,.09);border-radius:4px;padding:0 8px;background:#24211d;color:#c7baad;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600"><option value="mesa" ${state.channel === 'mesa' ? 'selected' : ''}>${escapeHtml(state.channel === 'mesa' && state.tableLabel ? state.tableLabel : 'Mesa / mapa')}</option><option value="balcao" ${state.channel === 'balcao' ? 'selected' : ''}>Balcão</option><option value="retirada" ${state.channel === 'retirada' ? 'selected' : ''}>Retirada</option><option value="delivery" ${state.channel === 'delivery' ? 'selected' : ''}>Delivery</option></select><button data-action="customer">${escapeHtml(state.customerName || 'Identificar cliente')}<span>⌄</span></button></div>${state.sentItems?.length ? `<div class="pdv-pro-total-row" style="margin:9px 14px 0;padding:8px 0;border-top:1px dashed rgba(246,232,214,.12);color:#8cc67d"><span>${state.sentItems.length} linha(s) já enviada(s)</span><span>${money(sentSubtotal)}</span></div>` : ''}<div class="pdv-pro-lines">${cartItems.length ? cartItems.map((item,index) => `<div class="pdv-pro-line"><div><h5>${escapeHtml(item.name)}</h5><p>${item.addons?.length ? 'Adicionais registrados na linha' : 'Sem adicionais'}</p><b>${money(item.totalPrice)}</b></div><div class="pdv-pro-qty"><button data-action="qty" data-index="${index}" data-delta="-1">−</button><span>${item.qty}</span><button data-action="qty" data-index="${index}" data-delta="1">+</button></div></div>`).join('') : '<div class="pdv-pro-lines-empty"><div><b>Comanda aguardando</b>Adicione novos itens ou feche a mesa quando a conta estiver concluída.</div></div>'}</div><div class="pdv-pro-summary"><div class="pdv-pro-coupon"><input id="professionalPdvCoupon" value="${escapeHtml(state.coupon)}" placeholder="CÓDIGO DO CUPOM"><button data-action="coupon">Aplicar</button></div><div class="pdv-pro-total-row"><span>Novos itens</span><span>${money(currentSubtotal)}</span></div>${liveDiscount > 0 ? `<div class="pdv-pro-total-row discount"><span>Desconto atual</span><span>− ${money(liveDiscount)}</span></div>` : ''}<div class="pdv-pro-total-row grand"><span>Total atual</span><strong>${money(sentSubtotal + total)}</strong></div><div class="pdv-pro-payments">${[['pix','PIX'],['credit','Crédito'],['debit','Débito'],['cash','Dinheiro']].map(([id,label]) => `<button class="${state.payment === id ? 'active' : ''}" data-action="payment" data-payment="${id}">${label}</button>`).join('')}</div><div style="display:grid;gap:6px"><button class="pdv-pro-button primary pdv-pro-finish" data-action="send-kitchen">Enviar itens à cozinha →</button>${canCloseCurrentTable ? '<button class="pdv-pro-button" data-action="close-table" style="min-height:38px;border-color:rgba(140,198,125,.55);background:rgba(140,198,125,.10);color:#b9e5ac">Fechar mesa e receber →</button>' : ''}</div><span class="pdv-pro-note">Enviar mantém a mesa aberta. Fechar confirma a conta e libera a mesa.</span></div></aside>
-        </div>
-        <section class="pdv-pro-tables"><div class="pdv-pro-section-head"><div><h5>Mapa de mesas</h5><p>Abra uma mesa livre ou continue uma comanda em andamento.</p></div><button class="pdv-pro-button" data-action="add-table">+ Mesa</button></div><div class="pdv-pro-table-grid">${tables.length ? tables.map(table => { const busy = Boolean(table.orderId); const order = busy ? orders.find(item => item.id === table.orderId) : null; return `<button class="pdv-pro-table ${busy ? 'busy' : 'free'}" data-action="table" data-table-id="${escapeHtml(table.id)}"><div class="top"><strong>${escapeHtml(table.name || 'Mesa')}</strong><em>${busy ? 'EM ATENDIMENTO' : 'LIVRE'}</em></div><small>${busy ? escapeHtml(order ? ((order.serviceType === 'mesa' || order.source === 'garcom') ? window.getPdvTableLabel(order.tableId ?? order.pdvTable, order.tableName || order.userName) : (order.userName || 'Comanda aberta')) : 'Comanda aberta') : 'Toque para abrir comanda'}</small></button>`; }).join('') : '<div class="pdv-pro-empty">Nenhuma mesa cadastrada. Adicione a primeira mesa para abrir comandas no salão.</div>'}</div></section>
-      </section>`;
-
-    target.querySelector('#professionalPdvSearch')?.addEventListener('input', event => { state.search = event.target.value; render(); });
-    target.querySelector('#professionalPdvCoupon')?.addEventListener('input', event => { state.coupon = event.target.value.toUpperCase(); state.discount = 0; saveActiveDraft(); });
-    target.querySelector('#professionalPdvServiceSelect')?.addEventListener('change', event => chooseChannel(event.target.value));
-    target.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', async event => {
-      const targetButton = event.currentTarget;
-      const action = targetButton.dataset.action;
-      if(action === 'start') start(targetButton.dataset.channel || 'balcao');
-      if(action === 'channel') chooseChannel(targetButton.dataset.channel || 'balcao');
-      if(action === 'category') { state.category = targetButton.dataset.category || '__all__'; render(); }
-      if(action === 'item') addProduct(targetButton.dataset.id);
-      if(action === 'qty') changeQuantity(Number(targetButton.dataset.index), Number(targetButton.dataset.delta));
-      if(action === 'payment') { state.payment = targetButton.dataset.payment || 'pix'; saveActiveDraft(); render(); }
-      if(action === 'coupon') applyCoupon();
-      if(action === 'customer') setCustomer();
-      if(action === 'table') openTable(targetButton.dataset.tableId);
-      if(action === 'add-table') await addTable();
-      if(action === 'send-kitchen') await sendToKitchen();
-      if(action === 'close-table') await closeTable();
-    }));
+    if(!storeData?.restaurant) return showInfo('Não foi possível acessar as configurações da loja.');
+    storeData.restaurant.tables = Array.isArray(storeData.restaurant.tables) ? storeData.restaurant.tables : [];
+    storeData.restaurant.tables.push(table);
+    try { await api()?.saveMenuData?.(); } catch(error) { return showInfo('Não foi possível salvar a nova mesa.'); }
+    removeOverlay(); openCatalog(newDraft('mesa', table.id, table.name));
   }
-
-  window.renderProfessionalPdv = () => { saveActiveDraft(); render(); };
-  window.openProfessionalPdvOrder = openTable;
-  window.clearProfessionalPdvDraftForTable = clearDraftForTable;
-  window.clearProfessionalPdvDraftForOrder = clearDraftForOrder;
-  window.addEventListener('beforeunload', saveActiveDraft);
-  document.addEventListener('DOMContentLoaded', () => setTimeout(render, 0));
+  function showTablePicker(tables){
+    removeOverlay();
+    const overlay=document.createElement('div'); overlay.className='pdv-kanban-overlay'; overlay.id='pdvTablePicker';
+    overlay.innerHTML=`<div class="pdv-kanban-dialog"><div class="pdv-dialog-head"><div><small>NOVA COMANDA</small><h3>Escolha a mesa</h3><p>A comanda será criada somente depois da seleção.</p></div><button type="button" data-close-overlay aria-label="Fechar">×</button></div><div class="pdv-table-picker">${tables.map(table=>`<button type="button" data-table-select="${escapeHtml(table.id)}"><strong>${escapeHtml(table.name || 'Mesa')}</strong><span>Mesa livre</span></button>`).join('')}<button type="button" class="pdv-table-new" data-new-table="true"><strong>+ Cadastrar mesa</strong><span>Criar uma nova mesa</span></button></div></div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click',event=>{
+      if(event.target===overlay || event.target.closest('[data-close-overlay]')) return removeOverlay();
+      if(event.target.closest('[data-new-table]')) return addNewTable();
+      const button=event.target.closest('[data-table-select]'); if(!button)return;
+      const table=tables.find(item=>String(item.id)===String(button.dataset.tableSelect)); if(!table)return;
+      removeOverlay(); openCatalog(newDraft('mesa', table.id, table.name || 'Mesa'));
+    });
+  }
+  function showInfo(message){
+    removeOverlay(); const overlay=document.createElement('div'); overlay.className='pdv-kanban-overlay'; overlay.innerHTML=`<div class="pdv-kanban-dialog pdv-info-dialog"><div class="pdv-dialog-head"><div><small>PDV</small><h3>Fluxo em preparação</h3></div><button type="button" data-close-overlay aria-label="Fechar">×</button></div><p>${escapeHtml(message)}</p><button type="button" class="pdv-kanban-primary" data-close-overlay>Entendi</button></div>`; document.body.appendChild(overlay); overlay.addEventListener('click',event=>{if(event.target===overlay||event.target.closest('[data-close-overlay]'))removeOverlay();});
+  }
+  function removeOverlay(){ document.querySelectorAll('.pdv-kanban-overlay').forEach(node=>node.remove()); }
+  function printDraft(draft){
+    syncDraftFromPdv(draft);
+    const items=(draft.items||[]).map(item=>`<div class="line"><span>${item.qty}x ${escapeHtml(item.name)}</span><b>${money(item.totalPrice)}</b></div>${(item.addons||[]).flatMap(group=>(group.selected||[]).filter(a=>a.qty>0).map(a=>`<small> + ${a.qty} adicional</small>`)).join('')}`).join('');
+    const win=window.open('','PDV_PRINT','width=420,height=700'); if(!win)return;
+    win.document.write(`<html><head><title>Comanda ${escapeHtml(draft.tableLabel || labels[draft.channel])}</title><style>body{font-family:monospace;font-size:12px;margin:12px}.center{text-align:center}.line{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #999;padding:5px 0}small{display:block;margin-left:12px}</style></head><body><div class="center"><b>COMANDA</b><br>${escapeHtml(draft.tableLabel || labels[draft.channel])}</div><hr>${items}<hr><div class="line"><b>Total</b><b>${money(itemTotal(draft.items))}</b></div><p>Emitido em ${new Date().toLocaleString('pt-BR')}</p></body></html>`); win.document.close(); win.focus(); win.print();
+  }
+  function openPayment(draft){
+    syncDraftFromPdv(draft); if(!draft.items?.length)return showInfo('Adicione pelo menos um produto antes de pagar.');
+    removeOverlay(); const overlay=document.createElement('div'); overlay.className='pdv-kanban-overlay'; overlay.innerHTML=`<div class="pdv-kanban-dialog"><div class="pdv-dialog-head"><div><small>FINALIZAR ${escapeHtml(labels[draft.channel].toUpperCase())}</small><h3>Pagamento da comanda</h3><p>Total: <strong>${money(itemTotal(draft.items))}</strong></p></div><button type="button" data-close-overlay aria-label="Fechar">×</button></div><div class="pdv-payment-options">${[['cash','Dinheiro'],['credit','Cartão de crédito'],['debit','Cartão de débito'],['pix','Pix']].map(([id,label])=>`<button type="button" data-payment="${id}">${label}</button>`).join('')}</div><button type="button" class="pdv-kanban-primary" data-pay disabled>${draft.channel === 'mesa' ? 'Fechar mesa e pagar' : 'Fechar balcão e pagar'}</button><button type="button" class="pdv-kanban-secondary" data-close-overlay>Cancelar</button></div>`; document.body.appendChild(overlay);
+    let selected=''; const payButton=overlay.querySelector('[data-pay]');
+    overlay.addEventListener('click',event=>{
+      if(event.target===overlay||event.target.closest('[data-close-overlay]'))return removeOverlay();
+      const option=event.target.closest('[data-payment]'); if(option){ selected=option.dataset.payment; overlay.querySelectorAll('[data-payment]').forEach(node=>node.classList.toggle('active',node===option)); payButton.disabled=false; payButton.textContent=`Pagar ${money(itemTotal(draft.items))}`; return; }
+      if(event.target.closest('[data-pay]')&&!payButton.disabled)finishPaid(draft,selected,overlay);
+    });
+  }
+  async function finishPaid(draft,payment,overlay){
+    const bridge=api(); if(!bridge?.finalizePDVOrder)return showInfo('A função de finalização do PDV não está disponível.');
+    bridge.setPdvState({tableId:draft.channel === 'mesa' ? draft.tableId : draft.key,tableLabel:draft.tableLabel || '',customerName:draft.customerName || '',deliveryAddress:draft.deliveryAddress || '',motoboyId:draft.motoboyId || '',motoboyName:draft.motoboyName || '',items:clone(draft.items),existingOrderId:null,paymentMethod:payment,serviceType:draft.channel,discount:0,finalizeAsDelivered:true});
+    const orderId=await bridge.finalizePDVOrder(draft.customerName || 'Atendimento PDV');
+    if(!orderId)return;
+    if(bridge.markPdvOrderDelivered) await bridge.markPdvOrderDelivered(orderId,payment);
+    state.drafts[draft.channel]=state.drafts[draft.channel].filter(item=>item.key!==draft.key); state.activeKey=null; state.catalogKey=null; saveStore(); overlay.remove(); api()?.setPdvMode(false); render();
+  }
+  function addMore(draft){ openCatalog(draft); }
+  function renderCatalog(draft){
+    const items=(data()?.items||[]).filter(item=>!item.isPaused); const categories=[{id:'__all__',name:'Todos'},...(data()?.categories||[]).map(c=>({id:String(c.id??c.name),name:c.name||c.label||'Categoria'}))];
+    return `<div class="pdv-kanban-catalog"><div class="pdv-catalog-head"><div><small>ADICIONAR ITENS · ${escapeHtml(draft.tableLabel||labels[draft.channel])}</small><h3>Escolha os produtos</h3><p>Selecione um card para personalizar adicionais.</p></div><button type="button" class="pdv-kanban-close" data-action="close-catalog">Concluir seleção</button></div><div class="pdv-catalog-categories">${categories.map(category=>`<span>${escapeHtml(category.name)}</span>`).join('')}</div><div class="pdv-kanban-products">${items.map(item=>{const image=item.img||window.blankSVG?.()||'';const promo=window.getItemPromotion?.(item);const price=window.getItemSalePrice?.(item)??item.price;return `<button type="button" class="pdv-kanban-product" data-product-id="${escapeHtml(item.id)}"><img src="${escapeHtml(image)}" alt="${escapeHtml(item.name||'Produto')}"><div><h4>${escapeHtml(item.name)}</h4>${promo?`<em>-${promo.discountPercent}% OFF</em>`:''}<p>${escapeHtml(item.desc||'Item do cardápio')}</p><strong>${money(price)}</strong></div></button>`;}).join('')||'<p class="pdv-empty">Nenhum produto disponível.</p>'}</div></div>`;
+  }
+  function addonDetails(item){
+    const original = (data()?.items || []).find(product => String(product.id) === String(item.itemId));
+    const lines = [];
+    (item.addons || []).forEach(group => {
+      const originalGroup = original?.addonGroups?.find(candidate => String(candidate.id) === String(group.groupId));
+      (group.selected || []).filter(addon => Number(addon.qty || 0) > 0).forEach(addon => {
+        const originalAddon = originalGroup?.addons?.find(candidate => String(candidate.id) === String(addon.addonId));
+        if (originalAddon) lines.push(`<small>+ ${addon.qty}x ${escapeHtml(originalAddon.name)}${Number(originalAddon.price || 0) > 0 ? ` · ${money(Number(originalAddon.price) * Number(addon.qty))}` : ''}</small>`);
+      });
+    });
+    return lines.join('');
+  }
+  function renderCard(draft){
+    const total=itemTotal(draft.items);
+    const closeLabel = draft.channel === 'mesa' ? 'Fechar mesa e pagar' : draft.channel === 'balcao' ? 'Fechar balcão e pagar' : draft.channel === 'delivery' ? 'Fechar delivery e pagar' : '';
+    const customerField = (draft.channel === 'retirada' || draft.channel === 'delivery') ? `<div class="pdv-customer-field"><label for="pdv-customer-${escapeHtml(draft.key)}">Nome do cliente</label><div><input id="pdv-customer-${escapeHtml(draft.key)}" data-customer-name="${escapeHtml(draft.key)}" value="${escapeHtml(draft.customerName || '')}" placeholder="Digite o nome" autocomplete="off"><button type="button" data-save-customer="${escapeHtml(draft.key)}">Confirmar</button></div>${draft.customerName ? `<small>Cliente confirmado: <strong>${escapeHtml(draft.customerName)}</strong></small>` : '<small>Informe o nome para identificar a comanda.</small>'}</div>` : '';
+    const deliveryField = draft.channel === 'delivery' ? `<div class="pdv-delivery-field"><label for="pdv-address-${escapeHtml(draft.key)}">Endereço de entrega</label><textarea id="pdv-address-${escapeHtml(draft.key)}" data-delivery-address="${escapeHtml(draft.key)}" placeholder="Digite o endereço completo">${escapeHtml(draft.deliveryAddress || '')}</textarea><label for="pdv-rider-${escapeHtml(draft.key)}">Motoboy responsável</label><select id="pdv-rider-${escapeHtml(draft.key)}" data-motoboy="${escapeHtml(draft.key)}"><option value="">Selecionar motoboy</option>${(Array.isArray(window.motoboys)?window.motoboys:[]).filter(m=>m && m.active !== false).map(m=>{const id=String(m.id||m.uid||m.userId||'');const name=String(m.name||m.nome||m.displayName||m.email||'Motoboy');return `<option value="${escapeHtml(id)}" data-name="${escapeHtml(name)}" ${id===String(draft.motoboyId||'')?'selected':''}>${escapeHtml(name)}</option>`}).join('')}</select><small>${draft.motoboyName ? `Motoboy selecionado: <strong>${escapeHtml(draft.motoboyName)}</strong>` : 'Selecione um motoboy cadastrado quando estiver disponível.'}</small></div>` : '';
+    const retiradaPayment = draft.channel === 'retirada' ? (draft.paymentChoice ? `<button type="button" class="pdv-retirada-payment-state ${draft.paymentChoice==='paid'?'is-paid':'is-awaiting'}" style="grid-column:1/-1;background:${draft.paymentChoice==='paid'?'#1f9d55':'#ff5a1f'} !important" data-retirada-payment-reset="${escapeHtml(draft.key)}">${draft.paymentChoice==='paid'?'Pago':'Aguardando pagamento'}</button>` : `<div class="pdv-retirada-payment-choices" style="grid-column:1/-1"><button type="button" style="background:#1f9d55 !important;color:#fff !important" data-retirada-payment="paid" data-key="${escapeHtml(draft.key)}">Pago</button><button type="button" style="background:#ff5a1f !important;color:#fff !important" data-retirada-payment="awaiting" data-key="${escapeHtml(draft.key)}">A pagar</button></div>`) : `<button type="button" data-order-action="pay" data-key="${escapeHtml(draft.key)}">${closeLabel}</button>`;
+    const actionStyle = draft.channel === 'retirada' ? ' style="display:grid;grid-template-columns:42px minmax(0,1fr);gap:5px"' : '';
+    const retiradaActionStyle = draft.channel === 'retirada' ? ' style="grid-column:1/-1"' : '';
+    return `<article class="pdv-kanban-order ${draft.channel==='retirada'?'pdv-order-retirada':''}"><header><div><small>${escapeHtml(labels[draft.channel].toUpperCase())}</small><h3>${escapeHtml(draft.tableLabel||'Novo atendimento')}</h3></div><span>${itemCount(draft.items)} item(ns)</span></header>${customerField}${deliveryField}<div class="pdv-order-items">${(draft.items||[]).map(item=>`<div class="pdv-order-item"><div><span>${item.qty}x ${escapeHtml(item.name)}</span>${addonDetails(item)}</div><b>${money(item.totalPrice)}</b></div>`).join('')||'<p>Nenhum item adicionado.</p>'}</div><footer><strong>${money(total)}</strong><div class="pdv-order-actions"${actionStyle}>${retiradaPayment}${draft.channel==='retirada'?`<button type="button" class="pdv-print-icon" style="grid-column:1" title="Imprimir comanda" aria-label="Imprimir comanda" data-order-action="print" data-key="${escapeHtml(draft.key)}">🖨</button><button type="button" style="grid-column:2" data-order-action="add" data-key="${escapeHtml(draft.key)}">+ Adicionar itens</button>`:`<button type="button" class="pdv-print-icon" title="Imprimir comanda" aria-label="Imprimir comanda" data-order-action="print" data-key="${escapeHtml(draft.key)}">🖨</button><button type="button" data-order-action="add" data-key="${escapeHtml(draft.key)}">+ Adicionar itens</button>`}</div></footer></article>`;
+  }
+  function render(){
+    restore(); const target=root(); if(!target)return; const active=activeDraft();
+    target.innerHTML=`<section class="pdv-kanban"><header class="pdv-kanban-main-head"><div><small>PDV OPERACIONAL</small><h2>Comandas por atendimento</h2><p>Abra, imprima e finalize cada comanda no fluxo correspondente.</p></div><span class="pdv-kanban-status">Quatro fluxos independentes</span></header><div class="pdv-kanban-board">${channels.map(channel=>{const drafts=state.drafts[channel]||[];const implemented=true;return `<section class="pdv-kanban-column ${implemented?'':'is-next'}"><header><div><span class="pdv-kanban-icon">${icons[channel]}</span><div><h3>${labels[channel]}</h3><small>${'Comandas abertas'}</small></div></div><button type="button" class="pdv-kanban-add" data-add-channel="${channel}" aria-label="Adicionar comanda ${labels[channel]}">+</button></header><div class="pdv-kanban-column-body">${drafts.length?drafts.map(renderCard).join(''):'<div class="pdv-kanban-empty">Nenhuma comanda aberta.<br><span>Clique em + para iniciar.</span></div>'}</div></section>`;}).join('')}</div>${active&&state.catalogKey===active.key?renderCatalog(active):''}</section>`;
+    bind(target);
+  }
+  function bind(target){
+    target.querySelectorAll('[data-add-channel]').forEach(button=>button.onclick=()=>openNew(button.dataset.addChannel));
+    target.querySelectorAll('[data-order-action]').forEach(button=>button.onclick=()=>{const draft=getDraft(button.dataset.key.split('_')[0],button.dataset.key);if(!draft)return; if(button.dataset.orderAction==='pay')openPayment(draft);if(button.dataset.orderAction==='print')printDraft(draft);if(button.dataset.orderAction==='add')addMore(draft);});
+    target.querySelectorAll('[data-save-customer]').forEach(button=>button.onclick=()=>{const key=button.dataset.saveCustomer;const draft=channels.map(channel=>getDraft(channel,key)).find(Boolean);if(!draft)return;const input=target.querySelector(`[data-customer-name="${key}"]`);const address=target.querySelector(`[data-delivery-address="${key}"]`);const rider=target.querySelector(`[data-motoboy="${key}"]`);draft.customerName=String(input?.value||'').trim();if(address)draft.deliveryAddress=String(address.value||'').trim();if(rider){draft.motoboyId=String(rider.value||'');draft.motoboyName=String(rider.selectedOptions?.[0]?.dataset.name||'').trim();}saveStore();render();});
+    target.querySelectorAll('[data-delivery-address]').forEach(area=>area.oninput=()=>{const key=area.dataset.deliveryAddress;const draft=getDraft('delivery',key);if(!draft)return;draft.deliveryAddress=String(area.value||'');saveStore();});
+    target.querySelectorAll('[data-motoboy]').forEach(select=>select.onchange=()=>{const key=select.dataset.motoboy;const draft=getDraft('delivery',key);if(!draft)return;draft.motoboyId=String(select.value||'');draft.motoboyName=String(select.selectedOptions?.[0]?.dataset.name||'').trim();saveStore();render();});
+    target.querySelectorAll('[data-retirada-payment]').forEach(button=>button.onclick=()=>{const draft=getDraft('retirada',button.dataset.key);if(!draft)return;draft.paymentChoice=button.dataset.retiradaPayment;saveStore();render();});
+    target.querySelectorAll('[data-retirada-payment-reset]').forEach(button=>button.onclick=()=>{const draft=getDraft('retirada',button.dataset.retiradaPaymentReset);if(!draft)return;draft.paymentChoice='';saveStore();render();});
+    target.querySelector('[data-action="close-catalog"]')?.addEventListener('click',closeCatalog);
+    target.querySelectorAll('[data-product-id]').forEach(button=>button.onclick=()=>{const draft=activeDraft();const item=(data()?.items||[]).find(product=>String(product.id)===String(button.dataset.productId));if(!draft||!item)return;setPdvDraft(draft);api()?.openModal?.(item,true);});
+  }
+  window.renderProfessionalPdv=render;
+  window.openProfessionalPdvOrder=(tableId)=>{const table=availableTables().find(item=>String(item.id)===String(tableId));if(table){const existing=state.drafts.mesa.find(item=>String(item.tableId)===String(tableId));openCatalog(existing||newDraft('mesa',table.id,table.name||'Mesa'));}};
+  window.syncProfessionalPdvDraftFromState=()=>{ const draft=activeDraft(); if(!draft)return; syncDraftFromPdv(draft); draft.updatedAt=new Date().toISOString(); saveStore(); render(); };
+  window.clearProfessionalPdvDraftForTable=tableId=>{state.drafts.mesa=state.drafts.mesa.filter(draft=>draft.tableId!==tableId);saveStore();render();};
+  window.clearProfessionalPdvDraftForOrder=()=>{};
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(render,0));
 })();
 </script>
 
