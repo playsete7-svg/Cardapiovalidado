@@ -25,9 +25,6 @@ window.formatBRL = formatBRL;
 
 // Solicita permissão de notificação ao carregar a página
 document.addEventListener("DOMContentLoaded", () => {
-    if (typeof Notification !== 'undefined' && Notification.permission !== "granted" && Notification.permission !== "denied") {
-        Notification.requestPermission();
-    }
     // Carrega configuração de cupons inteligentes
     loadSmartCouponConfig();
 });
@@ -1688,41 +1685,17 @@ window.printOrder = function(orderId) {
       
 
 
-<style id="partner-application-fixes-v2">
-  #partnerApplicationModal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:22px 14px}
-  #partnerApplicationModal>.card{width:min(620px,100%);max-height:calc(100dvh - 44px);overflow-y:auto;overscroll-behavior:contain}
-  #partnerApplicationForm{padding-bottom:4px}
-  #storeCourierInvite{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border:0;border-top:1px solid rgba(255,255,255,.1);margin-top:12px;padding:10px 4px;background:transparent;color:#c8b9ae;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:none;transition:color .18s,background .18s}
-  #storeCourierInvite:hover{color:#ffad86;background:rgba(255,255,255,.03)}
-  #partnerApplicationForm button[type="submit"]{min-width:150px}
-  @media(max-width:520px){#partnerApplicationModal{padding:10px 8px}#partnerApplicationModal>.card{max-height:calc(100dvh - 20px);border-radius:14px}#partnerApplicationModal .partner-application-grid{grid-template-columns:1fr}#partnerApplicationModal .partner-application-grid .wide{grid-column:auto}}
-</style>
-<style id="round2-store-pdv-uniform">
-  /* Rodada 2: PDV usa a mesma caixa compacta e regular do cardápio. */
-  .totem-products-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; align-items: start; }
-  .totem-product-card { height: 318px; min-height: 318px; }
-  .totem-product-card .totem-card-img-wrap { height: 172px; min-height: 172px; aspect-ratio: auto; }
-  .totem-product-card .totem-card-body { height: 146px; min-height: 146px; flex: 0 0 146px; padding: 10px 12px 12px; gap: 5px; overflow: hidden; }
-  .totem-product-card h4 { min-height: 22px; font-size: 16px; line-height: 1.2; }
-  .totem-product-card p { min-height: 36px; max-height: 36px; font-size: 12px; line-height: 1.35; }
-  .totem-product-card .totem-price-row { margin-top: auto; }
-  @media (max-width: 600px) {
-    .totem-products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-    .totem-product-card { height: 276px; min-height: 276px; }
-    .totem-product-card .totem-card-img-wrap { height: 142px; min-height: 142px; }
-    .totem-product-card .totem-card-body { height: 134px; min-height: 134px; flex-basis: 134px; padding: 8px 9px 10px; }
-    .totem-product-card h4 { font-size: 14px; }
-    .totem-product-card .totem-price { font-size: 17px; }
-    .totem-product-card .totem-add-btn { padding: 8px 10px; font-size: 12px; }
-  }
+
+<style id="pdv-payment-modal-critical">
+.pdv-payment-modal-backdrop{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:16px!important;background:rgba(0,0,0,.66)!important}
+.pdv-payment-modal{position:relative!important;width:min(360px,100%)!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;padding:18px!important;border:1px solid rgba(255,180,140,.35)!important;border-radius:14px!important;background:#24201d!important;color:#fff3e8!important;box-shadow:0 20px 70px rgba(0,0,0,.5)!important}
+.pdv-payment-modal-head{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important}
+.pdv-payment-modal-head button{border:0!important;background:transparent!important;color:#d8c9bd!important;font-size:25px!important;cursor:pointer!important}
+.pdv-payment-methods{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+.pdv-payment-methods button{min-height:42px!important;border:1px solid rgba(255,255,255,.2)!important;border-radius:8px!important;background:#302a26!important;color:#fff!important;cursor:pointer!important}
+.pdv-payment-complete{width:100%!important;margin-top:14px!important;min-height:42px!important;border:0!important;border-radius:8px!important;background:#1f9d55!important;color:#fff!important;cursor:pointer!important}
 </style>
 
-<style id="pdv-pickup-delivery-customer">
-  .pdv-retirada-payment-choices{display:flex;gap:6px;flex:1}.pdv-retirada-payment-choices button,.pdv-retirada-payment-state{min-height:38px;flex:1;padding:8px 10px;border-radius:8px;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-retirada-payment-choices button:first-child{background:#1f9d55!important;color:#fff!important;border:1px solid #6ee7a0!important}.pdv-retirada-payment-choices button:last-child{background:#ff5a1f!important;color:#fff!important;border:1px solid #ff9b72!important}.pdv-retirada-payment-state{width:100%;border:0;color:#fff!important}.pdv-retirada-payment-state.is-paid{background:#1f9d55!important}.pdv-retirada-payment-state.is-awaiting{background:#ff5a1f!important}.pdv-order-retirada .pdv-order-actions{grid-template-columns:42px minmax(0,1fr)}.pdv-order-retirada .pdv-retirada-payment-choices,.pdv-order-retirada .pdv-retirada-payment-state{grid-column:1/-1}.pdv-order-retirada .pdv-print-icon{grid-column:1}.pdv-order-retirada .pdv-order-actions>[data-order-action="add"]{grid-column:2}.pdv-print-icon{flex:0 0 42px!important;width:42px;padding:8px!important;font-size:18px!important;line-height:1}.pdv-delivery-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}.pdv-delivery-field label{display:block;margin:7px 0 5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase}.pdv-delivery-field label:first-child{margin-top:0}.pdv-delivery-field textarea,.pdv-delivery-field select{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-delivery-field textarea{min-height:66px;resize:vertical}.pdv-delivery-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-delivery-field small strong{color:#ffd0b4}
-  .pdv-customer-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}
-  .pdv-customer-field label{display:block;margin-bottom:5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
-  .pdv-customer-field>div{display:flex;gap:6px}.pdv-customer-field input{min-width:0;flex:1;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-customer-field input::placeholder{color:#9f9187}.pdv-customer-field button{padding:8px 10px;border:1px solid #ff9b72;border-radius:7px;background:#ff5a1f;color:#fff;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-customer-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-customer-field small strong{color:#ffd0b4}
-</style>
 </head>
       <body>
 ===============================================
@@ -1758,6 +1731,7 @@ ${totalComandas > 0 ? `<div class="footer-line"><span>Comandas Avulsas:</span><s
 <div class="footer-line"><span>Total:</span><span>${formatBRL(totalGeral)}</span></div>
 <div class="line"></div>
       
+
 </body>
     </html>
   `;
@@ -1770,6 +1744,44 @@ ${totalComandas > 0 ? `<div class="footer-line"><span>Comandas Avulsas:</span><s
 }
 
 </script>
+<style id="partner-application-fixes-v2">
+  #partnerApplicationModal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:22px 14px}
+  #partnerApplicationModal>.card{width:min(620px,100%);max-height:calc(100dvh - 44px);overflow-y:auto;overscroll-behavior:contain}
+  #partnerApplicationForm{padding-bottom:4px}
+  #storeCourierInvite{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border:0;border-top:1px solid rgba(255,255,255,.1);margin-top:12px;padding:10px 4px;background:transparent;color:#c8b9ae;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:none;transition:color .18s,background .18s}
+  #storeCourierInvite:hover{color:#ffad86;background:rgba(255,255,255,.03)}
+  #partnerApplicationForm button[type="submit"]{min-width:150px}
+  @media(max-width:520px){#partnerApplicationModal{padding:10px 8px}#partnerApplicationModal>.card{max-height:calc(100dvh - 20px);border-radius:14px}#partnerApplicationModal .partner-application-grid{grid-template-columns:1fr}#partnerApplicationModal .partner-application-grid .wide{grid-column:auto}}
+</style>
+<style id="round2-store-pdv-uniform">
+  /* Rodada 2: PDV usa a mesma caixa compacta e regular do cardápio. */
+  .totem-products-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; align-items: start; }
+  .totem-product-card { height: 318px; min-height: 318px; }
+  .totem-product-card .totem-card-img-wrap { height: 172px; min-height: 172px; aspect-ratio: auto; }
+  .totem-product-card .totem-card-body { height: 146px; min-height: 146px; flex: 0 0 146px; padding: 10px 12px 12px; gap: 5px; overflow: hidden; }
+  .totem-product-card h4 { min-height: 22px; font-size: 16px; line-height: 1.2; }
+  .totem-product-card p { min-height: 36px; max-height: 36px; font-size: 12px; line-height: 1.35; }
+  .totem-product-card .totem-price-row { margin-top: auto; }
+  @media (max-width: 600px) {
+    .totem-products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .totem-product-card { height: 276px; min-height: 276px; }
+    .totem-product-card .totem-card-img-wrap { height: 142px; min-height: 142px; }
+    .totem-product-card .totem-card-body { height: 134px; min-height: 134px; flex-basis: 134px; padding: 8px 9px 10px; }
+    .totem-product-card h4 { font-size: 14px; }
+    .totem-product-card .totem-price { font-size: 17px; }
+    .totem-product-card .totem-add-btn { padding: 8px 10px; font-size: 12px; }
+  }
+</style>
+
+<style id="pdv-pickup-delivery-customer">
+  .pdv-retirada-payment-choices{display:flex;gap:6px;flex:1}.pdv-retirada-payment-choices button,.pdv-retirada-payment-state{min-height:38px;flex:1;padding:8px 10px;border-radius:8px;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-retirada-payment-choices button:first-child{background:#1f9d55!important;color:#fff!important;border:1px solid #6ee7a0!important}.pdv-retirada-payment-choices button:last-child{background:#ff5a1f!important;color:#fff!important;border:1px solid #ff9b72!important}.pdv-retirada-payment-state{width:100%;border:0;color:#fff!important}.pdv-retirada-payment-state.is-paid{background:#1f9d55!important}.pdv-retirada-payment-state.is-awaiting{background:#ff5a1f!important}.pdv-order-retirada .pdv-order-actions{grid-template-columns:42px minmax(0,1fr)}.pdv-order-retirada .pdv-retirada-payment-choices,.pdv-order-retirada .pdv-retirada-payment-state{grid-column:1/-1}.pdv-order-retirada .pdv-print-icon{grid-column:1}.pdv-order-retirada .pdv-order-actions>[data-order-action="add"]{grid-column:2}.pdv-print-icon{flex:0 0 42px!important;width:42px;padding:8px!important;font-size:18px!important;line-height:1}  .pdv-confirm-row{display:flex;align-items:stretch;gap:6px;width:100%}.pdv-confirm-row textarea,.pdv-confirm-row select{min-width:0;flex:1}.pdv-confirm-row button{flex:0 0 auto;padding:8px 10px;border:1px solid rgba(255,255,255,.22);border-radius:7px;background:#ff5a1f;color:#fff;font:700 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-confirmed-info{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:7px 0;color:#e9ddd3}.pdv-confirmed-info span{color:#bdb0a5;font:700 10px IBM Plex Mono,monospace;text-transform:uppercase}.pdv-confirmed-info strong{color:#fff;font:700 12px Manrope,Arial,sans-serif;overflow-wrap:anywhere}.pdv-order-actions:not([style]) .pdv-print-icon{display:flex;align-items:center;justify-content:center}.pdv-order-actions:not([style]) .pdv-print-icon::first-letter{font-size:18px}
+.pdv-payment-modal-backdrop{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.66)}.pdv-payment-modal{width:min(360px,100%);padding:18px;border:1px solid rgba(255,180,140,.35);border-radius:14px;background:#24201d;color:#fff3e8;box-shadow:0 20px 70px rgba(0,0,0,.5)}.pdv-payment-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.pdv-payment-modal-head small{color:#ffad87;font:700 10px 'IBM Plex Mono',monospace}.pdv-payment-modal-head h3{margin:5px 0 0;font:800 20px Manrope,Arial,sans-serif}.pdv-payment-modal-head button{border:0;background:transparent;color:#d8c9bd;font-size:25px;cursor:pointer}.pdv-payment-total{margin:14px 0;color:#cbbdb2}.pdv-payment-total strong{color:#fff;font-size:18px}.pdv-payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pdv-payment-methods button{min-height:42px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:#302a26;color:#fff;font:700 12px Manrope,Arial,sans-serif;cursor:pointer}.pdv-payment-methods button.is-selected{border-color:#ff9b72;background:#8f3f21;box-shadow:0 0 0 2px rgba(255,155,114,.22)}.pdv-payment-complete{width:100%;margin-top:14px;min-height:42px;border:0;border-radius:8px;background:#1f9d55;color:#fff;font:800 12px Manrope,Arial,sans-serif;cursor:pointer}.pdv-payment-complete:disabled{opacity:.42;cursor:not-allowed}
+.pdv-close-order{background:#ff5a1f!important;color:#fff!important;border:1px solid #ff9b72!important;font-weight:800!important}.pdv-order-actions{width:100%}.pdv-order-actions>button{min-width:0}
+.pdv-delivery-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}.pdv-delivery-field label{display:block;margin:7px 0 5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase}.pdv-delivery-field label:first-child{margin-top:0}.pdv-delivery-field textarea,.pdv-delivery-field select{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-delivery-field textarea{min-height:66px;resize:vertical}.pdv-delivery-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-delivery-field small strong{color:#ffd0b4}
+  .pdv-customer-field{margin:8px 0 10px;padding:9px;border:1px solid rgba(255,213,185,.16);border-radius:9px;background:rgba(255,255,255,.035)}
+  .pdv-customer-field label{display:block;margin-bottom:5px;color:#ffd0b4;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+  .pdv-customer-field>div{display:flex;gap:6px}.pdv-customer-field input{min-width:0;flex:1;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#211c19;color:#fff3e8;font:600 12px Manrope,Arial,sans-serif}.pdv-customer-field input::placeholder{color:#9f9187}.pdv-customer-field button{padding:8px 10px;border:1px solid #ff9b72;border-radius:7px;background:#ff5a1f;color:#fff;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}.pdv-customer-field small{display:block;margin-top:6px;color:#a99b90;font-size:10px}.pdv-customer-field small strong{color:#ffd0b4}
+</style>
 <style>
   :root{
     --primary:#800080;
@@ -2968,7 +2980,6 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
               <button id="tabSales">Relatório de Vendas</button>
               <button id="tabCustomers">Controle de Clientes</button>
               <button id="tabSettings">Configurações da Loja</button>
-              <button id="tabPayments">Pagamentos</button>
               <button id="tabPDV">PDV (Mesas)</button>
               <button id="tabMotoboys">Motoboy</button>
               <button id="tabGarcons">Garçons</button>
@@ -3265,19 +3276,30 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
   </div>
 
   <form id="storeSettingsForm" class="settings-pro-form">
-    <section class="settings-pro-section">
+        <div class="store-settings-workspace">
+      <nav class="store-settings-nav" id="storeSettingsSectionNav" aria-label="Seções das configurações da loja">
+        <div class="store-settings-nav-label">Configurações</div>
+        <button type="button" class="is-active" data-settings-section="storeSettingsSection1"><span>01</span><strong>Identidade e operação</strong><small>Dados principais da loja</small></button>
+        <button type="button" data-settings-section="storeSettingsSection2"><span>02</span><strong>Marca e apresentação</strong><small>Logo e capa do cardápio</small></button>
+        <button type="button" data-settings-section="storeSettingsSection3"><span>03</span><strong>Contato e canais públicos</strong><small>Redes e atendimento</small></button>
+        <button type="button" data-settings-section="storeSettingsSection4"><span>04</span><strong>Entrega e áreas atendidas</strong><small>Taxas e regiões</small></button>
+        <button type="button" data-settings-section="storeSettingsSection5"><span>05</span><strong>Cupons e promoções</strong><small>Descontos e automações</small></button>
+        <button type="button" data-settings-section="storeSettingsSection6"><span>06</span><strong>Relacionamento e confiança</strong><small>Indicação e avaliações</small></button>
+      </nav>
+      <div class="store-settings-content" id="storeSettingsSectionContent">
+<section id="storeSettingsSection1" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>01</span><div><h5>Identidade e operação</h5><p>Informações exibidas no cardápio, cabeçalho e fluxo de pedidos.</p></div></div>
       <div class="settings-pro-grid settings-pro-grid-2">
         <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantName">Nome da loja</label><input type="text" id="restaurantName" required autocomplete="organization"><small>Nome principal exibido para os clientes.</small></div>
         <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantAddress">Endereço da loja</label><input type="text" id="restaurantAddress" required autocomplete="street-address"><small>Use um endereço completo para melhorar a localização da entrega.</small></div>
-        <div class="settings-pro-field"><label for="restaurantStatus">Status atual da loja</label><input type="text" id="restaurantStatus" placeholder="Ex.: Aberto até as 23:00" required><small>Texto curto exibido junto ao indicador de funcionamento.</small></div>
+        <div class="settings-pro-field settings-pro-store-status-field"><label>Status atual da loja</label><input type="hidden" id="restaurantStatus" value="Aberta" required><div class="store-status-controls" role="group" aria-label="Status da loja"><button type="button" class="store-status-option is-open" data-store-status="open"><span class="store-status-dot"></span><strong>Loja aberta</strong><small>Clientes podem fazer pedidos</small></button><button type="button" class="store-status-option is-closed" data-store-status="closed"><span class="store-status-dot"></span><strong>Loja fechada</strong><small>Pedidos ficam bloqueados</small></button></div><small>Escolha se o cardápio deve aceitar novos pedidos neste momento.</small></div>
         <div class="settings-pro-field"><label for="restaurantHours">Horário de funcionamento</label><input type="text" id="restaurantHours" placeholder="Ex.: Todos os dias, 18h às 23h"><small>Detalhe exibido na janela de informações.</small></div>
         <div class="settings-pro-field settings-pro-field-wide"><label for="restaurantDescription">Descrição da loja</label><textarea id="restaurantDescription" rows="3" placeholder="Conte brevemente sobre a loja, especialidades ou atendimento."></textarea><small>Texto opcional apresentado aos clientes.</small></div>
         <div class="settings-pro-field"><label for="preparationTime">Tempo médio de preparo</label><div class="settings-pro-input-suffix"><input type="number" id="preparationTime" min="5" max="120" placeholder="30" required><span>min</span></div><small>Informe um valor entre 5 e 120 minutos.</small></div>
       </div>
     </section>
 
-    <section class="settings-pro-section">
+    <section id="storeSettingsSection2" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>02</span><div><h5>Marca e apresentação</h5><p>Atualize a identidade visual usada no sistema e na experiência do cliente.</p></div></div>
       <div class="settings-pro-brand-grid settings-pro-brand-grid-extended">
         <div class="settings-pro-field"><label for="restaurantLogoFile">Logo da loja</label><input type="file" id="restaurantLogoFile" accept="image/*"><small>Imagem quadrada usada no cabeçalho e nos pontos de contato.</small><input type="hidden" id="restaurantLogoUrl"></div>
@@ -3287,7 +3309,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       </div>
     </section>
 
-    <section class="settings-pro-section">
+    <section id="storeSettingsSection3" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>03</span><div><h5>Contato e canais públicos</h5><p>Facilite o contato direto e permita que o cliente encontre a loja nas redes sociais.</p></div></div>
       <div class="settings-pro-grid settings-pro-grid-2">
         <div class="settings-pro-field"><label for="restaurantWhatsapp">WhatsApp da loja</label><input type="tel" id="restaurantWhatsapp" placeholder="Ex.: (11) 99999-9999" autocomplete="tel"><small>O botão abrirá uma conversa direta com a loja.</small></div>
@@ -3298,7 +3320,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       </div>
     </section>
 
-    <section class="settings-pro-section">
+    <section id="storeSettingsSection4" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>04</span><div><h5>Entrega e áreas atendidas</h5><p>Defina o modelo de cobrança e as áreas disponíveis para finalização do pedido.</p></div></div>
       <div class="settings-pro-toggle-row"><div><strong>Calcular taxa automaticamente por raio</strong><small>Usa a localização da loja e o endereço do cliente para estimar a taxa.</small></div><label class="settings-pro-switch"><input type="checkbox" id="useRadiusDelivery"><span></span></label></div>
       <div class="settings-pro-grid settings-pro-grid-2 settings-pro-delivery-fields">
@@ -3311,19 +3333,22 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       <div id="savedAddressesGroup" class="settings-pro-field settings-pro-saved-addresses" style="display:none"><label for="savedAddresses">Endereços salvos</label><select id="savedAddresses"><option value="">Selecionar um endereço salvo...</option><option value="Casa">Casa (Rua Exemplo, 123, Cidade)</option><option value="Trabalho">Trabalho (Av. Principal, 456, Cidade)</option></select></div>
     </section>
 
-    <section class="settings-pro-section">
+    <section id="storeSettingsSection5" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>05</span><div><h5>Cupons e promoções</h5><p>Gerencie cupons manuais e acompanhe as regras automáticas de incentivo.</p></div></div>
       <div class="settings-pro-list-heading"><div><strong>Cupons de desconto</strong><small>Controle validade, limite de uso e ativação de cada código.</small></div><button type="button" class="settings-pro-button secondary" id="btnAddCoupon">+ Criar cupom</button></div>
       <div id="couponsList" class="settings-pro-list"></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Automação</span><strong>Cupons inteligentes</strong></div><div id="smartCouponAdminPanel"></div></div>
     </section>
 
-    <section class="settings-pro-section">
+    <section id="storeSettingsSection6" class="settings-pro-section">
       <div class="settings-pro-section-heading"><span>06</span><div><h5>Relacionamento e confiança</h5><p>Configure indicação de clientes e consulte avaliações recebidas pela loja.</p></div></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Indicação</span><strong>Programa de indicação</strong></div><div id="referralAdminPanel"></div></div>
       <div class="settings-pro-subsection"><div class="settings-pro-subsection-heading"><span>Avaliações</span><strong>Feedback dos clientes</strong></div><div id="reviewsAdminPanel"></div></div>
       <div id="cashbackConfigContainer"></div>
     </section>
+
+      </div>
+    </div>
 
     <div class="settings-pro-savebar"><div id="storeSettingsFeedback" class="settings-pro-feedback" aria-live="polite"></div><button type="submit" class="settings-pro-button primary">Salvar configurações</button></div>
   </form>
@@ -7301,7 +7326,7 @@ function updateStoreHeader() {
     setText('storeInfoDescription', description);
     setText('storeHeaderStatusText', isOpen ? 'Aberta' : 'Fechada');
     setText('storeInfoStatusText', isOpen ? 'Aberta' : 'Fechada');
-    setText('storeInfoStatusDetail', status || hours);
+    setText('storeInfoStatusDetail', isOpen ? hours : 'A loja está fechada no momento.');
     const descriptionRow = document.getElementById('storeInfoDescriptionRow');
     if (descriptionRow) descriptionRow.hidden = !description;
     const logoNode = document.getElementById('logo');
@@ -8363,6 +8388,7 @@ function renderItems(){
     }
 }
 function handleItemAction(action, itemId){
+    if (action === 'add-to-cart' && !isAdmin && !isPdvMode && !isStoreCurrentlyOpen(DATA?.restaurant?.status)) { showStoreClosedModal(); return; }
     const item = getItem(itemId);
     if (!item) return;
     const purchaseItem = { ...item, addonGroups: Array.isArray(item.addonGroups) ? item.addonGroups : [] };
@@ -11081,7 +11107,7 @@ function loadStoreSettings() {
     const setChecked = (id, value) => { const node = document.getElementById(id); if (node) node.checked = Boolean(value); };
     setValue('restaurantName', restaurant.name || '');
     setValue('restaurantAddress', restaurant.address || '');
-    setValue('restaurantStatus', restaurant.status || '');
+    setStoreStatusControls(restaurant.status || 'Aberta');
     setValue('restaurantHours', restaurant.hours || restaurant.status || '');
     setValue('restaurantDescription', restaurant.description || '');
     setValue('preparationTime', restaurant.preparationTime || 30);
@@ -12432,7 +12458,6 @@ function initListeners(){
   document.querySelector("#tabSales").addEventListener("click", () => showAdminTab('sales'));
   document.querySelector("#tabCustomers").addEventListener("click", () => showAdminTab('customers'));
   document.querySelector("#tabSettings").addEventListener("click", () => showAdminTab('settings'));
-  document.querySelector("#tabPayments")?.addEventListener("click", () => showAdminTab('payments'));
   document.querySelector("#tabPDV").addEventListener("click", () => showAdminTab('pdv'));
   document.querySelector("#tabMarketing")?.addEventListener("click", () => showAdminTab('marketing'));
   document.querySelector("#closeAdminModal").addEventListener("click", closeAdminModal);
@@ -14406,7 +14431,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   window.__cloudUsers = window.__cloudUsers || readCloudUsersCache().users;
 
   function customerCache() {
-    const version = window.__ordersVersion || orders().length; const key = `${version}|${orders().length}`; if (state.customersCacheKey===key) return state.customers;
+    const version = window.__ordersVersion || orders().length; const accountIds = (window.__cloudUsers || []).map(user => String(user.id || user.uid || '').trim()).filter(Boolean).sort().join(','); const key = `${version}|${orders().length}|accounts:${accountIds}`; if (state.customersCacheKey===key) return state.customers;
     const map = new Map();
     (window.__cloudUsers || []).forEach(user => {
       const id = String(user.id || user.uid || '').trim();
@@ -14415,9 +14440,11 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     });
     orders().forEach(order => {
       if (isCancelled(order) || (!order.userId && !order.userPhone && !order.userName)) return;
-      const id = order.userId || digits(order.userPhone) || `anon_${String(order.userName||'cliente').toLowerCase()}`;
+      const id = String(order.userId || '').trim();
+      /* O CRM mostra somente contas existentes; pedidos de PDV, totem, retirada e delivery sem conta são ignorados. */
+      if (!id || !map.has(id)) return;
       const fallbackEmail = localClientEmailForOrder(order);
-      const current = map.get(id) || {id,name:order.userName||'Cliente sem nome',email:order.userEmail||fallbackEmail,phone:order.userPhone||'',address:order.address||'',totalOrders:0,deliveredOrders:0,totalSpent:0,lastOrderDate:0,firstOrderDate:0,pendingOrders:0,items:new Map(),orders:[]};
+      const current = map.get(id);
       current.name = current.name === 'Cliente sem nome' && order.userName ? order.userName : current.name; current.email = current.email || order.userEmail || fallbackEmail; current.phone = current.phone || order.userPhone || ''; current.address = current.address || order.address || ''; current.totalOrders += 1; current.orders.push(order); const created = dateMs(order.createdAt); if(created && (!current.lastOrderDate || created>current.lastOrderDate)) current.lastOrderDate=created; if(created && (!current.firstOrderDate || created<current.firstOrderDate)) current.firstOrderDate=created; if(isDelivered(order)){ current.deliveredOrders += 1; current.totalSpent += orderTotal(order); (order.items||[]).forEach(item=>{const itemKey=item.itemId||item.id||item.name||'item';const entry=current.items.get(itemKey)||{name:item.name||item.title||itemKey,qty:0};entry.qty += num(item.qty)||num(item.quantity)||1;current.items.set(itemKey,entry);}); } else current.pendingOrders += 1; map.set(id,current);
     });
     const now=Date.now(); state.customers=[...map.values()].map(customer=>{const inactiveDays=customer.lastOrderDate?Math.floor((now-customer.lastOrderDate)/86400000):999;customer.avgTicket=customer.deliveredOrders?customer.totalSpent/customer.deliveredOrders:0;customer.inactiveDays=inactiveDays;customer.segment=customer.totalSpent>=500?'VIP':inactiveDays<=30?'Ativo':inactiveDays<=90?'Recorrente':'Inativo';customer.tags=[customer.segment];customer.favorite=[...customer.items.values()].sort((a,b)=>b.qty-a.qty).slice(0,3);return customer;}).sort((a,b)=>b.totalSpent-a.totalSpent); state.customersCacheKey=key; return state.customers;
@@ -14433,6 +14460,14 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     if(!$id('customerDetailModal')) document.body.insertAdjacentHTML('beforeend',`<div class="modal" id="customerDetailModal"><div class="card brasa-detail-card" role="dialog" aria-modal="true"><div class="brasa-detail-header"><div><h3 id="customerDetailName">Cliente</h3><p id="customerDetailSubtitle">Detalhes do relacionamento</p></div><button type="button" class="pill" data-close-customer-detail aria-label="Fechar">×</button></div><div id="customerDetailContent"></div><div class="brasa-card-actions" style="justify-content:flex-end"><button type="button" class="pill" data-close-customer-detail>Fechar</button></div></div></div>`);
   }
 
+  function compactCustomerAddress(value) {
+    const raw = String(value || '').replace(/\s+/g, ' ').trim();
+    if (!raw) return '';
+    const parts = raw.split(/\s*,\s*/).map(part => part.trim()).filter(Boolean);
+    const useful = parts.filter(part => !/^(cep\s*[:\-]?|brasil$|\d{5}-?\d{3}$)/i.test(part));
+    const selected = (useful.length ? useful : parts).slice(0, 3);
+    return selected.join(', ').replace(/\s+-\s+(?:brasil|[A-Z]{2})$/i, '').slice(0, 120);
+  }
   function customerMatches(customer) {
     const term=($id('customerSearchInput')?.value||'').toLowerCase().trim(); const rawDigits=digits(term); const segment=$id('customerSegmentSelect')?.value||'all'; const text=`${customer.name} ${customer.email} ${customer.phone} ${customer.address}`.toLowerCase(); const matchTerm=!term||text.includes(term)||(rawDigits&&digits(customer.phone).includes(rawDigits)); return matchTerm&&(segment==='all'||customer.segment===segment);
   }
@@ -14440,7 +14475,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     ensureCustomerMarkup(); const all=customerCache(); const filtered=all.filter(customerMatches); const setText=(id,value)=>{const node=$id(id);if(node)node.textContent=value;}; setText('crmTotal',all.length);setText('crmActive',all.filter(c=>c.segment==='Ativo'||c.segment==='VIP').length);setText('crmRevenue',money(all.reduce((sum,c)=>sum+c.totalSpent,0)));setText('crmInactive',all.filter(c=>c.segment==='Inativo').length);setText('customersUpdated',`${all.length} clientes · atualizado ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`);
     const sort=$id('customerSortSelect')?.value||'totalSpentDesc'; filtered.sort((a,b)=>{if(sort==='totalOrdersDesc')return b.totalOrders-a.totalOrders;if(sort==='totalOrdersAsc')return a.totalOrders-b.totalOrders;if(sort==='totalSpentAsc')return a.totalSpent-b.totalSpent;if(sort==='lastOrderDateDesc')return b.lastOrderDate-a.lastOrderDate;if(sort==='lastOrderDateAsc')return a.lastOrderDate-b.lastOrderDate;return b.totalSpent-a.totalSpent;});
     const container=$id('customersList');if(!container)return;if(!filtered.length){container.innerHTML=`<div class="brasa-analytics-card" style="grid-column:1/-1"><p class="brasa-table-empty">Nenhum cliente encontrado com os filtros atuais.</p></div>`;return;}
-    container.innerHTML=filtered.map(customer=>{const phone=digits(customer.phone);const tags=customer.tags.map(tag=>`<span class="brasa-chip ${tag==='VIP'?'warn':tag==='Inativo'?'danger':'good'}">${tag}</span>`).join('');return `<article class="brasa-client-card" data-customer-id="${esc(customer.id)}"><div class="brasa-card-top"><div class="brasa-avatar">${esc(initials(customer.name))}</div><div class="brasa-card-title"><strong>${esc(customer.name)}</strong><small>${esc(customer.email||customer.phone||'Contato não informado')}</small></div></div><div style="margin-top:8px">${tags}</div><div class="brasa-card-metrics"><div><span>Pedidos</span><strong>${customer.totalOrders}</strong></div><div><span>Gasto</span><strong>${money(customer.totalSpent)}</strong></div><div><span>Ticket</span><strong>${money(customer.avgTicket)}</strong></div></div><div class="brasa-card-subline"><span>Último pedido</span><strong>${dateText(customer.lastOrderDate)}</strong></div><div class="brasa-card-subline"><span>Endereço</span><strong>${esc(customer.address||'Não informado')}</strong></div><div style="margin-top:4px">${window.CashbackModule?window.CashbackModule.renderSaldoCard(customer.id):''}${window.FiadoModule?window.FiadoModule.renderFiadoButton(customer.id,customer.name):''}</div><div class="brasa-card-actions"><button class="primary" data-customer-action="details" data-customer-id="${esc(customer.id)}">Ver detalhes</button><button data-customer-action="history" data-customer-id="${esc(customer.id)}">Histórico</button>${phone?`<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>`:''}</div></article>`;}).join('');
+    container.innerHTML=filtered.map(customer=>{const phone=digits(customer.phone);const tags=customer.tags.map(tag=>`<span class="brasa-chip ${tag==='VIP'?'warn':tag==='Inativo'?'danger':'good'}">${tag}</span>`).join('');return `<article class="brasa-client-card" data-customer-id="${esc(customer.id)}"><div class="brasa-card-top"><div class="brasa-avatar">${esc(initials(customer.name))}</div><div class="brasa-card-title"><strong>${esc(customer.name)}</strong><small>${esc(customer.email||customer.phone||'Contato não informado')}</small></div></div><div style="margin-top:8px">${tags}</div><div class="brasa-card-metrics"><div><span>Pedidos</span><strong>${customer.totalOrders}</strong></div><div><span>Gasto</span><strong>${money(customer.totalSpent)}</strong></div><div><span>Ticket</span><strong>${money(customer.avgTicket)}</strong></div></div><div class="brasa-card-subline"><span>Último pedido</span><strong>${dateText(customer.lastOrderDate)}</strong></div><div class="brasa-card-subline"><span>Endereço</span><strong>${esc(compactCustomerAddress(customer.address)||'Não informado')}</strong></div><div class="brasa-card-actions customer-card-actions"><button class="primary" data-customer-action="details" data-customer-id="${esc(customer.id)}">Perfil</button><button data-customer-action="history" data-customer-id="${esc(customer.id)}">Histórico</button>${phone?`<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>`:''}${window.FiadoModule?window.FiadoModule.renderFiadoButton(customer.id,customer.name):''}<button class="danger" data-customer-action="delete" data-customer-id="${esc(customer.id)}">Excluir conta</button></div></article>`;}).join('');
   }
 
   function openCustomerDetail(id) { window.bindOrderHistoryAccordion?.(); const customer=customerCache().find(item=>String(item.id)===String(id)); if(!customer)return; $id('customerDetailName').textContent=customer.name; $id('customerDetailSubtitle').textContent=`${customer.segment} · ${customer.email||customer.phone||'Contato não informado'}`; const orderRows=customer.orders.slice().sort((a,b)=>dateMs(b.createdAt)-dateMs(a.createdAt)).slice(0,8); $id('customerDetailContent').innerHTML=`<div class="brasa-detail-sections"><section class="brasa-detail-section"><h5>Resumo</h5><div class="brasa-detail-line"><span>Pedidos</span><strong>${customer.totalOrders}</strong></div><div class="brasa-detail-line"><span>Entregues</span><strong>${customer.deliveredOrders}</strong></div><div class="brasa-detail-line"><span>Total gasto</span><strong>${money(customer.totalSpent)}</strong></div><div class="brasa-detail-line"><span>Ticket médio</span><strong>${money(customer.avgTicket)}</strong></div></section><section class="brasa-detail-section"><h5>Contato e endereço</h5><div class="brasa-detail-line"><span>Telefone</span><strong>${esc(customer.phone||'Não informado')}</strong></div><div class="brasa-detail-line"><span>E-mail</span><strong>${esc(customer.email||'Não informado')}</strong></div><div class="brasa-detail-line"><span>Endereço</span><strong>${esc(customer.address||'Não informado')}</strong></div></section><section class="brasa-detail-section brasa-detail-wide"><h5>Produtos favoritos</h5><div>${customer.favorite.length?customer.favorite.map(item=>`<span class="brasa-chip info">${esc(item.name)} · ${item.qty}</span>`).join(''):'<span class="muted">Ainda sem produtos entregues identificados.</span>'}</div></section><section class="brasa-detail-section brasa-detail-wide"><h5>Últimos pedidos</h5>${orderRows.length?orderRows.map(order=>renderExpandableOrderCard(order,{context:'admin',showClient:true})).join(''):'<span class="muted">Nenhum pedido encontrado.</span>'}</section></div>`; $id('customerDetailModal').style.zIndex = '560'; $id('customerDetailModal').classList.add('open'); }
@@ -14473,7 +14508,7 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
       const vehicle = [m.vehicleModel || m.vehicle, m.vehicleColor || m.color].filter(Boolean).map(value => String(value).trim()).filter(Boolean).join(' · ');
       const plate = m.vehiclePlate || m.plate || '';
       const avatar = photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(m.name || 'motoboy')}">` : `<span>${esc(initials(m.name))}</span>`;
-      return `<article class="brasa-motoboy-card" data-motoboy-id="${esc(m.id)}"><div class="brasa-card-top"><div class="brasa-avatar brasa-avatar-photo">${avatar}</div><div class="brasa-card-title"><strong>${esc(m.name || 'Motoboy')}</strong><small>${esc(m.phone || 'Telefone não informado')}</small></div><span class="brasa-motoboy-status ${klass}"><span class="brasa-status-dot"></span>${label}</span></div><div class="brasa-motoboy-identity"><span class="brasa-motoboy-identity-icon">▣</span><div><strong>${esc(vehicle || 'Veículo não informado')}</strong><small>${plate ? `Placa ${esc(plate)}` : 'Placa não informada'}</small></div></div><div class="brasa-card-metrics"><div><span>Entregas</span><strong>${m.delivered}</strong></div><div><span>Hoje</span><strong>${m.today}</strong></div><div><span>Tempo</span><strong>${m.avgMinutes ? `${Math.round(m.avgMinutes)}m` : '—'}</strong></div></div><div class="brasa-card-subline"><span>Em andamento</span><strong>${m.active}</strong></div><div class="brasa-card-subline"><span>Valor entregue</span><strong>${money(m.total)}</strong></div><span class="brasa-motoboy-auto-status">Status automático</span><div class="brasa-card-actions"><button class="primary" data-motoboy-action="profile" data-motoboy-id="${esc(m.id)}">Ver perfil</button><button data-motoboy-action="edit" data-motoboy-id="${esc(m.id)}">Editar cadastro</button>${phone ? `<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>` : ''}</div></article>`;
+      return `<article class="brasa-motoboy-card" data-motoboy-id="${esc(m.id)}"><div class="brasa-card-top"><div class="brasa-avatar brasa-avatar-photo">${avatar}</div><div class="brasa-card-title"><strong>${esc(m.name || 'Motoboy')}</strong><small>${esc(m.phone || 'Telefone não informado')}</small></div><span class="brasa-motoboy-status ${klass}"><span class="brasa-status-dot"></span>${label}</span></div><div class="brasa-motoboy-identity"><span class="brasa-motoboy-identity-icon">▣</span><div><strong>${esc(vehicle || 'Veículo não informado')}</strong><small>${plate ? `Placa ${esc(plate)}` : 'Placa não informada'}</small></div></div><div class="brasa-card-metrics"><div><span>Entregas</span><strong>${m.delivered}</strong></div><div><span>Hoje</span><strong>${m.today}</strong></div><div><span>Tempo</span><strong>${m.avgMinutes ? `${Math.round(m.avgMinutes)}m` : '—'}</strong></div></div><div class="brasa-card-subline"><span>Em andamento</span><strong>${m.active}</strong></div><div class="brasa-card-subline"><span>Valor entregue</span><strong>${money(m.total)}</strong></div><span class="brasa-motoboy-auto-status">Status automático</span><div class="brasa-card-actions"><button class="primary" data-motoboy-action="profile" data-motoboy-id="${esc(m.id)}">Perfil</button><button data-motoboy-action="edit" data-motoboy-id="${esc(m.id)}">Cadastro</button>${phone ? `<a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/55${phone}">WhatsApp</a>` : ''}</div></article>`;
     }).join('');
   }
 
@@ -14643,9 +14678,12 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   function removeOverlay(){ document.querySelectorAll('.pdv-kanban-overlay').forEach(node=>node.remove()); }
   function printDraft(draft){
     syncDraftFromPdv(draft);
-    const items=(draft.items||[]).map(item=>`<div class="line"><span>${item.qty}x ${escapeHtml(item.name)}</span><b>${money(item.totalPrice)}</b></div>${(item.addons||[]).flatMap(group=>(group.selected||[]).filter(a=>a.qty>0).map(a=>`<small> + ${a.qty} adicional</small>`)).join('')}`).join('');
+    const printableAddons=item=>{const original=(data()?.items||[]).find(product=>String(product.id)===String(item.itemId));const lines=[];(item.addons||[]).forEach(group=>{const originalGroup=original?.addonGroups?.find(candidate=>String(candidate.id)===String(group.groupId));(group.selected||[]).filter(addon=>Number(addon.qty||0)>0).forEach(addon=>{const originalAddon=originalGroup?.addons?.find(candidate=>String(candidate.id)===String(addon.addonId));const name=originalAddon?.name||addon.name||'Adicional';const price=Number(originalAddon?.price??addon.price??0)*Number(addon.qty||0);lines.push(`<div class="addon">+ ${addon.qty}x ${escapeHtml(name)}${price>0?` · ${money(price)}`:''}</div>`);});});return lines.join('');};
+    const items=(draft.items||[]).map(item=>`<div class="line"><span>${item.qty}x ${escapeHtml(item.name)}</span><b>${money(item.totalPrice)}</b></div>${printableAddons(item)}`).join('');
+    const paymentLabel=draft.paymentChoice==='paid'?'Pago':draft.paymentChoice==='awaiting'?'Aguardando pagamento':'Não informado';
+    const methodLabel={credit:'Crédito',debit:'Débito',pix:'Pix',cash:'Dinheiro'}[draft.paymentMethod]||'Não informado';
     const win=window.open('','PDV_PRINT','width=420,height=700'); if(!win)return;
-    win.document.write(`<html><head><title>Comanda ${escapeHtml(draft.tableLabel || labels[draft.channel])}</title><style>body{font-family:monospace;font-size:12px;margin:12px}.center{text-align:center}.line{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #999;padding:5px 0}small{display:block;margin-left:12px}</style></head><body><div class="center"><b>COMANDA</b><br>${escapeHtml(draft.tableLabel || labels[draft.channel])}</div><hr>${items}<hr><div class="line"><b>Total</b><b>${money(itemTotal(draft.items))}</b></div><p>Emitido em ${new Date().toLocaleString('pt-BR')}</p></body></html>`); win.document.close(); win.focus(); win.print();
+    win.document.write(`<html><head><title>Comanda ${escapeHtml(draft.tableLabel || labels[draft.channel])}</title><style>body{font-family:monospace;font-size:12px;margin:12px;color:#111}.center{text-align:center}.line{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #999;padding:5px 0}.addon{display:block;margin:2px 0 2px 14px;font-size:11px;color:#333}.info{border-bottom:1px dashed #999;padding:4px 0}.info b{display:inline-block;min-width:125px}small{display:block;margin-left:12px}</style></head><body><div class="center"><b>COMANDA</b><br>${escapeHtml(draft.tableLabel || labels[draft.channel])}</div><hr><div class="info"><b>Cliente:</b> ${escapeHtml(draft.customerName||'Não informado')}</div><div class="info"><b>Endereço:</b> ${escapeHtml(draft.deliveryAddress||'Não informado')}</div><div class="info"><b>Motoboy:</b> ${escapeHtml(draft.motoboyName||'Não informado')}</div><div class="info"><b>Pagamento:</b> ${paymentLabel} · ${methodLabel}</div><hr>${items}<hr><div class="line"><b>Total</b><b>${money(itemTotal(draft.items))}</b></div><p>Emitido em ${new Date().toLocaleString('pt-BR')}</p></body></html>`); win.document.close(); win.focus(); win.print();
   }
   function openPayment(draft){
     syncDraftFromPdv(draft); if(!draft.items?.length)return showInfo('Adicione pelo menos um produto antes de pagar.');
@@ -14665,6 +14703,17 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     if(bridge.markPdvOrderDelivered) await bridge.markPdvOrderDelivered(orderId,payment);
     state.drafts[draft.channel]=state.drafts[draft.channel].filter(item=>item.key!==draft.key); state.activeKey=null; state.catalogKey=null; saveStore(); overlay.remove(); api()?.setPdvMode(false); render();
   }
+  async function closeDraft(draft){
+    syncDraftFromPdv(draft);
+    if(!draft.items?.length)return showInfo('Adicione pelo menos um produto antes de fechar.');
+    if(draft.paymentChoice!=='paid')return showInfo('Conclua o pagamento antes de fechar a comanda.');
+    const bridge=api(); if(!bridge?.finalizePDVOrder)return showInfo('A função de finalização do PDV não está disponível.');
+    bridge.setPdvState({tableId:draft.channel === 'mesa' ? draft.tableId : draft.key,tableLabel:draft.tableLabel || '',customerName:draft.customerName || '',deliveryAddress:draft.deliveryAddress || '',motoboyId:draft.motoboyId || '',motoboyName:draft.motoboyName || '',items:clone(draft.items),existingOrderId:null,paymentMethod:draft.paymentMethod||'',serviceType:draft.channel,discount:0,finalizeAsDelivered:true});
+    const orderId=await bridge.finalizePDVOrder(draft.customerName || 'Atendimento PDV');
+    if(!orderId)return;
+    if(bridge.markPdvOrderDelivered) await bridge.markPdvOrderDelivered(orderId,draft.paymentMethod||'');
+    state.drafts[draft.channel]=state.drafts[draft.channel].filter(item=>item.key!==draft.key); state.activeKey=null; state.catalogKey=null; saveStore(); api()?.setPdvMode(false); render();
+  }
   function addMore(draft){ openCatalog(draft); }
   function renderCatalog(draft){
     const items=(data()?.items||[]).filter(item=>!item.isPaused); const categories=[{id:'__all__',name:'Todos'},...(data()?.categories||[]).map(c=>({id:String(c.id??c.name),name:c.name||c.label||'Categoria'}))];
@@ -14682,15 +14731,24 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
     });
     return lines.join('');
   }
+  function openPdvPaymentModal(draft){
+    document.querySelector('[data-pdv-payment-modal]')?.remove();
+    const modal=document.createElement('div'); modal.setAttribute('data-pdv-payment-modal',''); modal.className='pdv-payment-modal-backdrop';
+    modal.innerHTML=`<div class="pdv-payment-modal" role="dialog" aria-modal="true" aria-labelledby="pdvPaymentTitle"><div class="pdv-payment-modal-head"><div><small>FINALIZAR PAGAMENTO</small><h3 id="pdvPaymentTitle">${escapeHtml(draft.tableLabel||'Comanda')}</h3></div><button type="button" data-pdv-payment-close aria-label="Fechar">×</button></div><p class="pdv-payment-total">Total: <strong>${money(itemTotal(draft.items))}</strong></p><div class="pdv-payment-methods" role="group" aria-label="Forma de pagamento"><button type="button" data-pdv-method="credit">Crédito</button><button type="button" data-pdv-method="debit">Débito</button><button type="button" data-pdv-method="pix">Pix</button><button type="button" data-pdv-method="cash">Dinheiro</button></div><button type="button" class="pdv-payment-complete" data-pdv-payment-complete disabled>Pagamento concluído</button></div>`;
+    document.body.appendChild(modal);
+    let method='';
+    modal.querySelectorAll('[data-pdv-method]').forEach(button=>button.onclick=()=>{method=button.dataset.pdvMethod;modal.querySelectorAll('[data-pdv-method]').forEach(item=>item.classList.toggle('is-selected',item===button));modal.querySelector('[data-pdv-payment-complete]').disabled=false;});
+    const close=()=>modal.remove(); modal.querySelector('[data-pdv-payment-close]').onclick=close; modal.addEventListener('click',event=>{if(event.target===modal)close();});
+    modal.querySelector('[data-pdv-payment-complete]').onclick=()=>{if(!method)return;draft.paymentChoice='paid';draft.paymentMethod=method;draft.paymentCompletedAt=new Date().toISOString();saveStore();close();render();};
+  }
   function renderCard(draft){
     const total=itemTotal(draft.items);
     const closeLabel = draft.channel === 'mesa' ? 'Fechar mesa e pagar' : draft.channel === 'balcao' ? 'Fechar balcão e pagar' : draft.channel === 'delivery' ? 'Fechar delivery e pagar' : '';
-    const customerField = (draft.channel === 'retirada' || draft.channel === 'delivery') ? `<div class="pdv-customer-field"><label for="pdv-customer-${escapeHtml(draft.key)}">Nome do cliente</label><div><input id="pdv-customer-${escapeHtml(draft.key)}" data-customer-name="${escapeHtml(draft.key)}" value="${escapeHtml(draft.customerName || '')}" placeholder="Digite o nome" autocomplete="off"><button type="button" data-save-customer="${escapeHtml(draft.key)}">Confirmar</button></div>${draft.customerName ? `<small>Cliente confirmado: <strong>${escapeHtml(draft.customerName)}</strong></small>` : '<small>Informe o nome para identificar a comanda.</small>'}</div>` : '';
-    const deliveryField = draft.channel === 'delivery' ? `<div class="pdv-delivery-field"><label for="pdv-address-${escapeHtml(draft.key)}">Endereço de entrega</label><textarea id="pdv-address-${escapeHtml(draft.key)}" data-delivery-address="${escapeHtml(draft.key)}" placeholder="Digite o endereço completo">${escapeHtml(draft.deliveryAddress || '')}</textarea><label for="pdv-rider-${escapeHtml(draft.key)}">Motoboy responsável</label><select id="pdv-rider-${escapeHtml(draft.key)}" data-motoboy="${escapeHtml(draft.key)}"><option value="">Selecionar motoboy</option>${(Array.isArray(window.motoboys)?window.motoboys:[]).filter(m=>m && m.active !== false).map(m=>{const id=String(m.id||m.uid||m.userId||'');const name=String(m.name||m.nome||m.displayName||m.email||'Motoboy');return `<option value="${escapeHtml(id)}" data-name="${escapeHtml(name)}" ${id===String(draft.motoboyId||'')?'selected':''}>${escapeHtml(name)}</option>`}).join('')}</select><small>${draft.motoboyName ? `Motoboy selecionado: <strong>${escapeHtml(draft.motoboyName)}</strong>` : 'Selecione um motoboy cadastrado quando estiver disponível.'}</small></div>` : '';
-    const retiradaPayment = draft.channel === 'retirada' ? (draft.paymentChoice ? `<button type="button" class="pdv-retirada-payment-state ${draft.paymentChoice==='paid'?'is-paid':'is-awaiting'}" style="grid-column:1/-1;background:${draft.paymentChoice==='paid'?'#1f9d55':'#ff5a1f'} !important" data-retirada-payment-reset="${escapeHtml(draft.key)}">${draft.paymentChoice==='paid'?'Pago':'Aguardando pagamento'}</button>` : `<div class="pdv-retirada-payment-choices" style="grid-column:1/-1"><button type="button" style="background:#1f9d55 !important;color:#fff !important" data-retirada-payment="paid" data-key="${escapeHtml(draft.key)}">Pago</button><button type="button" style="background:#ff5a1f !important;color:#fff !important" data-retirada-payment="awaiting" data-key="${escapeHtml(draft.key)}">A pagar</button></div>`) : `<button type="button" data-order-action="pay" data-key="${escapeHtml(draft.key)}">${closeLabel}</button>`;
-    const actionStyle = draft.channel === 'retirada' ? ' style="display:grid;grid-template-columns:42px minmax(0,1fr);gap:5px"' : '';
-    const retiradaActionStyle = draft.channel === 'retirada' ? ' style="grid-column:1/-1"' : '';
-    return `<article class="pdv-kanban-order ${draft.channel==='retirada'?'pdv-order-retirada':''}"><header><div><small>${escapeHtml(labels[draft.channel].toUpperCase())}</small><h3>${escapeHtml(draft.tableLabel||'Novo atendimento')}</h3></div><span>${itemCount(draft.items)} item(ns)</span></header>${customerField}${deliveryField}<div class="pdv-order-items">${(draft.items||[]).map(item=>`<div class="pdv-order-item"><div><span>${item.qty}x ${escapeHtml(item.name)}</span>${addonDetails(item)}</div><b>${money(item.totalPrice)}</b></div>`).join('')||'<p>Nenhum item adicionado.</p>'}</div><footer><strong>${money(total)}</strong><div class="pdv-order-actions"${actionStyle}>${retiradaPayment}${draft.channel==='retirada'?`<button type="button" class="pdv-print-icon" style="grid-column:1" title="Imprimir comanda" aria-label="Imprimir comanda" data-order-action="print" data-key="${escapeHtml(draft.key)}">🖨</button><button type="button" style="grid-column:2" data-order-action="add" data-key="${escapeHtml(draft.key)}">+ Adicionar itens</button>`:`<button type="button" class="pdv-print-icon" title="Imprimir comanda" aria-label="Imprimir comanda" data-order-action="print" data-key="${escapeHtml(draft.key)}">🖨</button><button type="button" data-order-action="add" data-key="${escapeHtml(draft.key)}">+ Adicionar itens</button>`}</div></footer></article>`;
+    const customerField = (draft.channel === 'retirada' || draft.channel === 'delivery') ? ((draft.customerConfirmed || draft.customerName) && draft.customerName ? `<div class="pdv-confirmed-info"><span>Cliente confirmado</span><strong>${escapeHtml(draft.customerName)}</strong></div>` : `<div class="pdv-customer-field"><label for="pdv-customer-${escapeHtml(draft.key)}">Nome do cliente</label><div><input id="pdv-customer-${escapeHtml(draft.key)}" data-customer-name="${escapeHtml(draft.key)}" value="${escapeHtml(draft.customerName || '')}" placeholder="Digite o nome" autocomplete="off"><button type="button" data-save-customer="${escapeHtml(draft.key)}">Confirmar</button></div></div>`) : '';
+    const deliveryField = draft.channel === 'delivery' ? `<div class="pdv-delivery-field">${(draft.addressConfirmed || draft.deliveryAddress) && draft.deliveryAddress ? `<div class="pdv-confirmed-info"><span>Endereço confirmado</span><strong>${escapeHtml(draft.deliveryAddress)}</strong></div>` : `<label for="pdv-address-${escapeHtml(draft.key)}">Endereço de entrega</label><div class="pdv-confirm-row"><textarea id="pdv-address-${escapeHtml(draft.key)}" data-delivery-address="${escapeHtml(draft.key)}" placeholder="Digite o endereço completo">${escapeHtml(draft.deliveryAddress || '')}</textarea><button type="button" data-save-address="${escapeHtml(draft.key)}">Confirmar</button></div>`}${(draft.motoboyConfirmed || draft.motoboyName) && draft.motoboyName ? `<div class="pdv-confirmed-info"><span>Motoboy confirmado</span><strong>${escapeHtml(draft.motoboyName)}</strong></div>` : `<label for="pdv-rider-${escapeHtml(draft.key)}">Motoboy responsável</label><div class="pdv-confirm-row"><select id="pdv-rider-${escapeHtml(draft.key)}" data-motoboy="${escapeHtml(draft.key)}"><option value="">Selecionar motoboy</option>${(Array.isArray(window.motoboys)?window.motoboys:[]).filter(m=>m && m.active !== false).map(m=>{const id=String(m.id||m.uid||m.userId||'');const name=String(m.name||m.nome||m.displayName||m.email||'Motoboy');return `<option value="${escapeHtml(id)}" data-name="${escapeHtml(name)}" ${id===String(draft.motoboyId||'')?'selected':''}>${escapeHtml(name)}</option>`}).join('')}</select><button type="button" data-save-motoboy="${escapeHtml(draft.key)}">Confirmar</button></div>`}</div>` : '';
+    const paymentControls = draft.paymentChoice === 'paid' ? `<button type="button" class="pdv-retirada-payment-state is-paid" style="grid-column:1/-1;background:#1f9d55 !important" data-payment-state="${escapeHtml(draft.key)}">Pago${draft.paymentMethod ? ` · ${draft.paymentMethod==='credit'?'Crédito':draft.paymentMethod==='debit'?'Débito':draft.paymentMethod==='pix'?'Pix':'Dinheiro'}` : ''}</button>` : draft.paymentChoice === 'awaiting' ? `<button type="button" class="pdv-retirada-payment-state is-awaiting" style="grid-column:1/-1;background:#ff5a1f !important" data-payment-state="${escapeHtml(draft.key)}">Aguardando pagamento</button>` : `<div class="pdv-retirada-payment-choices" style="display:flex;width:100%;grid-column:1/-1"><button type="button" style="flex:1;width:50%;background:#1f9d55 !important;color:#fff !important" data-payment-choice="pay_now" data-key="${escapeHtml(draft.key)}">Pagar agora</button><button type="button" style="flex:1;width:50%;background:#ff5a1f !important;color:#fff !important" data-payment-choice="awaiting" data-key="${escapeHtml(draft.key)}">A pagar</button></div>`;
+    const actionStyle = ' style="display:grid;grid-template-columns:42px minmax(0,1fr) minmax(64px,auto);gap:5px"';
+    return `<article class="pdv-kanban-order ${draft.channel==='retirada'?'pdv-order-retirada':''}"><header><div><small>${escapeHtml(labels[draft.channel].toUpperCase())}</small><h3>${escapeHtml(draft.tableLabel||'Novo atendimento')}</h3></div><span>${itemCount(draft.items)} item(ns)</span></header>${customerField}${deliveryField}<div class="pdv-order-items">${(draft.items||[]).map(item=>`<div class="pdv-order-item"><div><span>${item.qty}x ${escapeHtml(item.name)}</span>${addonDetails(item)}</div><b>${money(item.totalPrice)}</b></div>`).join('')||'<p>Nenhum item adicionado.</p>'}</div><footer><strong>${money(total)}</strong><div class="pdv-order-actions"${actionStyle}>${paymentControls}<button type="button" class="pdv-print-icon" style="grid-column:1" title="Imprimir comanda" aria-label="Imprimir comanda" data-order-action="print" data-key="${escapeHtml(draft.key)}">🖨️</button><button type="button" style="grid-column:2" data-order-action="add" data-key="${escapeHtml(draft.key)}">+ Adicionar itens</button><button type="button" class="pdv-close-order" style="grid-column:3" data-order-action="close" data-key="${escapeHtml(draft.key)}">Fechar</button></div></footer></article>`;
   }
   function render(){
     restore(); const target=root(); if(!target)return; const active=activeDraft();
@@ -14699,12 +14757,14 @@ document.getElementById("tabCustomers").addEventListener("click", () => {
   }
   function bind(target){
     target.querySelectorAll('[data-add-channel]').forEach(button=>button.onclick=()=>openNew(button.dataset.addChannel));
-    target.querySelectorAll('[data-order-action]').forEach(button=>button.onclick=()=>{const draft=getDraft(button.dataset.key.split('_')[0],button.dataset.key);if(!draft)return; if(button.dataset.orderAction==='pay')openPayment(draft);if(button.dataset.orderAction==='print')printDraft(draft);if(button.dataset.orderAction==='add')addMore(draft);});
-    target.querySelectorAll('[data-save-customer]').forEach(button=>button.onclick=()=>{const key=button.dataset.saveCustomer;const draft=channels.map(channel=>getDraft(channel,key)).find(Boolean);if(!draft)return;const input=target.querySelector(`[data-customer-name="${key}"]`);const address=target.querySelector(`[data-delivery-address="${key}"]`);const rider=target.querySelector(`[data-motoboy="${key}"]`);draft.customerName=String(input?.value||'').trim();if(address)draft.deliveryAddress=String(address.value||'').trim();if(rider){draft.motoboyId=String(rider.value||'');draft.motoboyName=String(rider.selectedOptions?.[0]?.dataset.name||'').trim();}saveStore();render();});
+    target.querySelectorAll('[data-order-action]').forEach(button=>button.onclick=()=>{const draft=getDraft(button.dataset.key.split('_')[0],button.dataset.key);if(!draft)return; if(button.dataset.orderAction==='pay')openPayment(draft);if(button.dataset.orderAction==='print')printDraft(draft);if(button.dataset.orderAction==='add')addMore(draft);if(button.dataset.orderAction==='close')closeDraft(draft);});
+    target.querySelectorAll('[data-save-customer]').forEach(button=>button.onclick=()=>{const key=button.dataset.saveCustomer;const draft=channels.map(channel=>getDraft(channel,key)).find(Boolean);if(!draft)return;const input=target.querySelector(`[data-customer-name="${key}"]`);draft.customerName=String(input?.value||'').trim();draft.customerConfirmed=!!draft.customerName;saveStore();render();});
+    target.querySelectorAll('[data-save-address]').forEach(button=>button.onclick=()=>{const key=button.dataset.saveAddress;const draft=getDraft('delivery',key);if(!draft)return;const input=target.querySelector(`[data-delivery-address="${key}"]`);draft.deliveryAddress=String(input?.value||'').trim();draft.addressConfirmed=!!draft.deliveryAddress;saveStore();render();});
+    target.querySelectorAll('[data-save-motoboy]').forEach(button=>button.onclick=()=>{const key=button.dataset.saveMotoboy;const draft=getDraft('delivery',key);if(!draft)return;const select=target.querySelector(`[data-motoboy="${key}"]`);draft.motoboyId=String(select?.value||'');draft.motoboyName=String(select?.selectedOptions?.[0]?.dataset.name||'').trim();draft.motoboyConfirmed=!!draft.motoboyId;saveStore();render();});
     target.querySelectorAll('[data-delivery-address]').forEach(area=>area.oninput=()=>{const key=area.dataset.deliveryAddress;const draft=getDraft('delivery',key);if(!draft)return;draft.deliveryAddress=String(area.value||'');saveStore();});
-    target.querySelectorAll('[data-motoboy]').forEach(select=>select.onchange=()=>{const key=select.dataset.motoboy;const draft=getDraft('delivery',key);if(!draft)return;draft.motoboyId=String(select.value||'');draft.motoboyName=String(select.selectedOptions?.[0]?.dataset.name||'').trim();saveStore();render();});
-    target.querySelectorAll('[data-retirada-payment]').forEach(button=>button.onclick=()=>{const draft=getDraft('retirada',button.dataset.key);if(!draft)return;draft.paymentChoice=button.dataset.retiradaPayment;saveStore();render();});
-    target.querySelectorAll('[data-retirada-payment-reset]').forEach(button=>button.onclick=()=>{const draft=getDraft('retirada',button.dataset.retiradaPaymentReset);if(!draft)return;draft.paymentChoice='';saveStore();render();});
+    target.querySelectorAll('[data-motoboy]').forEach(select=>select.onchange=()=>{});
+    target.querySelectorAll('[data-payment-choice]').forEach(button=>button.onclick=()=>{const key=button.dataset.key;const channel=key.split('_')[0];const draft=getDraft(channel,key);if(!draft)return;if(button.dataset.paymentChoice==='pay_now'){openPdvPaymentModal(draft);return;}draft.paymentChoice='awaiting';draft.paymentMethod='';saveStore();render();});
+    target.querySelectorAll('[data-payment-state]').forEach(button=>button.onclick=()=>{const key=button.dataset.paymentState;const channel=key.split('_')[0];const draft=getDraft(channel,key);if(draft)openPdvPaymentModal(draft);});
     target.querySelector('[data-action="close-catalog"]')?.addEventListener('click',closeCatalog);
     target.querySelectorAll('[data-product-id]').forEach(button=>button.onclick=()=>{const draft=activeDraft();const item=(data()?.items||[]).find(product=>String(product.id)===String(button.dataset.productId));if(!draft||!item)return;setPdvDraft(draft);api()?.openModal?.(item,true);});
   }
@@ -16354,6 +16414,27 @@ try { localStorage.removeItem('cardapio_integracoes_v1'); } catch (_) {}
 <!-- ===================== TOTEM KIOSK CONTAINER ===================== -->
 <div id="totemKioskOverlay" style="display:none"></div>
 
+<script id="store-settings-sidebar-behavior">
+(function(){
+  function initStoreSettingsSidebar(){
+    const root=document.getElementById('settingsPanel');
+    if(!root || root.dataset.sidebarReady==='1') return;
+    const buttons=[...root.querySelectorAll('[data-settings-section]')];
+    const sections=[...root.querySelectorAll('.store-settings-content>.settings-pro-section')];
+    if(!buttons.length || !sections.length) return;
+    const select=(id)=>{
+      buttons.forEach(btn=>btn.classList.toggle('is-active',btn.dataset.settingsSection===id));
+      sections.forEach(section=>section.classList.toggle('is-visible',section.id===id));
+    };
+    buttons.forEach(btn=>btn.addEventListener('click',()=>select(btn.dataset.settingsSection)));
+    select(buttons[0].dataset.settingsSection);
+    root.dataset.sidebarReady='1';
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initStoreSettingsSidebar);
+  else initStoreSettingsSidebar();
+  window.initStoreSettingsSidebar=initStoreSettingsSidebar;
+})();
+</script>
 </body><style id="round2-store-partner-search">
   /* Rodada 2: busca de parceiro permanece no modal até o aceite real da Central. */
   .partner-search-state,.partner-connected-state { display:grid; justify-items:center; gap:7px; padding:22px 14px; border:1px solid rgba(255,157,114,.22); border-radius:12px; background:rgba(255,157,114,.06); text-align:center; }
@@ -16363,6 +16444,201 @@ try { localStorage.removeItem('cardapio_integracoes_v1'); } catch (_) {}
   .partner-connected-mark { display:grid; width:28px; height:28px; place-items:center; border-radius:50%; background:#47ad70; color:#fff; font-weight:900; }
   @keyframes partner-search-spin { to { transform:rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .partner-search-spinner { animation:none; } }
+</style>
+
+<style id="moto-sections-style">
+/* Navegação por seções do entregador: mantém a lógica existente e altera apenas a organização visual. */
+body.motoboy-mode{overflow-x:hidden}
+body.motoboy-mode .moto-shell{width:min(1180px,calc(100% - 28px));padding-top:22px}
+.moto-header{position:relative;z-index:40}
+.moto-header .moto-identity{display:none!important}
+.moto-menu-button{display:grid;place-items:center;width:42px;height:42px;flex:none;border:1px solid rgba(255,255,255,.16);border-radius:11px;background:#29241f;color:#fff;cursor:pointer}
+.moto-menu-button:hover,.moto-menu-button:focus-visible{border-color:#ff8b62;background:#3a2c25;outline:none}
+.moto-menu-icon,.moto-menu-icon:before,.moto-menu-icon:after{display:block;width:19px;height:2px;border-radius:2px;background:#ffae8d;content:'';transition:.18s ease}
+.moto-menu-icon{position:relative}.moto-menu-icon:before{position:absolute;top:-6px}.moto-menu-icon:after{position:absolute;top:6px}
+.moto-sections-shell{display:block}.moto-section-view{display:none;min-width:0}.moto-section-view.is-active{display:block}
+.moto-section-view[data-section="home"] .moto-stats{margin-top:14px}
+.moto-section-view[data-section="home"] .moto-layout{display:grid}
+.moto-section-view[data-section="profile"],.moto-section-view[data-section="history"]{padding-top:14px}
+.moto-section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 14px;padding:0 2px 11px;border-bottom:1px solid rgba(255,255,255,.1)}
+.moto-section-title h2{margin:0;color:#fff;font:700 24px/1 'Barlow Condensed',Arial,sans-serif}.moto-section-title p{margin:5px 0 0;color:#a99d93;font-size:11px}
+.moto-profile-card{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr);gap:14px;padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:14px;background:linear-gradient(145deg,#24201d,#191715);box-shadow:0 14px 35px rgba(0,0,0,.16)}
+.moto-profile-identity{display:flex;align-items:center;gap:13px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.moto-profile-avatar{display:grid;place-items:center;width:58px;height:58px;flex:none;overflow:hidden;border-radius:17px;background:linear-gradient(135deg,#ff5a1f,#b83514);color:#fff;font:800 25px 'Barlow Condensed',Arial,sans-serif}.moto-profile-avatar img{width:100%;height:100%;object-fit:cover}.moto-profile-identity strong{display:block;color:#fff;font-size:18px}.moto-profile-identity small{display:block;margin-top:4px;color:#bbaea4;font-size:11px}
+.moto-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.moto-profile-field{min-height:62px;padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(255,255,255,.035)}.moto-profile-field span{display:block;color:#857970;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase}.moto-profile-field strong{display:block;margin-top:7px;color:#eee2d8;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.moto-profile-earnings{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:2px}.moto-profile-earning{padding:13px;border:1px solid rgba(143,221,164,.25);border-radius:10px;background:rgba(143,221,164,.07)}.moto-profile-earning span{display:block;color:#a8d8b6;font:700 9px 'IBM Plex Mono',monospace;text-transform:uppercase}.moto-profile-earning strong{display:block;margin-top:5px;color:#c9f3d2;font:700 23px 'Barlow Condensed',Arial,sans-serif}
+.moto-drawer{position:fixed;inset:0;z-index:2100;display:none}.moto-drawer.is-open{display:block}.moto-drawer-backdrop{position:absolute;inset:0;background:rgba(3,5,6,.68);backdrop-filter:blur(3px)}.moto-drawer-panel{position:absolute;top:0;right:0;display:flex;flex-direction:column;width:min(390px,86vw);height:100dvh;padding:24px 18px 20px;border-left:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg,#29231f,#141312);box-shadow:-20px 0 60px rgba(0,0,0,.4);transform:translateX(100%);transition:transform .22s ease}.moto-drawer.is-open .moto-drawer-panel{transform:translateX(0)}.moto-drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)}.moto-drawer-head small{display:block;color:#ffae8d;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.09em;text-transform:uppercase}.moto-drawer-head h2{margin:5px 0 0;color:#fff;font:700 27px/1 'Barlow Condensed',Arial,sans-serif}.moto-drawer-close{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:#332923;color:#fff;font-size:23px;cursor:pointer}.moto-drawer-nav{display:grid;gap:8px;margin-top:20px}.moto-drawer-link{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:0 13px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.035);color:#e9ded4;text-align:left;font:700 13px Manrope,Arial,sans-serif;cursor:pointer}.moto-drawer-link:hover,.moto-drawer-link.is-active{border-color:rgba(255,139,98,.55);background:rgba(255,90,31,.14);color:#fff}.moto-drawer-link b{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.08);color:#ffae8d;font:800 12px 'IBM Plex Mono',monospace}.moto-drawer-note{margin-top:auto;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#9f9187;font-size:10px;line-height:1.45}
+@media(max-width:850px){.moto-profile-card{grid-template-columns:1fr}.moto-section-view[data-section="home"] .moto-layout{display:block}.moto-section-view[data-section="home"] .moto-side-stack{margin-top:12px}}
+@media(max-width:520px){body.motoboy-mode .moto-shell{width:calc(100% - 18px);padding-top:10px}.moto-profile-fields,.moto-profile-earnings{grid-template-columns:1fr}.moto-profile-earnings{grid-column:auto}.moto-drawer-panel{width:min(370px,90vw)}}
+</style>
+<script id="moto-sections-runtime">
+(() => {
+  'use strict';
+  const byId = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const money = value => typeof window.formatBRL === 'function' ? window.formatBRL(Number(value) || 0) : `R$ ${(Number(value)||0).toFixed(2).replace('.',',')}`;
+  function profileRecord(){
+    const session = window.__motoboySession || {};
+    const list = Array.isArray(window.motoboys) ? window.motoboys : [];
+    return list.find(item => String(item.id) === String(session.motoboyId || session.id)) || session;
+  }
+  function buildProfile(){
+    const host = byId('motoProfileContent'); if (!host) return;
+    const p = profileRecord();
+    const name = p.name || 'Entregador';
+    const phone = p.phone || 'Telefone não informado';
+    const vehicle = [p.vehicleModel || p.vehicle, p.vehicleColor || p.color].filter(Boolean).join(' · ') || 'Moto não informada';
+    const plate = p.vehiclePlate || p.plate || 'Placa não informada';
+    const address = p.address || p.addressLine || p.endereco || 'Endereço não informado';
+    const photo = p.photo || p.photoURL || p.avatarUrl || '';
+    const avatar = photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(name)}">` : esc(name.trim().charAt(0).toUpperCase() || 'E');
+    const total = byId('motoEarningsTotal')?.textContent || 'R$ 0,00';
+    const hint = byId('motoEarningsHint')?.textContent || 'Hoje R$ 0,00';
+    host.innerHTML = `<div class="moto-profile-card"><div><div class="moto-profile-identity"><div class="moto-profile-avatar">${avatar}</div><div><strong>${esc(name)}</strong><small>Conta de entregador · Comissão por entrega</small></div></div><div class="moto-profile-earnings"><div class="moto-profile-earning"><span>Faturamento acumulado</span><strong>${esc(total)}</strong></div><div class="moto-profile-earning"><span>Resumo de hoje</span><strong>${esc(hint.replace('Taxas confirmadas',''))}</strong></div></div></div><div class="moto-profile-fields"><div class="moto-profile-field"><span>Telefone</span><strong>${esc(phone)}</strong></div><div class="moto-profile-field"><span>Moto</span><strong>${esc(vehicle)}</strong></div><div class="moto-profile-field"><span>Placa</span><strong>${esc(plate)}</strong></div><div class="moto-profile-field"><span>Endereço</span><strong>${esc(address)}</strong></div></div></div>`;
+  }
+  function switchSection(section){
+    document.querySelectorAll('.moto-section-view').forEach(node => node.classList.toggle('is-active', node.dataset.section === section));
+    document.querySelectorAll('.moto-drawer-link').forEach(node => { const active = node.dataset.section === section; node.classList.toggle('is-active', active); node.setAttribute('aria-current', active ? 'page' : 'false'); });
+    if(section === 'profile') buildProfile();
+    closeDrawer();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function openDrawer(){ const drawer=byId('motoDrawer'); if(!drawer) return; drawer.classList.add('is-open'); drawer.setAttribute('aria-hidden','false'); document.body.classList.add('moto-drawer-open'); }
+  function closeDrawer(){ const drawer=byId('motoDrawer'); if(!drawer) return; drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden','true'); document.body.classList.remove('moto-drawer-open'); }
+  function install(){
+    const root=byId('motoboyApp'); const header=root?.querySelector('.moto-header'); const stats=root?.querySelector('.moto-stats'); const layout=root?.querySelector('.moto-layout');
+    if(!root || !header || !stats || !layout || byId('motoSectionsRoot')) return;
+    const button=root.querySelector('.moto-brand-mark'); if(!button) return; button.type='button'; button.className='moto-menu-button'; button.id='motoMenuButton'; button.setAttribute('aria-label','Abrir menu'); button.innerHTML='<span class="moto-menu-icon" aria-hidden="true"></span>';
+    const sections=document.createElement('div'); sections.id='motoSectionsRoot'; sections.className='moto-sections-shell';
+    const home=document.createElement('section'); home.className='moto-section-view is-active'; home.dataset.section='home'; home.innerHTML='';
+    home.appendChild(layout);
+    const profile=document.createElement('section'); profile.className='moto-section-view'; profile.dataset.section='profile'; profile.innerHTML='<div class="moto-section-title"><div><h2>Meu perfil</h2><p>Informações do entregador, indicadores operacionais e faturamento por comissão.</p></div></div><div id="motoProfileContent"></div>'; profile.appendChild(stats);
+    const history=document.createElement('section'); history.className='moto-section-view'; history.dataset.section='history'; history.innerHTML='<div class="moto-section-title"><div><h2>Histórico de entregas</h2><p>Todos os pedidos concluídos nesta conta.</p></div></div>';
+    const side=layout.querySelector('.moto-side-stack'); if(side){ history.appendChild(side); }
+    sections.append(home,profile,history); root.querySelector('.moto-shell').appendChild(sections);
+    const drawer=document.createElement('div'); drawer.id='motoDrawer'; drawer.className='moto-drawer'; drawer.setAttribute('aria-hidden','true'); drawer.innerHTML='<div class="moto-drawer-backdrop" data-moto-close></div><aside class="moto-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu do entregador"><div class="moto-drawer-head"><div><small>Central do entregador</small><h2>Menu</h2></div><button type="button" class="moto-drawer-close" data-moto-close aria-label="Fechar menu">×</button></div><nav class="moto-drawer-nav"><button type="button" class="moto-drawer-link is-active" data-section="home"><b>01</b>Home</button><button type="button" class="moto-drawer-link" data-section="profile"><b>02</b>Perfil</button><button type="button" class="moto-drawer-link" data-section="history"><b>03</b>Histórico</button></nav><div class="moto-drawer-note">Escolha uma seção. O menu fecha automaticamente para manter a tela limpa durante a entrega.</div><button type="button" id="motoDrawerLogout" class="moto-drawer-logout">Sair da conta</button></aside></div>';
+    root.appendChild(drawer);
+    button.addEventListener('click',openDrawer); drawer.addEventListener('click',event=>{ const link=event.target.closest('[data-section]'); if(link) switchSection(link.dataset.section); if(event.target.closest('[data-moto-close]')) closeDrawer(); if(event.target.closest('#motoDrawerLogout')) byId('motoLogout')?.click(); }); document.addEventListener('keydown',event=>{if(event.key==='Escape') closeDrawer();});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+})();
+</script>
+
+<style id="moto-final-layout-adjustments">
+/* O menu principal ocupa o lugar do antigo E; os indicadores continuam no DOM para a lógica. */
+.moto-brand-mark.moto-menu-button{width:46px;height:46px;border-radius:12px;padding:0;background:#ff5a1f;box-shadow:none}
+.moto-brand-mark.moto-menu-button:hover,.moto-brand-mark.moto-menu-button:focus-visible{background:#ff6d39;border-color:#ffae8d}
+.moto-brand-mark.moto-menu-button .moto-menu-icon,.moto-brand-mark.moto-menu-button .moto-menu-icon:before,.moto-brand-mark.moto-menu-button .moto-menu-icon:after{background:#fff}
+.moto-section-view[data-section="home"]>.moto-stats{display:none!important}
+.moto-section-view[data-section="profile"]>.moto-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:14px 0 0}
+.moto-section-view[data-section="profile"]>.moto-stats .moto-stat:nth-child(4),.moto-section-view[data-section="profile"]>.moto-stats .moto-stat:nth-child(5){display:none}
+.moto-drawer-logout{width:100%;min-height:43px;margin-top:12px;border:1px solid rgba(255,100,78,.52);border-radius:10px;background:rgba(190,51,39,.18);color:#ffc0b1;font:800 11px 'IBM Plex Mono',monospace;cursor:pointer}
+.moto-drawer-logout:hover{background:rgba(210,62,45,.34);color:#fff}
+@media(max-width:700px){.moto-section-view[data-section="profile"]>.moto-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.moto-section-view[data-section="profile"]>.moto-stats{grid-template-columns:1fr}}
+</style>
+
+<style id="customer-location-recovery-style">
+.customer-location-recovery{display:none;position:fixed;right:16px;bottom:16px;z-index:1800;width:min(390px,calc(100vw - 32px));padding:14px 15px;border:1px solid rgba(255,208,131,.5);border-radius:13px;background:linear-gradient(145deg,#2b211c,#171311);color:#f7ece3;box-shadow:0 18px 50px rgba(0,0,0,.42)}
+.customer-location-recovery.is-visible{display:block}.customer-location-recovery strong{display:block;color:#ffe0a5;font-size:13px}.customer-location-recovery p{margin:6px 0 11px;color:#cdbcb0;font-size:11px;line-height:1.4}.customer-location-recovery-actions{display:flex;gap:8px}.customer-location-recovery button{min-height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#30251f;color:#f7ece3;font:800 10px 'IBM Plex Mono',monospace;cursor:pointer}.customer-location-recovery button.primary{border-color:#ff7b4d;background:#df5729;color:#fff}.customer-location-recovery button:hover{filter:brightness(1.12)}
+</style>
+<script id="customer-location-recovery-runtime">
+(() => {
+  'use strict';
+  const byId=id=>document.getElementById(id);
+  const text=value=>String(value??'').trim();
+  const digits=value=>text(value).replace(/\D/g,'');
+  const state={watchId:null,lastWrite:0,attempted:false};
+  function currentCustomer(){const u=window.currentUser;return u&&!u.isAdmin&&!u.isMotoboy&&!u.isGarcom?u:null;}
+  function customerOrder(order){
+    const user=currentCustomer(); if(!user||!order||!order.motoboyId) return false;
+    const ids=[user.uid,user.id,user.userId,user.email].map(text).filter(Boolean);
+    return ids.includes(text(order.userId)) || (text(order.userPhone)&&digits(order.userPhone)===digits(user.phone));
+  }
+  function activeOrder(){
+    const list=Array.isArray(window.orders)?window.orders:[];
+    return list.find(order=>customerOrder(order)&&['out_for_delivery','cancellation_requested'].includes(text(order.status).toLowerCase()))||null;
+  }
+  function ensureNotice(){
+    let node=byId('customerLocationRecovery'); if(node) return node;
+    node=document.createElement('aside');node.id='customerLocationRecovery';node.className='customer-location-recovery';node.setAttribute('role','status');node.innerHTML='<strong>Ative sua localização</strong><p>Para manter o acompanhamento da entrega atualizado, permita a localização neste aparelho. Se já estiver bloqueada, toque no ícone de cadeado/configurações do navegador e autorize o acesso.</p><div class="customer-location-recovery-actions"><button type="button" class="primary" data-customer-location-enable>Permitir localização</button><button type="button" data-customer-location-close>Agora não</button></div>';document.body.appendChild(node);return node;
+  }
+  function show(message){const node=ensureNotice();const p=node.querySelector('p');if(p&&message)p.textContent=message;node.classList.add('is-visible');}
+  function hide(){byId('customerLocationRecovery')?.classList.remove('is-visible');}
+  async function persist(position,order){
+    const now=Date.now(); if(now-state.lastWrite<15000)return; state.lastWrite=now;
+    const location={latitude:Number(position.coords.latitude),longitude:Number(position.coords.longitude),accuracy:Number(position.coords.accuracy||0),updatedAt:new Date().toISOString(),source:'customer-device'};
+    if(order) order.customerLocation=location;
+    if(window.db&&window.updateDoc&&window.doc&&order?.id){try{await window.updateDoc(window.doc(window.db,'orders',String(order.id)),{customerLocation:location,customerLocationUpdatedAt:location.updatedAt});}catch(_){} }
+    hide();
+  }
+  function request(){
+    const order=activeOrder(); if(!order)return;
+    if(!navigator.geolocation){show('Este aparelho não oferece localização. Abra a entrega em um navegador compatível.');return;}
+    navigator.geolocation.getCurrentPosition(position=>persist(position,order),error=>{state.attempted=true;show(error?.code===1?'A localização está bloqueada. Autorize-a nas configurações do navegador e toque novamente em Permitir localização.':'Não foi possível obter sua localização. Verifique o GPS e tente novamente.');},{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  }
+  function start(){
+    const order=activeOrder(); if(!order)return;
+    ensureNotice();
+    if(navigator.permissions?.query){navigator.permissions.query({name:'geolocation'}).then(permission=>{const refresh=()=>{if(permission.state==='granted'){hide();request();}else show();};permission.addEventListener?.('change',refresh);refresh();}).catch(()=>show());}else show();
+  }
+  function bind(){
+    document.addEventListener('click',event=>{if(event.target.closest('[data-customer-location-enable]'))request();if(event.target.closest('[data-customer-location-close]'))hide();});
+    window.addEventListener('pageshow',()=>setTimeout(start,250));window.addEventListener('focus',()=>setTimeout(start,250));window.addEventListener('online',()=>setTimeout(start,250));document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(start,250);});
+    setTimeout(start,1200);setInterval(start,30000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
+<style id="moto-destination-compact-style">
+.moto-order-card .moto-meta-item strong[title]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;cursor:help}
+</style>
+
+<style id="moto-notification-and-panel-style">
+/* Sino compacto no estilo de controles de áudio/notificação de apps de entrega. */
+.moto-notification-toggle{position:relative;width:42px;min-width:42px;height:38px;min-height:38px;padding:0;border-radius:10px;background:#28231f;color:#ffae8d;font-size:0}
+.moto-notification-toggle:hover{border-color:#ff8b62;background:#362821;filter:none}.moto-bell-icon{display:grid;place-items:center;width:21px;height:22px;color:#ffb08d;font:800 25px/1 Arial,sans-serif;transform:rotate(180deg)}
+.moto-bell-icon:before{content:'\\1F514';font-size:20px}.moto-notification-slash{position:absolute;left:9px;top:18px;width:25px;height:2px;border-radius:2px;background:#ff8e72;transform:rotate(-45deg);opacity:0;transition:.18s ease;box-shadow:0 0 0 1px rgba(23,17,14,.35)}
+.moto-notification-toggle.is-off .moto-notification-slash{opacity:1}.moto-notification-toggle.is-on{border-color:rgba(143,221,164,.6);background:rgba(143,221,164,.12)}.moto-notification-toggle.is-on .moto-bell-icon{color:#a9e8b8}.moto-notification-toggle:focus-visible{outline:2px solid #ffae8d;outline-offset:2px}
+/* A Home deixa de parecer uma comanda dentro de outra; as comandas individuais permanecem intactas. */
+.moto-section-view[data-section="home"] .moto-layout{display:block!important}.moto-section-view[data-section="home"] .moto-panel{width:100%;box-sizing:border-box;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}.moto-section-view[data-section="home"] .moto-panel-head{padding:0 2px 12px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,.1)}.moto-section-view[data-section="home"] .moto-order-list{width:100%}
+</style>
+<script id="moto-notification-visual-runtime">
+(() => {
+  'use strict';
+  function updateNotificationIcon(){
+    const button=document.getElementById('motoEnableNotifications'); if(!button) return;
+    const supported=typeof Notification!=='undefined';
+    const enabled=supported && Notification.permission==='granted';
+    button.classList.toggle('is-on',enabled);button.classList.toggle('is-off',!enabled);
+    const label=enabled?'Notificações ativadas':'Ativar notificações';
+    button.setAttribute('aria-label',label);button.setAttribute('title',label);button.dataset.notificationState=enabled?'on':'off';
+  }
+  function install(){
+    updateNotificationIcon();
+    const button=document.getElementById('motoEnableNotifications');
+    if(button && button.dataset.visualBound!=='1'){button.dataset.visualBound='1';button.addEventListener('click',()=>setTimeout(updateNotificationIcon,80));}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+  window.addEventListener('focus',updateNotificationIcon);window.addEventListener('pageshow',updateNotificationIcon);
+})();
+</script>
+
+<style id="moto-bell-final-fix">
+/* Sino vetorial: não depende de fonte/emoji e não sofre deformação no layout. */
+.moto-notification-toggle{display:grid!important;place-items:center!important;position:relative;width:42px!important;min-width:42px!important;height:38px!important;min-height:38px!important;padding:0!important;line-height:0!important;overflow:visible!important}
+.moto-bell-icon{display:grid!important;place-items:center;width:22px;height:22px;color:#ffb08d;line-height:0}
+.moto-bell-icon svg{display:block;width:22px;height:22px;overflow:visible}
+.moto-notification-toggle.is-on .moto-bell-icon{color:#a9e8b8}.moto-notification-toggle.is-off .moto-bell-icon{color:#ffb08d}
+.moto-notification-slash{position:absolute;left:8px;top:18px;width:27px;height:2px;border-radius:3px;background:#ff8e72;transform:rotate(-45deg);opacity:0;pointer-events:none;box-shadow:0 0 0 1px rgba(23,17,14,.42)}
+.moto-notification-toggle.is-off .moto-notification-slash{opacity:1}
+</style>
+
+<style id="moto-hide-notice-and-controls">
+/* Permissões são solicitadas no login; nenhum balão ou controle extra aparece na operação. */
+body.motoboy-mode #motoNotice{display:none!important}
+body.motoboy-mode .moto-panel-actions{display:none!important}
 </style>
 </html>
 
@@ -16549,7 +16825,7 @@ try { localStorage.removeItem('cardapio_integracoes_v1'); } catch (_) {}
     </section>
     <div class="moto-layout">
       <main class="moto-panel">
-        <div class="moto-panel-head"><div><h2>Pedidos para você</h2><p>Receba ofertas, aceite a rota, intermedie o contato e confirme a entrega com o código do cliente.</p></div><div class="moto-panel-actions"><button type="button" id="motoEnableNotifications" class="moto-button">Ativar notificações</button></div></div>
+        <div class="moto-panel-head"><div><h2>Pedidos para você</h2></div></div>
         <div id="motoOrdersList" class="moto-order-list"></div>
       </main>
       <aside class="moto-side-stack">
@@ -16649,6 +16925,25 @@ try { localStorage.removeItem('cardapio_integracoes_v1'); } catch (_) {}
   const isDeliveryActive = order => ['out_for_delivery','cancellation_requested'].includes(normalizedStatus(order?.status));
   const isTerminal = order => ['delivered','cancelled'].includes(normalizedStatus(order?.status)) || order?.decisionStatus === 'rejected';
   const orderNumber = order => esc(order?.orderNumber || String(order?.id || '').slice(0, 7).toUpperCase());
+  function compactDestination(value) {
+    const raw = String(value || '').replace(/\s+/g, ' ').trim();
+    if (!raw) return 'Endereço não informado';
+    const parts = raw.split(/\s*,\s*/).map(part => part.trim()).filter(Boolean);
+    let street = parts[0] || raw;
+    let number = '';
+    const inlineNumber = street.match(/\b(?:n[º°.]?\s*)?(\d+[A-Za-z]?)\b/);
+    if (inlineNumber) {
+      number = inlineNumber[1];
+      street = street.replace(inlineNumber[0], '').replace(/\s{2,}/g, ' ').replace(/[,-]\s*$/, '').trim();
+    } else {
+      const separateNumberIndex = parts.findIndex((part, index) => index > 0 && /^\s*(?:n[º°.]?\s*)?\d+[A-Za-z]?\s*$/i.test(part));
+      if (separateNumberIndex >= 0) number = parts[separateNumberIndex].replace(/\D/g, '');
+    }
+    const neighborhoodPart = parts.find(part => /\b(?:bairro|bh)\b/i.test(part)) || parts.find((part, index) => index > 0 && part !== number && !/^\d+[A-Za-z]?$/i.test(part)) || '';
+    const neighborhood = neighborhoodPart.replace(/^\s*(?:bairro|bh)\s*[:\-]?\s*/i, '').trim();
+    const summary = [street, number ? `nº ${number}` : '', neighborhood ? `bairro ${neighborhood}` : ''].filter(Boolean).join(', ');
+    return summary.length > 110 ? `${summary.slice(0, 107).trim()}…` : summary;
+  }
   const deliveryEarning = order => {
     const value = Number(order?.deliveryEarning ?? order?.deliveryFee ?? 0);
     return Number.isFinite(value) && value > 0 ? value : 0;
@@ -17657,7 +17952,7 @@ updatedAt:changedAt };
     const manual = state.manualAcceptOrderId === String(order.id) ? `<div class="moto-error">${esc(state.locationError || 'Não foi possível compartilhar a localização.')}</div><div class="moto-order-actions"><button type="button" class="moto-button" data-action="accept-location" data-order-id="${esc(order.id)}">Tentar novamente</button></div>` : '';
     return `<article class="moto-order-card ${isOffer ? 'offer' : ''} ${isActive ? 'active' : ''}" data-order-id="${esc(order.id)}">
       <div class="moto-order-head"><div><div class="moto-order-number">PEDIDO #${orderNumber(order)}</div><span class="moto-order-status ${isOffer ? 'offer' : isActive ? 'active' : 'done'}">${statusLabel}</span></div><div class="moto-order-total"><small>${status === 'delivered' ? 'Taxa recebida' : 'Sua taxa'}</small>${money(earning)}</div></div>
-      <div class="moto-order-meta"><div class="moto-meta-item"><span>Cliente</span><strong>${esc(order.userName || 'Cliente')}</strong></div><div class="moto-meta-item"><span>Contato</span><strong>Comunique-se com a loja</strong></div><div class="moto-meta-item"><span>Destino</span><strong>${esc(order.address || order.deliveryAreaName || 'Endereço não informado')}</strong></div><div class="moto-meta-item"><span>Pagamento</span><strong>${esc(order.paymentMethod || 'Não informado')}</strong></div></div>
+      <div class="moto-order-meta"><div class="moto-meta-item"><span>Cliente</span><strong>${esc(order.userName || 'Cliente')}</strong></div><div class="moto-meta-item"><span>Contato</span><strong>Comunique-se com a loja</strong></div><div class="moto-meta-item"><span>Destino</span><strong title="${esc(order.address || order.deliveryAreaName || 'Endereço não informado')}">${esc(compactDestination(order.address || order.deliveryAreaName || 'Endereço não informado'))}</strong></div><div class="moto-meta-item"><span>Pagamento</span><strong>${esc(order.paymentMethod || 'Não informado')}</strong></div></div>
       <ul class="moto-item-list">${items || '<li>Itens não informados</li>'}</ul>
       ${isActive ? `<div class="moto-live ${isCancellationRequested ? 'pending' : location ? '' : 'warning'}">${isCancellationRequested ? 'Solicitação de cancelamento enviada. Aguarde a avaliação da loja; a entrega ainda não foi encerrada.' : location ? esc(locationText) : 'A entrega está ativa, mas a localização não foi compartilhada. O cliente continuará recebendo os status da operação.'}</div>` : ''}
       ${liveMapMarkup}
@@ -17703,7 +17998,7 @@ updatedAt:changedAt };
     const history = byId('motoHistory');
     if (history) {
       if (typeof bindOrderHistoryAccordion === 'function') bindOrderHistoryAccordion();
-      const completed = orders.filter(order => normalizedStatus(order.status) === 'delivered').slice(0, 8);
+      const completed = orders.filter(order => normalizedStatus(order.status) === 'delivered');
       history.innerHTML = completed.length
         ? completed.map(order => renderExpandableOrderCard(order, { context: 'motoboy', showClient: true })).join('')
         : '<div class="moto-empty">Nenhuma entrega concluída ainda.</div>';
@@ -17734,7 +18029,7 @@ updatedAt:changedAt };
         if (state.initialized) next.filter(order => normalizedStatus(order.status) === 'ready_for_delivery' && order.deliveryOffer?.status === 'offered' && !previousIds.has(String(order.id))).forEach(notifyOffer);
         state.initialized = true;
         renderDashboard();
-        if (!state.lastNotice || !state.lastNotice.startsWith('Pedido #')) setNotice('Pedidos sincronizados em tempo real.');
+        if (!state.lastNotice || !state.lastNotice.startsWith('Pedido #')) setNotice('');
         const syncedQueue = deliveryQueueSnapshot();
         if (state.queueStarted && !syncedQueue.current && syncedQueue.next && state.queueActivationBlockedId !== String(syncedQueue.next.id)) window.setTimeout(() => activateNextQueuedDelivery('sync'), 0);
       }, error => {
@@ -17785,6 +18080,7 @@ updatedAt:changedAt };
     hideLegacyInterface();
     setupDashboardEvents(); setupCancellationEvents(); setupLiveMapControls();
     setupNotificationButton();
+    requestMotoboyPermissionsOnLogin();
     startMotoboyPresenceHeartbeat();
     setNotice('Sessão de entregador iniciada. Aguardando pedidos atribuídos à sua conta.');
     attachOrdersListener();
@@ -18002,14 +18298,19 @@ updatedAt:changedAt };
   window.renderCustomerTrackerExtension = renderCustomerTrackerExtension;
 
   function setupNotificationButton() {
-    const button = byId('motoEnableNotifications');
-    if (!button || button.dataset.bound === '1') return;
-    button.dataset.bound = '1';
-    button.addEventListener('click', async () => {
-      if (typeof Notification === 'undefined') { setNotice('Este navegador não oferece notificações do sistema.', 'warning'); return; }
-      const permission = await Notification.requestPermission();
-      setNotice(permission === 'granted' ? 'Notificações ativadas para novas ofertas.' : 'Notificações não foram autorizadas; a fila continua atualizando dentro da conta.', permission === 'granted' ? '' : 'warning');
-    });
+    // O controle visual foi removido; a permissão é solicitada no login do entregador.
+  }
+
+  async function requestMotoboyPermissionsOnLogin() {
+    // O navegador sempre exige a decisão do usuário; não é possível conceder permissões silenciosamente.
+    try {
+      if (typeof Notification !== 'undefined' && Notification.permission === 'default') await Notification.requestPermission();
+    } catch (_) {}
+    try {
+      if (navigator.geolocation?.getCurrentPosition && window.isSecureContext) {
+        await new Promise(resolve => navigator.geolocation.getCurrentPosition(() => resolve(), () => resolve(), { enableHighAccuracy:true, timeout:12000, maximumAge:0 }));
+      }
+    } catch (_) {}
   }
 
   function setupCancellationEvents() {
@@ -21828,5 +22129,206 @@ body:has(#modal.open) {
   async function retry() { if(!state.order)return; await startPixCheckout(state.order); }
   window.PaymentHub=window.PaymentHub||{}; window.PaymentHub.startPixCheckout=startPixCheckout; window.PaymentHub.closePix=closePix;
   window.addEventListener('beforeunload', e=>{ if(document.getElementById('foodFlowPixOverlay')?.classList.contains('is-open') && state.order && !['paid','approved'].includes(String(state.order.paymentStatus||'').toLowerCase())){ e.preventDefault(); e.returnValue='Seu pagamento Pix ainda está pendente.'; } });
+})();
+</script>
+<script id="store-settings-sidebar-runtime">
+(function(){
+  var css="\n/* Layout visual das configura\u00e7\u00f5es: uma se\u00e7\u00e3o por vez, sem alterar campos ou persist\u00eancia. */\n#settingsPanel.settings-pro-panel{max-width:100%;overflow:visible}\n#settingsPanel .settings-pro-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px}\n#settingsPanel .settings-pro-title{font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.035em}\n#settingsPanel .settings-pro-subtitle{max-width:720px;font-size:13px;line-height:1.6;color:#bdb0a5}\n#settingsPanel .settings-pro-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}\n#settingsPanel .settings-pro-summary-card{min-height:86px;padding:16px 18px;border-radius:12px}\n#settingsPanel .store-settings-workspace{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;align-items:start}\n#settingsPanel .store-settings-nav{position:sticky;top:12px;display:grid;gap:7px;padding:12px;border:1px solid rgba(255,219,190,.14);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:0 12px 35px rgba(0,0,0,.12)}\n#settingsPanel .store-settings-nav-label{padding:4px 10px 9px;color:#ffad87;font:800 10px/1.2 \"IBM Plex Mono\",monospace;letter-spacing:.12em;text-transform:uppercase}\n#settingsPanel .store-settings-nav button{display:grid;grid-template-columns:32px minmax(0,1fr);gap:1px 9px;width:100%;padding:12px 11px;border:1px solid transparent;border-radius:10px;background:transparent;color:#bdb0a5;text-align:left;cursor:pointer;transition:.18s ease}\n#settingsPanel .store-settings-nav button span{grid-row:span 2;display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(255,174,135,.3);border-radius:7px;color:#ffad87;font:800 10px \"IBM Plex Mono\",monospace}\n#settingsPanel .store-settings-nav button strong{align-self:end;color:#eee2d8;font:800 12px/1.25 Manrope,Arial,sans-serif}\n#settingsPanel .store-settings-nav button small{color:#94877d;font:500 10px/1.35 Manrope,Arial,sans-serif}\n#settingsPanel .store-settings-nav button:hover{border-color:rgba(255,143,97,.4);background:rgba(255,90,31,.08);transform:translateX(2px)}\n#settingsPanel .store-settings-nav button.is-active{border-color:rgba(255,143,97,.7);background:linear-gradient(135deg,rgba(255,90,31,.22),rgba(255,90,31,.07));box-shadow:inset 3px 0 #ff5a1f}\n#settingsPanel .store-settings-nav button.is-active strong{color:#fff}\n#settingsPanel .store-settings-nav button.is-active span{background:#ff5a1f;border-color:#ff8f61;color:#fff}\n#settingsPanel .store-settings-content{min-width:0}\n#settingsPanel .store-settings-content>.settings-pro-section{display:none;margin:0;min-height:440px;padding:24px;border:1px solid rgba(255,219,190,.16);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));box-shadow:0 12px 35px rgba(0,0,0,.12)}\n#settingsPanel .store-settings-content>.settings-pro-section.is-visible{display:block;animation:settingsSectionIn .2s ease-out}\n@keyframes settingsSectionIn{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:none}}\n#settingsPanel .settings-pro-section-heading{margin-bottom:22px;padding-bottom:15px;border-bottom:1px solid rgba(255,219,190,.12)}\n#settingsPanel .settings-pro-section-heading h5{font-size:20px;line-height:1.2}\n#settingsPanel .settings-pro-section-heading p{max-width:700px;font-size:12px;line-height:1.5;color:#a99c91}\n#settingsPanel .settings-pro-field label{font-size:11px;letter-spacing:.035em}\n#settingsPanel .settings-pro-field input,#settingsPanel .settings-pro-field textarea,#settingsPanel .settings-pro-field select{min-height:42px;font-size:13px}\n#settingsPanel .settings-pro-field textarea{min-height:98px}\n#settingsPanel .settings-pro-field small{font-size:10px;line-height:1.45}\n#settingsPanel .settings-pro-savebar{grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;padding:14px 2px 0}\n@media(max-width:900px){#settingsPanel .store-settings-workspace{grid-template-columns:1fr}#settingsPanel .store-settings-nav{position:static;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.store-settings-nav-label{grid-column:1/-1}#settingsPanel .settings-pro-savebar{grid-column:auto}}\n@media(max-width:560px){#settingsPanel .store-settings-nav{grid-template-columns:1fr}#settingsPanel .store-settings-content>.settings-pro-section{padding:16px;min-height:0}#settingsPanel .settings-pro-summary{grid-template-columns:1fr}#settingsPanel .settings-pro-header{display:block}#settingsPanel .settings-pro-status-card{margin-top:12px}}\n";
+  function install(){
+    if(!document.getElementById('store-settings-sidebar-runtime-style')){
+      var style=document.createElement('style'); style.id='store-settings-sidebar-runtime-style'; style.textContent=css; document.head.appendChild(style);
+    }
+    if(window.initStoreSettingsSidebar) window.initStoreSettingsSidebar();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+})();
+</script><script id="store-status-runtime">
+(function(){
+  var css="<style id=\"store-status-controls-style\">\n.store-status-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:7px}\n.store-status-option{display:grid;grid-template-columns:18px 1fr;gap:2px 8px;align-items:center;min-height:62px;padding:10px 12px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.035);color:#cfc2b8;text-align:left;cursor:pointer;transition:.18s ease}\n.store-status-option .store-status-dot{grid-row:span 2;width:12px;height:12px;border-radius:50%;background:#84776f;box-shadow:0 0 0 3px rgba(255,255,255,.06)}\n.store-status-option strong{font:800 12px/1.2 Manrope,Arial,sans-serif;color:#eee2d8}.store-status-option small{font:500 10px/1.3 Manrope,Arial,sans-serif;color:#a99c91}\n.store-status-option.is-open:hover,.store-status-option.is-open.is-selected{border-color:#5bd477;background:rgba(39,174,96,.16);box-shadow:0 0 0 2px rgba(91,212,119,.12)}\n.store-status-option.is-open .store-status-dot{background:#55d477}.store-status-option.is-closed:hover,.store-status-option.is-closed.is-selected{border-color:#f27668;background:rgba(199,63,52,.17);box-shadow:0 0 0 2px rgba(242,118,104,.12)}\n.store-status-option.is-closed .store-status-dot{background:#ef6f62}.store-status-option.is-selected strong{color:#fff}\n.store-closed-modal{position:fixed;inset:0;z-index:2147483100;display:grid;place-items:center;padding:18px;background:rgba(4,3,3,.72);backdrop-filter:blur(4px)}\n.store-closed-dialog{width:min(390px,100%);padding:26px 24px;border:1px solid rgba(242,118,104,.4);border-radius:16px;background:linear-gradient(145deg,#2b211e,#181413);box-shadow:0 24px 80px rgba(0,0,0,.55);color:#fff4ed;text-align:center}\n.store-closed-dialog .store-closed-icon{display:grid;place-items:center;width:48px;height:48px;margin:0 auto 13px;border-radius:50%;background:rgba(199,63,52,.2);color:#ff9384;font-size:24px}.store-closed-dialog h3{margin:0 0 8px;font:800 24px/1.1 Manrope,Arial,sans-serif}.store-closed-dialog p{margin:0;color:#c9b8ae;font:500 13px/1.5 Manrope,Arial,sans-serif}.store-closed-dialog button{margin-top:18px;min-width:120px;padding:10px 16px;border:0;border-radius:8px;background:#d85b4d;color:#fff;font:800 12px Manrope,Arial,sans-serif;cursor:pointer}\n@media(max-width:560px){.store-status-controls{grid-template-columns:1fr}}\n</style>\n";
+  function addStyle(){if(!document.getElementById('store-status-controls-style-runtime')){var st=document.createElement('style');st.id='store-status-controls-style-runtime';st.textContent=css;document.head.appendChild(st);}}
+  window.setStoreStatusControls=function(value){
+    var input=document.getElementById('restaurantStatus'); if(!input) return;
+    var open=!/(fechad|encerrad|pausad|indisponivel|closed|offline)/i.test(String(value||''));
+    input.value=open?'Aberta':'Fechada';
+    document.querySelectorAll('[data-store-status]').forEach(function(btn){btn.classList.toggle('is-selected',(open&&btn.dataset.storeStatus==='open')||(!open&&btn.dataset.storeStatus==='closed'));btn.setAttribute('aria-pressed',String((open&&btn.dataset.storeStatus==='open')||(!open&&btn.dataset.storeStatus==='closed')));});
+  };
+  window.showStoreClosedModal=function(){
+    var old=document.getElementById('storeClosedModal'); if(old) old.remove();
+    var modal=document.createElement('div'); modal.id='storeClosedModal'; modal.className='store-closed-modal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); modal.innerHTML='<div class="store-closed-dialog"><div class="store-closed-icon">!</div><h3>Loja fechada</h3><p>No momento, a loja está fechada e não está aceitando novos pedidos.</p><button type="button" data-store-closed-close>Entendi</button></div>';
+    document.body.appendChild(modal); var close=function(){modal.remove();}; modal.querySelector('[data-store-closed-close]').addEventListener('click',close); modal.addEventListener('click',function(e){if(e.target===modal) close();});
+  };
+  function bind(){
+    addStyle();
+    document.querySelectorAll('[data-store-status]').forEach(function(btn){if(btn.dataset.statusBound==='1') return;btn.dataset.statusBound='1';btn.addEventListener('click',function(){setStoreStatusControls(btn.dataset.storeStatus==='open'?'Aberta':'Fechada');});});
+    setStoreStatusControls(document.getElementById('restaurantStatus')?.value || window.DATA?.restaurant?.status || 'Aberta');
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
+  window.bindStoreStatusControls=bind;
+})();
+</script><style id="store-status-savebar-runtime">
+#settingsPanel .store-settings-nav .settings-pro-savebar{grid-column:auto;display:flex;flex-direction:column;align-items:stretch;gap:9px;margin-top:8px;padding:12px 2px 2px;border-top:1px solid rgba(255,219,190,.14)}
+#settingsPanel .store-settings-nav .settings-pro-feedback{min-height:28px;font-size:10px;line-height:1.4}
+#settingsPanel .store-settings-nav .settings-pro-button.primary{width:100%;min-height:40px}
+</style><script id="store-status-final-repair">
+(function(){
+var css="\n/* Corre\u00e7\u00f5es finais do status da loja e do layout das configura\u00e7\u00f5es. */\n#settingsPanel .store-settings-nav .store-status-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}\n#settingsPanel .store-settings-content + .settings-pro-savebar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;width:100%!important;margin-top:14px!important;padding:14px 2px 0!important;border-top:1px solid rgba(255,219,190,.14)!important}\n#settingsPanel .settings-pro-savebar .settings-pro-button.primary{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:10px 18px!important;border:1px solid #ff8f61!important;border-radius:9px!important;background:#ff5a1f!important;color:#fff!important;font:800 12px Manrope,Arial,sans-serif!important;cursor:pointer!important;box-shadow:0 8px 18px rgba(255,90,31,.2)!important}\n#settingsPanel .settings-pro-savebar .settings-pro-button.primary:hover{background:#ff713f!important}\n.store-header-status.is-open i,.store-info-status.is-open i{animation:store-header-pulse 1.22s cubic-bezier(.45,0,.25,1) infinite!important}\n.store-header-status.is-closed i,.store-info-status.is-closed i{animation:none!important}\n@media(max-width:560px){#settingsPanel .store-settings-nav .store-status-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}#settingsPanel .store-settings-content + .settings-pro-savebar{align-items:stretch!important;flex-direction:column!important}#settingsPanel .store-settings-content + .settings-pro-savebar .settings-pro-button.primary{width:100%!important}}\n";
+function install(){if(!document.getElementById('store-status-final-repair-style')){var st=document.createElement('style');st.id='store-status-final-repair-style';st.textContent=css;document.head.appendChild(st);}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script><script id="store-status-layout-final">(function(){var css="\n/* Ajuste final: status lado a lado e salvamento fora da navega\u00e7\u00e3o, abaixo dela. */\n#settingsPanel .settings-pro-store-status-field .store-status-controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}\n#settingsPanel .store-settings-content + .settings-pro-savebar{grid-column:1 / -1!important;justify-self:start!important;width:270px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:9px!important;margin:14px 0 0!important;padding:14px 0 0!important;border-top:1px solid rgba(255,219,190,.14)!important}\n#settingsPanel .store-settings-content + .settings-pro-savebar .settings-pro-button.primary{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:42px!important;padding:10px 18px!important;border:1px solid #ff8f61!important;border-radius:9px!important;background:#ff5a1f!important;color:#fff!important;font:800 12px Manrope,Arial,sans-serif!important;cursor:pointer!important;box-shadow:0 8px 18px rgba(255,90,31,.2)!important}\n@media(max-width:900px){#settingsPanel .store-settings-content + .settings-pro-savebar{grid-column:auto!important;width:100%!important}}\n@media(max-width:560px){#settingsPanel .settings-pro-store-status-field .store-status-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}}\n";function i(){if(!document.getElementById('store-status-layout-final-style')){var s=document.createElement('style');s.id='store-status-layout-final-style';s.textContent=css;document.head.appendChild(s);}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',i);else i();})();</script>
+<style id="customer-motoboy-layout-delete-style">
+/* CRM e logística: cinco cards por linha em telas de computador. */
+#customersList,#motoboysList{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;align-items:stretch}
+#customersList .brasa-client-card,#motoboysList .brasa-motoboy-card{min-width:0}
+/* Editor deve ficar acima de qualquer painel administrativo. */
+#motoboyModal,#motoboyModal.open{position:fixed!important;z-index:2147483000!important}
+#motoboyDeleteModal{position:fixed;inset:0;z-index:2147483001;display:grid;place-items:center;padding:16px;background:rgba(5,4,3,.76);backdrop-filter:blur(5px)}
+#motoboyDeleteModal[hidden]{display:none!important}
+#motoboyDeleteModal .motoboy-delete-dialog{width:min(440px,100%);max-height:min(86vh,620px);overflow:auto;padding:22px;border:1px solid rgba(242,118,104,.42);border-radius:14px;background:linear-gradient(145deg,#2a211d,#171311);color:#f7ece3;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+#motoboyDeleteModal h3{margin:0 0 7px;font:800 24px/1.05 Manrope,Arial,sans-serif}#motoboyDeleteModal p{margin:0 0 15px;color:#c9b8ad;font-size:12px;line-height:1.45}
+#motoboyDeleteModal label{display:block;margin-bottom:6px;color:#e9d8cd;font:700 10px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
+#motoboyDeleteModal select{width:100%;min-height:42px;padding:9px 10px;border:1px solid rgba(255,255,255,.18);border-radius:8px;background:#211b18;color:#fff;font:600 13px Manrope,Arial,sans-serif}
+#motoboyDeleteModal .motoboy-delete-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}#motoboyDeleteModal button{min-height:38px;padding:0 13px;border:1px solid rgba(255,255,255,.16);border-radius:7px;background:#302822;color:#eee2d8;font:800 11px Manrope,Arial,sans-serif;cursor:pointer}#motoboyDeleteModal button.danger{border-color:#e96d5e;background:#c74b3e;color:#fff}#motoboyDeleteModal button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:1250px){#customersList,#motoboysList{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:980px){#customersList,#motoboysList{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:680px){#customersList,#motoboysList{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:430px){#customersList,#motoboysList{grid-template-columns:1fr!important}}
+</style>
+<script id="motoboy-delete-runtime">
+(function(){
+  function list(){ return Array.isArray(window.motoboys) ? window.motoboys : []; }
+  function escText(value){ const node=document.createElement('div'); node.textContent=String(value ?? ''); return node.innerHTML; }
+  function ensureDeleteButton(){
+    const open=document.getElementById('btnOpenMotoboyModal');
+    if(!open || document.getElementById('btnDeleteMotoboy')) return;
+    const button=document.createElement('button'); button.type='button'; button.id='btnDeleteMotoboy'; button.className='pill'; button.textContent='Excluir motoboy'; button.style.cssText='background:#c74b3e;color:#fff;border:1px solid #e96d5e;';
+    open.parentElement?.appendChild(button); button.addEventListener('click',openDeleteModal);
+  }
+  function closeDeleteModal(){ document.getElementById('motoboyDeleteModal')?.remove(); }
+  function openDeleteModal(){
+    closeDeleteModal();
+    const options=list().map(item=>`<option value="${escText(item.id)}">${escText(item.name || 'Motoboy')} · ${escText(item.phone || 'Telefone não informado')}</option>`).join('');
+    const modal=document.createElement('div'); modal.id='motoboyDeleteModal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true');
+    modal.innerHTML=`<div class="motoboy-delete-dialog"><h3>Confirmar exclusão</h3><p>Selecione o motoboy que será removido. O cadastro e o acesso desse motoboy serão excluídos; o histórico dos pedidos será preservado.</p><label for="motoboyDeleteSelect">Motoboy cadastrado</label><select id="motoboyDeleteSelect"><option value="">Selecione um motoboy</option>${options}</select><div class="motoboy-delete-actions"><button type="button" data-delete-close>Cancelar</button><button type="button" class="danger" data-delete-confirm disabled>Excluir cadastro</button></div></div>`;
+    document.body.appendChild(modal);
+    const select=modal.querySelector('#motoboyDeleteSelect'), confirm=modal.querySelector('[data-delete-confirm]');
+    select.addEventListener('change',()=>{confirm.disabled=!select.value;});
+    modal.querySelector('[data-delete-close]').addEventListener('click',closeDeleteModal);
+    modal.addEventListener('click',event=>{if(event.target===modal)closeDeleteModal();});
+    confirm.addEventListener('click',async()=>{
+      const id=String(select.value||'').trim(); if(!id) return;
+      const target=list().find(item=>String(item.id)===id); if(!target) return;
+      const confirmed=window.confirm(`Excluir o cadastro de ${target.name || 'este motoboy'}? Esta ação não pode ser desfeita.`); if(!confirmed) return;
+      confirm.disabled=true; confirm.textContent='Excluindo...';
+      try{
+        if(typeof window.deleteDoc!=='function' || typeof window.doc!=='function') throw new Error('Serviço de exclusão indisponível.');
+        await window.deleteDoc(window.doc(motoboysCollectionRef,id));
+        closeDeleteModal();
+        await window.fetchMotoboys?.();
+        window.renderMotoboys?.(); window.renderMotoboyDashboard?.();
+        window.alert('Cadastro do motoboy excluído com sucesso.');
+      }catch(error){ console.error('Falha ao excluir motoboy:',error); confirm.disabled=false; confirm.textContent='Excluir cadastro'; window.alert(error?.message || 'Não foi possível excluir o cadastro do motoboy.'); }
+    });
+  }
+  function bind(){ ensureDeleteButton(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
+  window.setTimeout(bind,500); window.openMotoboyDeleteModal=openDeleteModal;
+})();
+</script>
+
+<style id="customer-card-actions-style">
+#customersList .customer-card-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:auto;padding-top:10px}
+#customersList .customer-card-actions button,#customersList .customer-card-actions a{min-width:0;margin:0!important;padding:7px 5px!important;text-align:center;font-size:10px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#customersList .customer-card-actions .danger{border:1px solid rgba(233,109,94,.55);border-radius:6px;background:#8f352d;color:#fff;cursor:pointer}
+#customersList .customer-card-actions .danger:hover{background:#b74639}
+#customersList .customer-card-actions .fiado-card-action{margin:0!important}
+@media(max-width:1250px){#customersList .customer-card-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){#customersList .customer-card-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="customer-delete-runtime">
+(function(){
+ function esc(v){const n=document.createElement('div');n.textContent=String(v??'');return n.innerHTML;}
+ async function removeCustomer(id){
+  const customer=(typeof window.customerCache==='function'?window.customerCache():[]).find(x=>String(x.id)===String(id));
+  const name=customer?.name||'este cliente';
+  if(!window.confirm(`Excluir a conta de ${name}? Esta ação não pode ser desfeita.`)) return;
+  try{
+   if(typeof window.deleteDoc!=='function'||typeof window.doc!=='function'||!window.db) throw new Error('Serviço de exclusão indisponível.');
+   await window.deleteDoc(window.doc(window.db,'users',String(id)));
+   try{localStorage.removeItem(`user_${id}`);localStorage.removeItem(`customer_${id}`);}catch(_){ }
+   window.renderCustomers?.();
+   window.alert('Conta do cliente excluída com sucesso.');
+  }catch(error){console.error('Falha ao excluir conta do cliente:',error);window.alert(error?.message||'Não foi possível excluir a conta do cliente.');}
+ }
+ document.addEventListener('click',event=>{const b=event.target.closest('#customersList [data-customer-action="delete"]');if(!b)return;event.preventDefault();event.stopPropagation();removeCustomer(b.dataset.customerId);});
+})();
+</script>
+<script id="store-status-autosave-runtime">
+(function(){
+  async function persistStatus(){
+    const input=document.getElementById('restaurantStatus');
+    if(!input || typeof window.saveMenuData!=='function' && typeof saveMenuData!=='function') return;
+    try{
+      window.DATA=window.DATA||{}; window.DATA.restaurant=window.DATA.restaurant||{}; window.DATA.restaurant.status=input.value;
+      const saver=window.saveMenuData||saveMenuData; await saver();
+      const feedback=document.getElementById('storeSettingsFeedback')||document.getElementById('settingsFeedback');
+      if(feedback){feedback.textContent=`Status salvo automaticamente: ${input.value}.`;feedback.className='settings-pro-feedback success';}
+    }catch(error){console.error('Falha ao salvar automaticamente o status da loja:',error);}
+  }
+  document.addEventListener('click',function(event){
+    const button=event.target.closest('[data-store-status]'); if(!button) return;
+    window.setTimeout(persistStatus,0);
+  });
+})();
+</script>
+<script id="sales-report-sidebar-runtime">
+(function(){
+  function setup(){
+    const panel=document.getElementById('salesPanel');
+    if(!panel||document.getElementById('salesReportSidebarLayout')) return;
+    const toolbar=panel.querySelector('.brasa-report-toolbar');
+    const header=document.getElementById('salesUpgradeHeader');
+    const trend=document.getElementById('salesTrendCard');
+    const peak=document.getElementById('peakHoursChart')?.closest('.side');
+    const products=document.getElementById('tableTopProducts')?.closest('.side');
+    const customers=document.getElementById('tableTopCustomers')?.closest('.side');
+    const payments=document.getElementById('tablePayments')?.closest('.side');
+    const motoboys=document.getElementById('tableMotoboyReport')?.closest('.side');
+    const garcons=document.getElementById('tableGarcomReport')?.closest('.side');
+    const areas=document.getElementById('tableAreas')?.closest('.side');
+    const history=document.getElementById('salesOrderHistoryCard');
+    if(!toolbar||!trend) return;
+    const layout=document.createElement('div');layout.id='salesReportSidebarLayout';layout.className='sales-report-sidebar-layout';
+    const nav=document.createElement('nav');nav.className='sales-report-sidebar';nav.setAttribute('aria-label','Seções do relatório de vendas');
+    const content=document.createElement('div');content.className='sales-report-sections';
+    const sections=[
+      ['trend','Tendência de faturamento','Faturamento e indicadores'],['peaks','Picos de pedidos por hora','Horários de maior movimento'],['products','Top 10 produtos mais vendidos','Produtos líderes'],['customers','Top clientes','Clientes de maior valor'],['payments','Formas de pagamento','Métodos utilizados'],['motoboys','Relatórios de motoboys','Desempenho das entregas'],['garcons','Relatórios de garçons','Comandas por garçom'],['areas','Performance por área','Resultados por região'],['history','Histórico geral de pedidos','Todos os pedidos']
+    ];
+    sections.forEach(([key,label,desc],index)=>{const b=document.createElement('button');b.type='button';b.className='sales-report-nav-button';b.dataset.salesSection=key;b.innerHTML=`<span class="sales-report-nav-index">${String(index+1).padStart(2,'0')}</span><span><strong>${label}</strong><small>${desc}</small></span>`;nav.appendChild(b);});
+    function section(key,label){const el=document.createElement('section');el.className='sales-report-section';el.dataset.salesSectionPanel=key;el.setAttribute('aria-labelledby','sales-report-title-'+key);const h=document.createElement('div');h.className='sales-report-section-heading';h.innerHTML=`<div><small>RELATÓRIO DE VENDAS</small><h3 id="sales-report-title-${key}">${label}</h3></div>`;el.appendChild(h);content.appendChild(el);return el;}
+    const map={};sections.forEach(x=>map[x[0]]=section(x[0],x[1]));
+    [trend,document.getElementById('salesUpgradeKpis'),document.getElementById('salesSummaryCards')].forEach(n=>{if(n)map.trend.appendChild(n);});
+    [[peak,'peaks'],[products,'products'],[customers,'customers'],[payments,'payments'],[motoboys,'motoboys'],[garcons,'garcons'],[areas,'areas'],[history,'history']].forEach(([n,k])=>{if(n)map[k].appendChild(n);});
+    layout.append(nav,content);
+    const anchor=toolbar.nextSibling; if(anchor) panel.insertBefore(layout,anchor); else panel.appendChild(layout);
+    function activate(key){nav.querySelectorAll('button').forEach(b=>{const active=b.dataset.salesSection===key;b.classList.toggle('is-active',active);b.setAttribute('aria-selected',String(active));});content.querySelectorAll('[data-sales-section-panel]').forEach(x=>x.classList.toggle('is-active',x.dataset.salesSectionPanel===key));}
+    nav.addEventListener('click',e=>{const b=e.target.closest('[data-sales-section]');if(b)activate(b.dataset.salesSection);});
+    activate('trend');
+  }
+  const css=`
+#salesReportSidebarLayout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start;margin-top:18px}
+.sales-report-sidebar{position:sticky;top:16px;display:flex;flex-direction:column;gap:7px;padding:10px;border:1px solid rgba(255,219,190,.13);border-radius:14px;background:rgba(16,13,11,.72);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+.sales-report-nav-button{display:grid;grid-template-columns:34px minmax(0,1fr);gap:9px;align-items:center;width:100%;padding:10px 9px;border:1px solid transparent;border-radius:9px;background:transparent;color:#d8cbc0;text-align:left;cursor:pointer;transition:.18s ease}
+.sales-report-nav-button:hover{background:rgba(255,116,67,.08);border-color:rgba(255,143,97,.24)}
+.sales-report-nav-button.is-active{background:linear-gradient(135deg,rgba(255,90,31,.23),rgba(255,139,88,.08));border-color:rgba(255,143,97,.52);color:#fff}
+.sales-report-nav-index{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.06);color:#ffab83;font:800 10px 'IBM Plex Mono',monospace}
+.sales-report-nav-button strong{display:block;font:800 11px/1.2 Manrope,Arial,sans-serif}.sales-report-nav-button small{display:block;margin-top:3px;color:#a99a8f;font-size:9px;line-height:1.2}.sales-report-nav-button.is-active small{color:#eac1ad}
+.sales-report-sections{min-width:0}#salesPanel .sales-report-section{display:none!important;min-width:0}#salesPanel .sales-report-section.is-active{display:block!important}.sales-report-section-heading{display:flex;justify-content:space-between;align-items:end;margin:0 0 10px;padding-bottom:9px;border-bottom:1px solid rgba(255,219,190,.12)}.sales-report-section-heading small{color:#ff9c75;font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.08em}.sales-report-section-heading h3{margin:4px 0 0;color:#f7eee8;font:800 19px/1.15 Manrope,Arial,sans-serif}.sales-report-section>[id="salesUpgradeKpis"]{margin-top:0}.sales-report-section>[id="salesSummaryCards"]{margin-top:12px}
+.sales-report-section .brasa-analytics-card,.sales-report-section .brasa-kpi-grid,.sales-report-section #salesSummaryCards{max-width:100%;min-width:0}.sales-report-section #salesTrendCard{margin-top:0}.sales-report-section #salesOrderHistoryCard{margin-top:0}
+@media(max-width:900px){#salesReportSidebarLayout{grid-template-columns:1fr}.sales-report-sidebar{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.sales-report-nav-button{min-height:54px}}
+@media(max-width:560px){.sales-report-sidebar{grid-template-columns:1fr}.sales-report-section-heading h3{font-size:16px}}
+`;
+  function install(){if(!document.getElementById('sales-report-sidebar-style')){const st=document.createElement('style');st.id='sales-report-sidebar-style';st.textContent=css;document.head.appendChild(st);}setup();[80,350,900].forEach(delay=>setTimeout(setup,delay));}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
 </script>
