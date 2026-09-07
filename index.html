@@ -2859,7 +2859,7 @@ header .meta p{color:#c8b8a9;font-family:"IBM Plex Mono",monospace;font-size:10p
       <div class="store-header-cover" id="storeHeaderCover">
         <img id="storeCoverImg" class="store-header-cover-img" src="" alt="Capa da loja" hidden>
         <div class="store-header-cover-shade" aria-hidden="true"></div>
-        <span class="store-header-cover-label">Cardápio da loja</span>
+        
       </div>
       <div class="store-header-info">
         <div class="store-header-logo-wrap"><img class="logo" id="logo" src="" alt="Logo da loja"></div>
@@ -16640,6 +16640,16 @@ body.motoboy-mode .moto-shell{width:min(1180px,calc(100% - 28px));padding-top:22
 body.motoboy-mode #motoNotice{display:none!important}
 body.motoboy-mode .moto-panel-actions{display:none!important}
 </style>
+
+<style id="menu-header-spacing-and-carousel-fix">
+/* Cabeçalho mais limpo e fluxo vertical mais compacto, sem alterar o rodapé. */
+.store-header-cover-label{display:none!important}
+.store-header ~ .controls{padding-top:4px!important;padding-bottom:4px!important}
+.store-header + .store-info-modal + .customer-order-tracker + #customerTrackerReopenBtn + .modal + .controls{margin-top:0!important}
+#cats.menu-category-visual-nav{margin-top:3px!important;margin-bottom:0!important;padding-top:0!important;padding-bottom:5px!important;gap:6px!important}
+#items > .menu-promotions-section{margin-top:0!important;margin-bottom:7px!important;padding-top:4px!important;padding-bottom:6px!important}
+@media(max-width:600px){.store-header ~ .controls{padding-top:3px!important;padding-bottom:3px!important}#cats.menu-category-visual-nav{padding-bottom:4px!important;gap:5px!important}#items > .menu-promotions-section{margin-bottom:5px!important;padding-top:3px!important;padding-bottom:5px!important}}
+</style>
 </html>
 
 
@@ -21452,19 +21462,22 @@ updatedAt:changedAt };
     const track = document.createElement('div');
     track.className = 'menu-marketing-flyer-track';
     const count = data.flyers.length;
-    data.flyers.forEach((flyer, index) => {
+    const createSlide = (flyer, index, clone = false) => {
       const slide = document.createElement('div');
-      slide.className = 'menu-marketing-flyer-slide';
+      slide.className = 'menu-marketing-flyer-slide' + (clone ? ' is-loop-clone' : '');
       slide.dataset.flyerIndex = String(index);
-      slide.setAttribute('aria-hidden', index === marketingFlyerIndex ? 'false' : 'true');
+      slide.dataset.flyerClone = clone ? '1' : '0';
+      slide.setAttribute('aria-hidden', 'true');
       const image = document.createElement('img');
       image.alt = flyer.name || `Flyer ${index + 1}`;
       image.src = flyer.dataUrl;
       if (flyer.link || flyer.productId) { slide.classList.add('has-marketing-flyer-destination'); slide.setAttribute('role','link'); slide.setAttribute('aria-label', `Abrir ${flyer.name || `Flyer ${index + 1}`}`); slide.tabIndex = 0; }
       slide.appendChild(image);
-      slide.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openMarketingFlyerDestination(flyer); } });
-      track.appendChild(slide);
-    });
+      if (!clone) slide.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openMarketingFlyerDestination(flyer); } });
+      return slide;
+    };
+    data.flyers.forEach((flyer, index) => track.appendChild(createSlide(flyer, index)));
+    if (count > 1) track.appendChild(createSlide(data.flyers[0], 0, true));
     viewport.appendChild(track);
     track.addEventListener('click', event => {
       if (track.dataset.suppressFlyerClick === '1') { track.dataset.suppressFlyerClick = '0'; event.preventDefault(); return; }
@@ -21474,10 +21487,22 @@ updatedAt:changedAt };
     });
     marketingFlyerIndex = ((marketingFlyerIndex % count) + count) % count;
     const update = (nextIndex, animate = true) => {
-      marketingFlyerIndex = ((nextIndex % count) + count) % count;
+      const displayCount = count + 1;
+      marketingFlyerIndex = Math.max(0, Math.min(nextIndex, count));
       track.style.transition = animate ? 'transform .35s ease' : 'none';
       track.style.transform = `translate3d(-${marketingFlyerIndex * 100}%,0,0)`;
       track.querySelectorAll('.menu-marketing-flyer-slide').forEach((slide, i) => slide.setAttribute('aria-hidden', i === marketingFlyerIndex ? 'false' : 'true'));
+      if (animate && marketingFlyerIndex === count) {
+        const reset = () => {
+          if (marketingFlyerIndex !== count) return;
+          track.removeEventListener('transitionend', reset);
+          marketingFlyerIndex = 0;
+          track.style.transition = 'none';
+          track.style.transform = 'translate3d(0,0,0)';
+          track.querySelectorAll('.menu-marketing-flyer-slide').forEach((slide, i) => slide.setAttribute('aria-hidden', i === 0 ? 'false' : 'true'));
+        };
+        track.addEventListener('transitionend', reset, { once:true });
+      }
     };
     const move = delta => update(marketingFlyerIndex + delta);
     if (count > 1) {
